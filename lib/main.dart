@@ -5,6 +5,7 @@ import 'models/test_record.dart';
 import 'services/formula_service.dart';
 import 'services/breaker_curve_manager.dart';
 import 'core/theme/app_theme.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +21,7 @@ void main() async {
   await FormulaService.init();
   await BreakerCurveManager.init();
 
+  usePathUrlStrategy(); // Sử dụng Path URL thay cho Hash URL (#)
   runApp(const MyApp());
 }
 
