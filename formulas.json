@@ -1,0 +1,149 @@
+[
+  {
+    "test_id": "MBA_Rcd",
+    "name": "Quy đổi điện trở cách điện",
+    "inputs": [
+      "R_do",
+      "T_do",
+      "T_tc"
+    ],
+    "formula": "R_do * pow(1.5, (T_do - T_tc)/10)",
+    "unit": "MΩ"
+  },
+  {
+    "test_id": "MBA_R_dc",
+    "name": "Quy đổi điện trở một chiều (Đồng)",
+    "inputs": [
+      "R_do",
+      "T_do",
+      "T_tc"
+    ],
+    "formula": "R_do * ((235 + T_tc)/(235 + T_do))",
+    "unit": "mΩ"
+  },
+  {
+    "test_id": "MBA_R_dc_Al",
+    "name": "Quy đổi điện trở một chiều (Nhôm)",
+    "inputs": [
+      "R_do",
+      "T_do",
+      "T_tc"
+    ],
+    "formula": "R_do * ((225 + T_tc)/(225 + T_do))",
+    "unit": "mΩ"
+  },
+  {
+    "test_id": "MBA_K_error",
+    "name": "Sai số tỷ số biến",
+    "inputs": [
+      "K_tt",
+      "K_dm"
+    ],
+    "formula": "((K_tt - K_dm)/K_dm) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "MC_Time_Delta",
+    "name": "Độ không đồng thời Máy cắt",
+    "inputs": [
+      "t_max",
+      "t_min"
+    ],
+    "formula": "t_max - t_min",
+    "unit": "ms"
+  },
+  {
+    "test_id": "TITU_Ratio_Error",
+    "name": "Sai số tỷ số TI/TU",
+    "inputs": [
+      "K_tt",
+      "K_dm"
+    ],
+    "formula": "((K_tt - K_dm) / K_dm) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "LA_Leakage_Current",
+    "name": "Quy đổi dòng rò LA (Nhiệt độ)",
+    "inputs": [
+      "I_do",
+      "T_do",
+      "T_tc"
+    ],
+    "formula": "I_do / pow(1.1, (T_do - T_tc)/10)",
+    "unit": "mA"
+  },
+  {
+    "test_id": "TD_R_QuyDoi",
+    "name": "Điện trở tiếp địa quy đổi",
+    "inputs": [
+      "R_do",
+      "K_mua"
+    ],
+    "formula": "R_do * K_mua",
+    "unit": "Ω"
+  },
+  {
+    "test_id": "CAP_Tan_Delta",
+    "name": "Tổn hao điện môi (Quy đổi 20°C)",
+    "inputs": [
+      "Tan_do",
+      "T_do"
+    ],
+    "formula": "Tan_do / (1 + 0.04 * (T_do - 20))",
+    "unit": "%"
+  },
+  {
+    "test_id": "RL_IDMT_NormalInverse",
+    "name": "Thời gian tác động Rơ le (IEC Normal)",
+    "inputs": [
+      "I_f",
+      "I_set",
+      "TMS"
+    ],
+    "formula": "0.14 / (pow(I_f / I_set, 0.02) - 1) * TMS",
+    "unit": "s"
+  },
+  {
+    "test_id": "APT_P_Calc",
+    "name": "Tính công suất từ U, I, cosphi",
+    "inputs": [
+      "U",
+      "I",
+      "cosphi"
+    ],
+    "formula": "1.732 * U * I * cosphi / 1000",
+    "unit": "kW"
+  },
+  {
+    "test_id": "MBA_Unbalance",
+    "name": "Độ lệch điện trở 1 chiều",
+    "inputs": [
+      "R_max",
+      "R_min",
+      "R_avg"
+    ],
+    "formula": "((R_max - R_min) / R_avg) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "MBA_NoLoad",
+    "name": "Dòng không tải (%)",
+    "inputs": [
+      "I0_avg",
+      "I_dm"
+    ],
+    "formula": "(I0_avg / I_dm) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "MBA_ShortCircuit",
+    "name": "Điện áp ngắn mạch (%)",
+    "inputs": [
+      "Uk_avg",
+      "U_dm"
+    ],
+    "formula": "(Uk_avg / U_dm) * 100",
+    "unit": "%"
+  }
+]

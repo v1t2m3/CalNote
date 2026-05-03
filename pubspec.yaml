@@ -1,0 +1,42 @@
+name: mte_calculator_pro
+description: "MTE Calculator Pro - Ứng dụng Thử nghiệm Điện"
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI/State
+  provider: ^6.1.1
+  cupertino_icons: ^1.0.6
+
+  # Local Database / Offline Storage
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Files & Media
+  image_picker: ^1.0.7  # Để chụp ảnh và chọn ảnh máy đo
+  path_provider: ^2.1.4 # Quản lý thư mục lưu file, ảnh trong máy
+  file_picker: ^8.0.0   # Chọn file công thức JSON từ bộ nhớ
+
+  # Math Engine
+  function_tree: ^0.9.1 # Đọc file JSON và parse biểu thức toán học động
+  intl: ^0.20.2
+  share_plus: ^10.0.0
+  build_runner: ^2.4.9
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.1
+  hive_generator: ^2.0.1
+
+flutter:
+  uses-material-design: true
