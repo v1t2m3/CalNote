@@ -1,6 +1,6 @@
 {
     "name": "MTE-LAB Cal-Notes",
-    "short_name": "MTE Cal-Notes",
+    "short_name": "Cal-Notes",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0F172A",
