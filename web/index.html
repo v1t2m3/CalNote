@@ -59,17 +59,10 @@
 <body>
   <script>
     window.addEventListener('load', function(ev) {
-      // Đăng ký Service Worker tường minh để đảm bảo cache Offline
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('flutter_service_worker.js?v=' + serviceWorkerVersion)
-          .then((reg) => console.log('Service Worker Registered Successfully', reg))
-          .catch((err) => console.error('Service Worker Registration Failed', err));
-      }
-
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
+      // Khởi tạo Flutter Web chuẩn mới
+      _flutter.loader.load({
         serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
+          serviceWorkerVersion: {{flutter_service_worker_version}},
         },
         onEntrypointLoaded: function(engineInitializer) {
           engineInitializer.initializeEngine().then(function(appRunner) {
