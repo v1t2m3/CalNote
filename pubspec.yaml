@@ -1,5 +1,5 @@
-name: mte_calculator_pro
-description: "MTE Calculator Pro - Ứng dụng Thử nghiệm Điện"
+name: mte_calculator
+description: "MTE Calculato - Ứng dụng Ghi chú và tính toán Thử nghiệm Điện"
 
 publish_to: 'none'
 
@@ -34,9 +34,19 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  flutter_launcher_icons: ^0.13.1 # Sử dụng phiên bản mới nhất
   flutter_lints: ^3.0.1
   hive_generator: ^2.0.1
 
 flutter:
   uses-material-design: true
+  
+flutter_launcher_icons:
+  image_path: "assets/icon/Cal_notes_icon.png" # Đường dẫn tới file thiết kế của anh
+  android: true
+  ios: true
+  web:
+    generate: true
+    image_path: "assets/icon/Cal_notes_icon.png"
+    background_color: "#1E1E1E" # Màu nền (đồng bộ với dark theme của app)
+    theme_color: "#1E1E1E"
