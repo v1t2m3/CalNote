@@ -10,6 +10,7 @@ import 'grounding_screen.dart';
 import 'digital_relay_screen.dart';
 import 'aptomat_screen.dart'; // THÊM IMPORT APTOMAT
 import 'insulation_screen.dart'; // THÊM IMPORT ĐO CÁCH ĐIỆN (DAR & PI)
+import 'cable_screen.dart'; // THÊM IMPORT CÁP LỰC
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -128,10 +129,8 @@ class DashboardScreen extends StatelessWidget {
                     break;
                   case 8:
                   default:
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Module này đang xây dựng nghen!')),
-                    );
-                    return;
+                    targetScreen = const CableScreen(); // CÁP LỰC
+                    break;
                 }
 
                 Navigator.push(
