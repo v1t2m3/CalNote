@@ -145,5 +145,25 @@
     ],
     "formula": "(Uk_avg / U_dm) * 100",
     "unit": "%"
+  },
+  {
+    "test_id": "INS_PI",
+    "name": "Hệ số phân cực PI",
+    "inputs": [
+      "R_10m",
+      "R_1m"
+    ],
+    "formula": "R_10m / R_1m",
+    "unit": ""
+  },
+  {
+    "test_id": "INS_DAR",
+    "name": "Tỉ số hấp thụ điện môi DAR",
+    "inputs": [
+      "R_60s",
+      "R_15s"
+    ],
+    "formula": "R_60s / R_15s",
+    "unit": ""
   }
 ]

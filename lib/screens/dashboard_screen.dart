@@ -9,6 +9,7 @@ import 'surge_arrester_screen.dart';
 import 'grounding_screen.dart';
 import 'digital_relay_screen.dart';
 import 'aptomat_screen.dart'; // THÊM IMPORT APTOMAT
+import 'insulation_screen.dart'; // THÊM IMPORT ĐO CÁCH ĐIỆN (DAR & PI)
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -16,6 +17,7 @@ class DashboardScreen extends StatelessWidget {
   final List<Map<String, dynamic>> _devices = const [
     {'name': 'Máy Biến Áp', 'icon': Icons.flash_on},
     {'name': 'Máy Cắt', 'icon': Icons.electric_moped_outlined},
+    {'name': 'Đo Cách Điện (DAR/PI)', 'icon': Icons.speed},
     {'name': 'TI / TU', 'icon': Icons.settings_input_component},
     {'name': 'Chống Sét Van', 'icon': Icons.bolt},
     {'name': 'Tiếp Địa', 'icon': Icons.horizontal_rule},
@@ -107,21 +109,24 @@ class DashboardScreen extends StatelessWidget {
                     targetScreen = const CircuitBreakerScreen();
                     break;
                   case 2:
-                    targetScreen = const CtVtScreen();
+                    targetScreen = const InsulationCalculatorScreen(); // ĐO CÁCH ĐIỆN DAR & PI
                     break;
                   case 3:
-                    targetScreen = const SurgeArresterScreen();
+                    targetScreen = const CtVtScreen();
                     break;
                   case 4:
-                    targetScreen = const GroundingScreen();
+                    targetScreen = const SurgeArresterScreen();
                     break;
                   case 5:
-                    targetScreen = const AptomatScreen(); // APTOMAT
+                    targetScreen = const GroundingScreen();
                     break;
                   case 6:
-                    targetScreen = const DigitalRelayScreen();
+                    targetScreen = const AptomatScreen(); // APTOMAT
                     break;
                   case 7:
+                    targetScreen = const DigitalRelayScreen();
+                    break;
+                  case 8:
                   default:
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Module này đang xây dựng nghen!')),
