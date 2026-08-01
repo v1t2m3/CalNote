@@ -11,6 +11,7 @@ import 'digital_relay_screen.dart';
 import 'aptomat_screen.dart'; // THÊM IMPORT APTOMAT
 import 'insulation_screen.dart'; // THÊM IMPORT ĐO CÁCH ĐIỆN (DAR & PI)
 import 'cable_screen.dart'; // THÊM IMPORT CÁP LỰC
+import 'reference_standard_screen.dart'; // THÊM IMPORT TRA CỨU TIÊU CHUẨN
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -44,6 +45,16 @@ class DashboardScreen extends StatelessWidget {
         title: const Text('MTE-LAB Cal-Notes', style: TextStyle( color: Colors.white)),
         actions: [
           IconButton(
+            icon: const Icon(Icons.menu_book, size: 28),
+            tooltip: 'Tra cứu Tiêu chuẩn',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ReferenceStandardScreen()),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.history, size: 28),
             tooltip: 'Xem Sổ Tay',
             onPressed: () {
@@ -72,6 +83,19 @@ class DashboardScreen extends StatelessWidget {
                 ],
               ),
             ),
+            ListTile(
+              leading: const Icon(Icons.menu_book, color: AppTheme.myOrangeAccent, size: 32),
+              title: const Text('Tra cứu Tiêu chuẩn', style: TextStyle(fontSize: 18, color: Colors.white)),
+              subtitle: const Text('Tra cứu nhanh tiêu chuẩn đạt của thiết bị', style: TextStyle(color: Colors.white70)),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ReferenceStandardScreen()),
+                );
+              },
+            ),
+            const Divider(color: AppTheme.myMedNavy, thickness: 1),
             ListTile(
               leading: const Icon(Icons.file_upload, color: AppTheme.myOrangeAccent, size: 32),
               title: const Text('Nhập file Công thức (JSON)', style: TextStyle(fontSize: 18, color: Colors.white)),
