@@ -169,7 +169,7 @@ class _AptomatScreenState extends State<AptomatScreen> {
                      Row(
                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                        children: [
-                         const Text('CHỌN THƯ VIỆN ĐẶC TUYẾN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                         const Text('1. CHỌN THƯ VIỆN ĐẶC TUYẾN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.myOrangeAccent)),
                          IconButton(
                            onPressed: () {
                              Navigator.push(context, MaterialPageRoute(builder: (_) => const CurveDigitizerScreen())).then((value) => _loadCurves());
@@ -213,7 +213,7 @@ class _AptomatScreenState extends State<AptomatScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('THÔNG SỐ ĐẦU VÀO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    const Text('2. THÔNG SỐ ĐẦU VÀO & THỜI GIAN CẮT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                       children: [

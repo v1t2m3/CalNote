@@ -279,7 +279,7 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.myBrightBlue)),
+                            color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                       children: [
@@ -363,7 +363,7 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.myBrightBlue)),
+                            color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                       children: [
@@ -421,7 +421,7 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.myBrightBlue)),
+                            color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                       children: [

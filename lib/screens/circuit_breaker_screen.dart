@@ -217,11 +217,11 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('ĐIỆN TRỞ CÁCH ĐIỆN (MΩ)',
+                    const Text('1. ĐIỆN TRỞ CÁCH ĐIỆN (MΩ)',
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.myBrightBlue)),
+                            color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                       children: [
@@ -259,11 +259,11 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('ĐIỆN TRỞ TIẾP XÚC (μΩ)',
+                    const Text('2. ĐIỆN TRỞ TIẾP XÚC (μΩ)',
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.myBrightBlue)),
+                            color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                       children: [
@@ -320,11 +320,11 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('ĐỘ KHÔNG ĐỒNG THỜI THỜI GIAN (ms)',
+                    const Text('3. ĐỘ KHÔNG ĐỒNG THỜI THỜI GIAN (ms)',
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.myBrightBlue)),
+                            color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                       children: [

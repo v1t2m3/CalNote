@@ -250,7 +250,7 @@ class _InsulationCalculatorScreenState
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.myBrightBlue),
+                          color: AppTheme.myOrangeAccent),
                     ),
                     const Divider(),
                     Row(
@@ -268,7 +268,7 @@ class _InsulationCalculatorScreenState
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.myBrightBlue),
+                          color: AppTheme.myOrangeAccent),
                     ),
                     const Divider(),
                     Row(

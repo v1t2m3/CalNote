@@ -142,7 +142,7 @@ class _CtVtScreenState extends State<CtVtScreen> {
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.myBrightBlue)),
+                            color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                       children: [

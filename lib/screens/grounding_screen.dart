@@ -142,7 +142,7 @@ class _GroundingScreenState extends State<GroundingScreen> {
                         style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.myBrightBlue)),
+                            color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                       children: [

@@ -392,7 +392,7 @@ class _TransformerCalculatorScreenState
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text('1. ĐiỆN TRỞ CÁCH ĐIỆN (MΩ)',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myBrightBlue)),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                       children: [
@@ -431,7 +431,7 @@ class _TransformerCalculatorScreenState
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text('2. ĐIỆN TRỞ MỘT CHIỀU QUY ĐỔI (mΩ)',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myBrightBlue)),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                       children: [
@@ -502,7 +502,7 @@ class _TransformerCalculatorScreenState
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text('3. SAI LỆCH TỶ SỐ BIẾN (%)',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myBrightBlue)),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     _buildTextField('K Định mức (K_dm)', kDmCtrl, isExpanded: false),
                     Row(
@@ -541,7 +541,7 @@ class _TransformerCalculatorScreenState
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text('4. KHÔNG TẢI',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myBrightBlue)),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                        children: [
@@ -587,7 +587,7 @@ class _TransformerCalculatorScreenState
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text('5. NGẮN MẠCH',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myBrightBlue)),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
                     const Divider(),
                     Row(
                        children: [

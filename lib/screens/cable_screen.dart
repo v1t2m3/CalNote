@@ -12,11 +12,8 @@ class CableScreen extends StatefulWidget {
   State<CableScreen> createState() => _CableScreenState();
 }
 
-class _CableScreenState extends State<CableScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  // TAB 1: CÁCH ĐIỆN CÁP
+class _CableScreenState extends State<CableScreen> {
+  // MODULE 1: CÁCH ĐIỆN CÁP
   final TextEditingController r15sCtrl = TextEditingController();
   final TextEditingController r60sCtrl = TextEditingController();
   final TextEditingController r10mCtrl = TextEditingController();
@@ -31,7 +28,7 @@ class _CableScreenState extends State<CableScreen>
   Color darColor = Colors.grey;
   Color piColor = Colors.grey;
 
-  // TAB 2: ĐIỆN TRỞ RUỘT DẪN (R_DC)
+  // MODULE 2: ĐIỆN TRỞ RUỘT DẪN (R_DC)
   final TextEditingController rACtrl = TextEditingController();
   final TextEditingController rBCtrl = TextEditingController();
   final TextEditingController rCCtrl = TextEditingController();
@@ -40,7 +37,7 @@ class _CableScreenState extends State<CableScreen>
 
   double? rResultA, rResultB, rResultC, deltaRdc;
 
-  // TAB 3: THỬ CHIỆU ĐIỆN ÁP CAO (HI-POT DC / VLF)
+  // MODULE 3: THỬ CHIỆU ĐIỆN ÁP CAO (HI-POT DC / VLF)
   final TextEditingController iLeakACtrl = TextEditingController();
   final TextEditingController iLeakBCtrl = TextEditingController();
   final TextEditingController iLeakCCtrl = TextEditingController();
@@ -51,18 +48,6 @@ class _CableScreenState extends State<CableScreen>
   double parseInput(String val) {
     if (val.isEmpty) return 0;
     return double.tryParse(val.replaceAll(',', '.')) ?? 0;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 
   void _tinhCachDienCap() {
@@ -346,16 +331,6 @@ class _CableScreenState extends State<CableScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('THỬ NGHIỆM CÁP LỰC'),
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: AppTheme.myOrangeAccent,
-          labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          tabs: const [
-            Tab(text: '1. Cách điện (DAR/PI)'),
-            Tab(text: '2. Ruột dẫn (R_DC)'),
-            Tab(text: '3. Hi-Pot DC/VLF'),
-          ],
-        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveAllNotes,
@@ -363,242 +338,229 @@ class _CableScreenState extends State<CableScreen>
         icon: const Icon(Icons.bookmark_add),
         label: Text('Lưu Tổ Hợp ($count)'),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          // TAB 1: CÁCH ĐIỆN CÁP
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            // MODULE 1: ĐIỆN TRỞ CÁCH ĐIỆN CÁP
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      '1. ĐIỆN TRỞ CÁCH ĐIỆN CÁP (MΩ)',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.myOrangeAccent),
+                    ),
+                    const Divider(),
+                    Row(
                       children: [
-                        const Text(
-                          'ĐIỆN TRỞ CÁCH ĐIỆN CÁP (MΩ)',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.myBrightBlue),
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            _buildTextField('R_15s (MΩ)', r15sCtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('R_60s (MΩ)', r60sCtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('R_10m (MΩ)', r10mCtrl),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            _buildTextField('T_đo (°C)', tDoInsCtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('T_tc (°C)', tTcInsCtrl),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        ElevatedButton(
-                          onPressed: _tinhCachDienCap,
-                          child: const Text('TÍNH DAR, PI & QUY ĐỔI R60s'),
-                        ),
-                        if (darResult != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              'DAR (R60/R15): ${darResult!.toStringAsFixed(3)} - $darEval',
-                              style: TextStyle(
-                                  color: darColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15),
-                            ),
-                          ),
-                        if (piResult != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              'PI (R10m/R1m): ${piResult!.toStringAsFixed(3)} - $piEval',
-                              style: TextStyle(
-                                  color: piColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15),
-                            ),
-                          ),
-                        if (r60sConverted != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              'R60s Quy đổi 20°C: ${r60sConverted!.toStringAsFixed(1)} MΩ',
-                              style: const TextStyle(
-                                  color: Colors.cyanAccent,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15),
-                            ),
-                          ),
+                        _buildTextField('R_15s (MΩ)', r15sCtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('R_60s (MΩ)', r60sCtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('R_10m (MΩ)', r10mCtrl),
                       ],
                     ),
-                  ),
+                    Row(
+                      children: [
+                        _buildTextField('T_đo (°C)', tDoInsCtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('T_tc (°C)', tTcInsCtrl),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _tinhCachDienCap,
+                      child: const Text('TÍNH DAR, PI & QUY ĐỔI R60s'),
+                    ),
+                    if (darResult != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          'DAR (R60/R15): ${darResult!.toStringAsFixed(3)} - $darEval',
+                          style: TextStyle(
+                              color: darColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                        ),
+                      ),
+                    if (piResult != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          'PI (R10m/R1m): ${piResult!.toStringAsFixed(3)} - $piEval',
+                          style: TextStyle(
+                              color: piColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                        ),
+                      ),
+                    if (r60sConverted != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          'R60s Quy đổi 20°C: ${r60sConverted!.toStringAsFixed(1)} MΩ',
+                          style: const TextStyle(
+                              color: Colors.cyanAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                        ),
+                      ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
 
-          // TAB 2: ĐIỆN TRỞ RUỘT DẪN
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Text(
-                          'ĐIỆN TRỞ RUỘT DẪN QUY ĐỔI 20°C (mΩ)',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.myBrightBlue),
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            const Text('Vật liệu: '),
-                            ChoiceChip(
-                              label: const Text('Đồng (Cu)'),
-                              selected: _material == 'Cu',
-                              onSelected: (val) =>
-                                  setState(() => _material = 'Cu'),
-                            ),
-                            const SizedBox(width: 8),
-                            ChoiceChip(
-                              label: const Text('Nhôm (Al)'),
-                              selected: _material == 'Al',
-                              onSelected: (val) =>
-                                  setState(() => _material = 'Al'),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            _buildTextField('Ra (mΩ)', rACtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('Rb (mΩ)', rBCtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('Rc (mΩ)', rCCtrl),
-                          ],
-                        ),
-                        _buildTextField('T_đo (°C)', tDoRdcCtrl,
-                            isExpanded: false),
-                        const SizedBox(height: 12),
-                        ElevatedButton(
-                          onPressed: _tinhRdcRuotDan,
-                          child: const Text('QUY ĐỔI R_DC VỀ 20°C'),
-                        ),
-                        if (rResultA != null || rResultB != null || rResultC != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Column(
-                              children: [
-                                if (rResultA != null)
-                                  Text(
-                                      'Ra_20 = ${rResultA!.toStringAsFixed(3)} mΩ',
-                                      style: const TextStyle(
-                                          color: Colors.greenAccent,
-                                          fontWeight: FontWeight.bold)),
-                                if (rResultB != null)
-                                  Text(
-                                      'Rb_20 = ${rResultB!.toStringAsFixed(3)} mΩ',
-                                      style: const TextStyle(
-                                          color: Colors.greenAccent,
-                                          fontWeight: FontWeight.bold)),
-                                if (rResultC != null)
-                                  Text(
-                                      'Rc_20 = ${rResultC!.toStringAsFixed(3)} mΩ',
-                                      style: const TextStyle(
-                                          color: Colors.greenAccent,
-                                          fontWeight: FontWeight.bold)),
-                                if (deltaRdc != null)
-                                  Text(
-                                    'Độ lệch các pha ΔR = ${deltaRdc!.toStringAsFixed(2)}% ${deltaRdc! <= 2.0 ? "(✓ Đạt ≤2%)" : "(⚠️ Cảnh báo >2%)"}',
-                                    style: TextStyle(
-                                        color: deltaRdc! <= 2.0
-                                            ? Colors.lightGreenAccent
-                                            : Colors.redAccent,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15),
-                                  ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+            const SizedBox(height: 8),
 
-          // TAB 3: HI-POT DC / VLF
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+            // MODULE 2: ĐIỆN TRỞ RUỘT DẪN (R_DC)
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      '2. ĐIỆN TRỞ RUỘT DẪN QUY ĐỔI 20°C (mΩ)',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.myOrangeAccent),
+                    ),
+                    const Divider(),
+                    Row(
                       children: [
-                        const Text(
-                          'THỬ CHỊU ĐIỆN ÁP CAO & DÒNG RÒ CÁP',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.myBrightBlue),
+                        const Text('Vật liệu: '),
+                        ChoiceChip(
+                          label: const Text('Đồng (Cu)'),
+                          selected: _material == 'Cu',
+                          onSelected: (val) =>
+                              setState(() => _material = 'Cu'),
                         ),
-                        const Divider(),
-                        _buildTextField('Điện áp thử U_test (kV)', uTestCtrl,
-                            isExpanded: false),
-                        Row(
-                          children: [
-                            _buildTextField('I_rò Pha A (µA)', iLeakACtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('I_rò Pha B (µA)', iLeakBCtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('I_rò Pha C (µA)', iLeakCCtrl),
-                          ],
+                        const SizedBox(width: 8),
+                        ChoiceChip(
+                          label: const Text('Nhôm (Al)'),
+                          selected: _material == 'Al',
+                          onSelected: (val) =>
+                              setState(() => _material = 'Al'),
                         ),
-                        const SizedBox(height: 12),
-                        ElevatedButton(
-                          onPressed: _tinhHiPotUnbalance,
-                          child: const Text('TÍNH BẤT CÂN BẰNG DÒNG RÒ (%)'),
-                        ),
-                        if (unbalanceLeakage != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              'Độ bất cân bằng dòng rò: ${unbalanceLeakage!.toStringAsFixed(2)}%',
-                              style: const TextStyle(
-                                  color: Colors.cyanAccent,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
                       ],
                     ),
-                  ),
+                    Row(
+                      children: [
+                        _buildTextField('Ra (mΩ)', rACtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('Rb (mΩ)', rBCtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('Rc (mΩ)', rCCtrl),
+                      ],
+                    ),
+                    _buildTextField('T_đo (°C)', tDoRdcCtrl,
+                        isExpanded: false),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _tinhRdcRuotDan,
+                      child: const Text('QUY ĐỔI R_DC VỀ 20°C'),
+                    ),
+                    if (rResultA != null || rResultB != null || rResultC != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Column(
+                          children: [
+                            if (rResultA != null)
+                              Text(
+                                  'Ra_20 = ${rResultA!.toStringAsFixed(3)} mΩ',
+                                  style: const TextStyle(
+                                      color: Colors.greenAccent,
+                                      fontWeight: FontWeight.bold)),
+                            if (rResultB != null)
+                              Text(
+                                  'Rb_20 = ${rResultB!.toStringAsFixed(3)} mΩ',
+                                  style: const TextStyle(
+                                      color: Colors.greenAccent,
+                                      fontWeight: FontWeight.bold)),
+                            if (rResultC != null)
+                              Text(
+                                  'Rc_20 = ${rResultC!.toStringAsFixed(3)} mΩ',
+                                  style: const TextStyle(
+                                      color: Colors.greenAccent,
+                                      fontWeight: FontWeight.bold)),
+                            if (deltaRdc != null)
+                              Text(
+                                'Độ lệch các pha ΔR = ${deltaRdc!.toStringAsFixed(2)}% ${deltaRdc! <= 2.0 ? "(✓ Đạt ≤2%)" : "(⚠️ Cảnh báo >2%)"}',
+                                style: TextStyle(
+                                    color: deltaRdc! <= 2.0
+                                        ? Colors.lightGreenAccent
+                                        : Colors.redAccent,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                              ),
+                          ],
+                        ),
+                      ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 8),
+
+            // MODULE 3: THỬ CHIỆU ĐIỆN ÁP CAO & DÒNG RÒ (HI-POT DC / VLF)
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      '3. THỬ CHỊU ĐIỆN ÁP CAO & DÒNG RÒ (HI-POT DC / VLF)',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.myOrangeAccent),
+                    ),
+                    const Divider(),
+                    _buildTextField('Điện áp thử U_test (kV)', uTestCtrl,
+                        isExpanded: false),
+                    Row(
+                      children: [
+                        _buildTextField('I_rò Pha A (µA)', iLeakACtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('I_rò Pha B (µA)', iLeakBCtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('I_rò Pha C (µA)', iLeakCCtrl),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _tinhHiPotUnbalance,
+                      child: const Text('TÍNH BẤT CÂN BẰNG DÒNG RÒ (%)'),
+                    ),
+                    if (unbalanceLeakage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          'Độ bất cân bằng dòng rò: ${unbalanceLeakage!.toStringAsFixed(2)}%',
+                          style: const TextStyle(
+                              color: Colors.cyanAccent,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 80),
+          ],
+        ),
       ),
     );
   }

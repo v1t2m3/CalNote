@@ -12,11 +12,8 @@ class DigitalRelayScreen extends StatefulWidget {
   State<DigitalRelayScreen> createState() => _DigitalRelayScreenState();
 }
 
-class _DigitalRelayScreenState extends State<DigitalRelayScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  // TAB 1: F50 / F51 QUÁ DÒNG
+class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
+  // MODULE 1: F50 / F51 QUÁ DÒNG
   final TextEditingController iFCtrl = TextEditingController();
   final TextEditingController iSetCtrl = TextEditingController();
   final TextEditingController tmsCtrl = TextEditingController(text: '0.1');
@@ -26,14 +23,14 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen>
   double? tTheoryResult;
   double? tTimeErrorPercent;
 
-  // TAB 2: F67 QUÁ DÒNG CÓ HƯỚNG
+  // MODULE 2: F67 QUÁ DÒNG CÓ HƯỚNG
   final TextEditingController mtaCtrl = TextEditingController(text: '45');
   final TextEditingController angleUCtrl = TextEditingController(text: '0');
   final TextEditingController angleICtrl = TextEditingController(text: '45');
   String? directionZoneEval;
   Color directionZoneColor = Colors.grey;
 
-  // TAB 3: F21 BẢO VỆ KHOẢNG CÁCH
+  // MODULE 3: F21 BẢO VỆ KHOẢNG CÁCH
   final TextEditingController z0Ctrl = TextEditingController();
   final TextEditingController z1Ctrl = TextEditingController();
   final TextEditingController zDoCtrl = TextEditingController();
@@ -41,7 +38,7 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen>
   double? k0Result;
   double? zErrorPercent;
 
-  // TAB 4: F87T SO LỆCH MÁY BIẾN ÁP
+  // MODULE 4: F87T SO LỆCH MÁY BIẾN ÁP
   final TextEditingController iHCtrl = TextEditingController();
   final TextEditingController iLCtrl = TextEditingController();
   final TextEditingController i1hCtrl = TextEditingController();
@@ -52,7 +49,7 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen>
   double? slopeResult;
   double? harmonic2Result;
 
-  // TAB 5: F87B & F87L SO LỆCH THANH CÁI & ĐƯỜNG DÂY
+  // MODULE 5: F87B & F87L SO LỆCH THANH CÁI & ĐƯỜNG DÂY
   final TextEditingController iACtrl = TextEditingController();
   final TextEditingController iBCtrl = TextEditingController();
   final TextEditingController iCCapCtrl = TextEditingController();
@@ -61,18 +58,6 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen>
   double parseInput(String val) {
     if (val.isEmpty) return 0;
     return double.tryParse(val.replaceAll(',', '.')) ?? 0;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 5, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 
   // 1. TÍNH F50 / F51
@@ -147,7 +132,6 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen>
     double iAngle = parseInput(angleICtrl.text);
 
     double phi = iAngle - uAngle;
-    // Chuẩn hóa góc phi về khoảng [-180, 180]
     while (phi > 180) {
       phi -= 360;
     }
@@ -391,19 +375,6 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('RƠ LE SỐ CHUYÊN SÂU'),
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          indicatorColor: AppTheme.myOrangeAccent,
-          labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          tabs: const [
-            Tab(text: 'F50/F51 (Quá dòng)'),
-            Tab(text: 'F67 (Có hướng)'),
-            Tab(text: 'F21 (Khoảng cách)'),
-            Tab(text: 'F87T (So lệch MBA)'),
-            Tab(text: 'F87B & F87L'),
-          ],
-        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveAllNotes,
@@ -411,367 +382,344 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen>
         icon: const Icon(Icons.bookmark_add),
         label: Text('Lưu Tổ Hợp ($count)'),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          // TAB 1: F50 / F51 QUÁ DÒNG
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            // MODULE 1: F50 / F51 QUÁ DÒNG
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      '1. F50/F51: QUÁ DÒNG CẮT NHANH & CÓ THỜI GIAN',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.myOrangeAccent),
+                    ),
+                    const Divider(),
+                    DropdownButtonFormField<String>(
+                      initialValue: _curveType,
+                      decoration:
+                          const InputDecoration(labelText: 'Đặc tuyến IDMT'),
+                      items: [
+                        'IEC Normal Inverse',
+                        'IEC Very Inverse',
+                        'IEC Extremely Inverse',
+                        'IEC Long Time Inverse'
+                      ]
+                          .map((e) => DropdownMenuItem(
+                              value: e, child: Text(e)))
+                          .toList(),
+                      onChanged: (val) =>
+                          setState(() => _curveType = val!),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
                       children: [
-                        const Text(
-                          'F50/F51: QUÁ DÒNG CẮT NHANH & CÓ THỜI GIAN',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.myBrightBlue),
-                        ),
-                        const Divider(),
-                        DropdownButtonFormField<String>(
-                          value: _curveType,
-                          decoration:
-                              const InputDecoration(labelText: 'Đặc tuyến IDMT'),
-                          items: [
-                            'IEC Normal Inverse',
-                            'IEC Very Inverse',
-                            'IEC Extremely Inverse',
-                            'IEC Long Time Inverse'
-                          ]
-                              .map((e) => DropdownMenuItem(
-                                  value: e, child: Text(e)))
-                              .toList(),
-                          onChanged: (val) =>
-                              setState(() => _curveType = val!),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            _buildTextField('I_set (A)', iSetCtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('I_sự cố (A)', iFCtrl),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            _buildTextField('Bội số TMS', tmsCtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('t_đo thực tế (s)', tMeasuredCtrl),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        ElevatedButton(
-                          onPressed: _tinhF51,
-                          child: const Text('TÍNH THỜI GIAN CẮT TÍNH TOÁN'),
-                        ),
-                        if (tTheoryResult != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              't_lý thuyết = ${tTheoryResult!.toStringAsFixed(3)} s',
-                              style: const TextStyle(
-                                  color: Colors.greenAccent,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        if (tTimeErrorPercent != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              'Sai số thời gian Δt = ${tTimeErrorPercent! >= 0 ? "+" : ""}${tTimeErrorPercent!.toStringAsFixed(2)}%',
-                              style: TextStyle(
-                                  color: tTimeErrorPercent!.abs() <= 5.0
-                                      ? Colors.lightGreenAccent
-                                      : Colors.redAccent,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                        _buildTextField('I_set (A)', iSetCtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('I_sự cố (A)', iFCtrl),
                       ],
                     ),
-                  ),
+                    Row(
+                      children: [
+                        _buildTextField('Bội số TMS', tmsCtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('t_đo thực tế (s)', tMeasuredCtrl),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _tinhF51,
+                      child: const Text('TÍNH THỜI GIAN CẮT TÍNH TOÁN'),
+                    ),
+                    if (tTheoryResult != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          't_lý thuyết = ${tTheoryResult!.toStringAsFixed(3)} s',
+                          style: const TextStyle(
+                              color: Colors.greenAccent,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    if (tTimeErrorPercent != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          'Sai số thời gian Δt = ${tTimeErrorPercent! >= 0 ? "+" : ""}${tTimeErrorPercent!.toStringAsFixed(2)}%',
+                          style: TextStyle(
+                              color: tTimeErrorPercent!.abs() <= 5.0
+                                  ? Colors.lightGreenAccent
+                                  : Colors.redAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
 
-          // TAB 2: F67 CÓ HƯỚNG
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Text(
-                          'F67: QUÁ DÒNG CÓ HƯỚNG & GÓC NHẠY MTA',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.myBrightBlue),
-                        ),
-                        const Divider(),
-                        _buildTextField('Góc nhạy cực đại MTA (°)', mtaCtrl,
-                            isExpanded: false),
-                        Row(
-                          children: [
-                            _buildTextField('Góc Điện áp ∠U (°)', angleUCtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('Góc Dòng điện ∠I (°)', angleICtrl),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        ElevatedButton(
-                          onPressed: _tinhF67,
-                          child: const Text('KIỂM TRA HƯỚNG BẢO VỆ'),
-                        ),
-                        if (directionZoneEval != null) ...[
-                          const SizedBox(height: 12),
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: directionZoneColor.withAlpha(50),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: directionZoneColor),
-                            ),
-                            child: Text(
-                              directionZoneEval!,
-                              style: TextStyle(
-                                  color: directionZoneColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ]
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+            const SizedBox(height: 8),
 
-          // TAB 3: F21 KHOẢNG CÁCH
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+            // MODULE 2: F67 CÓ HƯỚNG
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      '2. F67: QUÁ DÒNG CÓ HƯỚNG & GÓC NHẠY MTA',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.myOrangeAccent),
+                    ),
+                    const Divider(),
+                    _buildTextField('Góc nhạy cực đại MTA (°)', mtaCtrl,
+                        isExpanded: false),
+                    Row(
                       children: [
-                        const Text(
-                          'F21: BẢO VỆ KHOẢNG CÁCH & HỆ SỐ BÙ ĐẤT (K0)',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.myBrightBlue),
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            _buildTextField('Z_1 (Ω)', z1Ctrl, hint: 'Thứ tự thuận'),
-                            const SizedBox(width: 8),
-                            _buildTextField('Z_0 (Ω)', z0Ctrl, hint: 'Thứ tự không'),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            _buildTextField('Z_đo (Ω)', zDoCtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('Z_cài đặt (Ω)', zSetCtrl),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        ElevatedButton(
-                          onPressed: _tinhF21,
-                          child: const Text('TÍNH K0 & SAI SỐ TỔNG TRỞ F21'),
-                        ),
-                        if (k0Result != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              'Hệ số bù đất K0 = ${k0Result!.toStringAsFixed(3)}',
-                              style: const TextStyle(
-                                  color: Colors.greenAccent,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        if (zErrorPercent != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              'Sai số tổng trở ΔZ = ${zErrorPercent! >= 0 ? "+" : ""}${zErrorPercent!.toStringAsFixed(2)}%',
-                              style: TextStyle(
-                                  color: zErrorPercent!.abs() <= 5.0
-                                      ? Colors.lightGreenAccent
-                                      : Colors.redAccent,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                        _buildTextField('Góc Điện áp ∠U (°)', angleUCtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('Góc Dòng điện ∠I (°)', angleICtrl),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _tinhF67,
+                      child: const Text('KIỂM TRA HƯỚNG BẢO VỆ'),
+                    ),
+                    if (directionZoneEval != null) ...[
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: directionZoneColor.withAlpha(50),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: directionZoneColor),
+                        ),
+                        child: Text(
+                          directionZoneEval!,
+                          style: TextStyle(
+                              color: directionZoneColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ]
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
 
-          // TAB 4: F87T SO LỆCH MBA
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Text(
-                          'F87T: BẢO VỆ SO LỆCH MÁY BIẾN ÁP 110kV',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.myBrightBlue),
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            _buildTextField('I_Cao quy đổi (A)', iHCtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('I_Hạ quy đổi (A)', iLCtrl),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            _buildTextField('Sóng hài 1 (100%)', i1hCtrl, hint: 'I_50Hz'),
-                            const SizedBox(width: 8),
-                            _buildTextField('Sóng hài 2 (A)', i2hCtrl, hint: 'I_100Hz'),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        ElevatedButton(
-                          onPressed: _tinhF87T,
-                          child: const Text('TÍNH SO LỆCH, DÒNG HÃM & SÓNG HÀI BẬC 2'),
-                        ),
-                        if (iDiffResult != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              'Dòng so lệch I_diff = ${iDiffResult!.toStringAsFixed(3)} A',
-                              style: const TextStyle(
-                                  color: Colors.cyanAccent,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        if (iBiasResult != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              'Dòng hãm I_bias = ${iBiasResult!.toStringAsFixed(3)} A (Slope: ${slopeResult?.toStringAsFixed(1) ?? 0}%)',
-                              style: const TextStyle(
-                                  color: Colors.greenAccent,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        if (harmonic2Result != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              'Hàm lượng Sóng hài 2: ${harmonic2Result!.toStringAsFixed(1)}% ${harmonic2Result! >= 15.0 ? "(✓ Khóa đóng điện)" : "(Không khóa)"}',
-                              style: TextStyle(
-                                  color: harmonic2Result! >= 15.0
-                                      ? Colors.orangeAccent
-                                      : Colors.white70,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+            const SizedBox(height: 8),
 
-          // TAB 5: F87B & F87L
-          SingleChildScrollView(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+            // MODULE 3: F21 KHOẢNG CÁCH
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      '3. F21: BẢO VỆ KHOẢNG CÁCH & HỆ SỐ BÙ ĐẤT (K0)',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.myOrangeAccent),
+                    ),
+                    const Divider(),
+                    Row(
                       children: [
-                        const Text(
-                          'F87B / F87L: SO LỆCH THANH CÁI & ĐƯỜNG DÂY',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.myBrightBlue),
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            _buildTextField('Dòng đầu A / Nút 1 (A)', iACtrl),
-                            const SizedBox(width: 8),
-                            _buildTextField('Dòng đầu B / Nút 2 (A)', iBCtrl),
-                          ],
-                        ),
-                        _buildTextField('Dòng dung nạp bù I_dung (A)', iCCapCtrl,
-                            hint: 'Chỉ áp dụng F87L', isExpanded: false),
-                        const SizedBox(height: 12),
-                        ElevatedButton(
-                          onPressed: _tinhF87L,
-                          child: const Text('TÍNH SO LỆCH ĐƯỜNG DÂY (BÙ DÒNG DUNG)'),
-                        ),
-                        if (lineDiffCompResult != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              'Dòng so lệch F87L (Đã bù): ${lineDiffCompResult!.toStringAsFixed(3)} A',
-                              style: const TextStyle(
-                                  color: Colors.greenAccent,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                        _buildTextField('Z_1 (Ω)', z1Ctrl, hint: 'Thứ tự thuận'),
+                        const SizedBox(width: 8),
+                        _buildTextField('Z_0 (Ω)', z0Ctrl, hint: 'Thứ tự không'),
                       ],
                     ),
-                  ),
+                    Row(
+                      children: [
+                        _buildTextField('Z_đo (Ω)', zDoCtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('Z_cài đặt (Ω)', zSetCtrl),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _tinhF21,
+                      child: const Text('TÍNH K0 & SAI SỐ TỔNG TRỞ F21'),
+                    ),
+                    if (k0Result != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          'Hệ số bù đất K0 = ${k0Result!.toStringAsFixed(3)}',
+                          style: const TextStyle(
+                              color: Colors.greenAccent,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    if (zErrorPercent != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          'Sai số tổng trở ΔZ = ${zErrorPercent! >= 0 ? "+" : ""}${zErrorPercent!.toStringAsFixed(2)}%',
+                          style: TextStyle(
+                              color: zErrorPercent!.abs() <= 5.0
+                                  ? Colors.lightGreenAccent
+                                  : Colors.redAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 8),
+
+            // MODULE 4: F87T SO LỆCH MBA
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      '4. F87T: BẢO VỆ SO LỆCH MÁY BIẾN ÁP 110kV',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.myOrangeAccent),
+                    ),
+                    const Divider(),
+                    Row(
+                      children: [
+                        _buildTextField('I_Cao quy đổi (A)', iHCtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('I_Hạ quy đổi (A)', iLCtrl),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        _buildTextField('Sóng hài 1 (100%)', i1hCtrl, hint: 'I_50Hz'),
+                        const SizedBox(width: 8),
+                        _buildTextField('Sóng hài 2 (A)', i2hCtrl, hint: 'I_100Hz'),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _tinhF87T,
+                      child: const Text('TÍNH SO LỆCH, DÒNG HÃM & SÓNG HÀI BẬC 2'),
+                    ),
+                    if (iDiffResult != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          'Dòng so lệch I_diff = ${iDiffResult!.toStringAsFixed(3)} A',
+                          style: const TextStyle(
+                              color: Colors.cyanAccent,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    if (iBiasResult != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          'Dòng hãm I_bias = ${iBiasResult!.toStringAsFixed(3)} A (Slope: ${slopeResult?.toStringAsFixed(1) ?? 0}%)',
+                          style: const TextStyle(
+                              color: Colors.greenAccent,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    if (harmonic2Result != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          'Hàm lượng Sóng hài 2: ${harmonic2Result!.toStringAsFixed(1)}% ${harmonic2Result! >= 15.0 ? "(✓ Khóa đóng điện)" : "(Không khóa)"}',
+                          style: TextStyle(
+                              color: harmonic2Result! >= 15.0
+                                  ? Colors.orangeAccent
+                                  : Colors.white70,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            // MODULE 5: F87B & F87L
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      '5. F87B / F87L: SO LỆCH THANH CÁI & ĐƯỜNG DÂY',
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.myOrangeAccent),
+                    ),
+                    const Divider(),
+                    Row(
+                      children: [
+                        _buildTextField('Dòng đầu A / Nút 1 (A)', iACtrl),
+                        const SizedBox(width: 8),
+                        _buildTextField('Dòng đầu B / Nút 2 (A)', iBCtrl),
+                      ],
+                    ),
+                    _buildTextField('Dòng dung nạp bù I_dung (A)', iCCapCtrl,
+                        hint: 'Chỉ áp dụng F87L', isExpanded: false),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _tinhF87L,
+                      child: const Text('TÍNH SO LỆCH ĐƯỜNG DÂY (BÙ DÒNG DUNG)'),
+                    ),
+                    if (lineDiffCompResult != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          'Dòng so lệch F87L (Đã bù): ${lineDiffCompResult!.toStringAsFixed(3)} A',
+                          style: const TextStyle(
+                              color: Colors.greenAccent,
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 80),
+          ],
+        ),
       ),
     );
   }
