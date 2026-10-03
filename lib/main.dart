@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'screens/dashboard_screen.dart';
 import 'models/test_record.dart';
 import 'services/formula_service.dart';
+import 'services/reference_standard_service.dart';
 import 'services/breaker_curve_manager.dart';
 import 'core/theme/app_theme.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -27,6 +28,7 @@ void main() async {
     
     // Khởi tạo Service
     await FormulaService.init();
+    await ReferenceStandardService.init();
     await BreakerCurveManager.init();
   } catch (e) {
     debugPrint('Lỗi khởi tạo Hive hoặc Services: $e');

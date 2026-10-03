@@ -1,0 +1,194 @@
+[
+  {
+    "id": "TD_01",
+    "category": "Tiếp Địa",
+    "subCategory": "Nối đất Trạm biến áp 110kV",
+    "item": "Điện trở nối đất (Rtđ)",
+    "limit": "≤0.5 Ω (hoặc thỏa mãn điện áp chạm/điện áp bước)",
+    "standard": "QCVN 01:2020/BCT, TCVN 9358:2012, IEEE Std 80"
+  },
+  {
+    "id": "TD_02",
+    "category": "Tiếp Địa",
+    "subCategory": "Nối đất Đường dây 110kV",
+    "item": "Điện trở nối đất cột",
+    "limit": "≤10 Ω ÷ 30 Ω (tùy điện trở suất đất vùng)",
+    "standard": "QCVN 01:2020/BCT, TCVN 9358:2012"
+  },
+  {
+    "id": "TD_03",
+    "category": "Tiếp Địa",
+    "subCategory": "Nối đất Trạm / Cột Trung thế (22–35kV)",
+    "item": "Điện trở nối đất",
+    "limit": "≤4 Ω ÷ 10 Ω (Trạm phân phối: ≤4 Ω)",
+    "standard": "TCVN 9358:2012, QCVN QTĐ 8:2010/BCT"
+  },
+  {
+    "id": "TD_04",
+    "category": "Tiếp Địa",
+    "subCategory": "Nối đất Hạ thế (0.4kV)",
+    "item": "Điện trở nối đất trung tính / vỏ",
+    "limit": "≤4 Ω (nếu nối đất chung: ≤4 Ω)",
+    "standard": "TCVN 9358:2012, TCVN 7447"
+  },
+  {
+    "id": "MBA_01",
+    "category": "Máy Biến Áp",
+    "subCategory": "Điện trở cách điện cuộn dây (MBA)",
+    "item": "R60s & Hệ số hấp thụ Kht = R60s/R15s",
+    "limit": "• R60s ≥ 1.000 MΩ (Phía 110kV); ≥ 300 MΩ (Trung thế)\n• Kht ≥ 1.3",
+    "standard": "TCVN 6306 / IEC 60076, IEEE C57.12.90"
+  },
+  {
+    "id": "MBA_02",
+    "category": "Máy Biến Áp",
+    "subCategory": "Tổn hao điện môi (tanδ) cuộn dây",
+    "item": "Tang góc tổn hao tanδ (20°C)",
+    "limit": "≤0.8% (MBA mới 110kV); ≤1.5% (MBA đang vận hành)",
+    "standard": "IEC 60076-1, IEEE C57.12.90"
+  },
+  {
+    "id": "MBA_03",
+    "category": "Máy Biến Áp",
+    "subCategory": "Điện trở một chiều cuộn dây (R1c)",
+    "item": "Độ lệch giữa các pha / nấc phân áp",
+    "limit": "Sai lệch giữa các pha ≤2% so với giá trị trung bình",
+    "standard": "TCVN 6306-1 / IEC 60076-1"
+  },
+  {
+    "id": "MBA_04",
+    "category": "Máy Biến Áp",
+    "subCategory": "Tỷ số biến áp (K)",
+    "item": "Tỷ số điện áp các nấc",
+    "limit": "Sai lệch ≤0.5% so với danh định / nhà sản xuất",
+    "standard": "TCVN 6306-1 / IEC 60076-1"
+  },
+  {
+    "id": "MBA_05",
+    "category": "Máy Biến Áp",
+    "subCategory": "Dầu cách điện (Thử điện áp phóng điện)",
+    "item": "Điện áp đánh thủng cách điện dầu",
+    "limit": "• ≥60 kV (MBA Phía 110kV)\n• ≥40 kV (MBA Trung thế)",
+    "standard": "TCVN 7592 / IEC 60156, ASTM D877"
+  },
+  {
+    "id": "MBA_06",
+    "category": "Máy Biến Áp",
+    "subCategory": "Khí hòa tan trong dầu (DGA)",
+    "item": "Hàm lượng C2H2, H2, C2H4...",
+    "limit": "Không phát hiện C2H2 (Acetylen > 1 ppm cần cảnh báo); H2 < 100 ppm",
+    "standard": "IEC 60599, IEEE C57.104"
+  },
+  {
+    "id": "MC_01",
+    "category": "Máy Cắt",
+    "subCategory": "Điện trở tiếp xúc (Rtx)",
+    "item": "Điện trở tiếp điểm chính",
+    "limit": "≤50 ÷ 100 μΩ (Phía 110kV); ≤100 ÷ 200 μΩ (Trung thế) (hoặc theo catalogue NSX)",
+    "standard": "TCVN 8096 / IEC 62271-100 / IEC 62271-1"
+  },
+  {
+    "id": "MC_02",
+    "category": "Máy Cắt",
+    "subCategory": "Thời gian đóng/mở & Độ đồng pha",
+    "item": "Thời gian thao tác (t_đóng, t_mở)",
+    "limit": "• t_mở ≤ 40 ms; t_đóng ≤ 100 ms\n• Độ lệch đồng pha giữa các cực ≤2 ÷ 3 ms",
+    "standard": "IEC 62271-100, TCVN 8096"
+  },
+  {
+    "id": "MC_03",
+    "category": "Máy Cắt",
+    "subCategory": "Khí cách điện SF6 (Máy cắt SF6)",
+    "item": "Độ ẩm & Độ tinh khiết",
+    "limit": "• Độ ẩm ≤150 ppm (nghiệm thu); ≤300 ppm (định kỳ)\n• Độ tinh khiết ≥97%",
+    "standard": "IEC 60376, IEC 62271-4"
+  },
+  {
+    "id": "DS_01",
+    "category": "Dao Cách Ly",
+    "subCategory": "Điện trở tiếp xúc (Rtx)",
+    "item": "Tiếp điểm lưỡi dao",
+    "limit": "≤100 ÷ 200 μΩ (tùy dòng định mức)",
+    "standard": "IEC 62271-102, TCVN 8096"
+  },
+  {
+    "id": "DS_02",
+    "category": "Dao Cách Ly",
+    "subCategory": "Điện trở cách điện",
+    "item": "Giữa các pha & với đất",
+    "limit": "≥1.000 MΩ (Phía 110kV); ≥500 MΩ (Trung thế)",
+    "standard": "IEC 62271-1"
+  },
+  {
+    "id": "CAP_01",
+    "category": "Cáp Điện Lực",
+    "subCategory": "Điện trở cách điện cáp hạ thế (0.4kV)",
+    "item": "R_cách_điện (Dùng Megohmmeter 1kV/2.5kV)",
+    "limit": "≥0.5 MΩ (Quy chuẩn tối thiểu) (Thực tế nên ≥10 MΩ)",
+    "standard": "TCVN 5935 / IEC 60502-1"
+  },
+  {
+    "id": "CAP_02",
+    "category": "Cáp Điện Lực",
+    "subCategory": "Điện trở cách điện cáp Trung thế / 110kV",
+    "item": "R_cách_điện (Dùng Megohmmeter 2.5kV/5kV)",
+    "limit": "≥1.000 MΩ/km",
+    "standard": "TCVN 5935 / IEC 60502-2, IEEE 400"
+  },
+  {
+    "id": "CAP_03",
+    "category": "Cáp Điện Lực",
+    "subCategory": "Thử chịu điện áp tần số thấp (VLF 0.1Hz) - Cáp Trung thế",
+    "item": "Thử điện áp VLF (2 ÷ 3 U0) trong 15–60 phút",
+    "limit": "Không bị phóng điện / thủng cách điện trong suốt thời gian thử",
+    "standard": "IEEE 400.2, IEC 60502-2"
+  },
+  {
+    "id": "CAP_04",
+    "category": "Cáp Điện Lực",
+    "subCategory": "Thử vỏ bảo vệ cáp ngầm (Outer sheath test)",
+    "item": "Điện áp DC 5kV/10kV trong 1 phút",
+    "limit": "Dòng rò ổn định, không bị thủng vỏ (R ≥ 10 MΩ/km)",
+    "standard": "IEC 60229, TCVN 10889"
+  },
+  {
+    "id": "LA_01",
+    "category": "Chống Sét Van",
+    "subCategory": "Điện trở cách điện",
+    "item": "R_cách_điện ở điện áp thử 2.5kV/5kV",
+    "limit": "≥2.000 MΩ (với LA 110kV); ≥1.000 MΩ (với LA trung thế)",
+    "standard": "IEC 60099-4, TCVN 8097"
+  },
+  {
+    "id": "LA_02",
+    "category": "Chống Sét Van",
+    "subCategory": "Dòng điện rò ở điện áp làm việc",
+    "item": "Dòng rò (Total / Resistive Leakage Current)",
+    "limit": "≤1 ÷ 2 mA (Tổng); Dòng điện trở rò ≤50 ÷ 100 μA (tùy hãng)",
+    "standard": "IEC 60099-4, IEEE C62.11"
+  },
+  {
+    "id": "CTVT_01",
+    "category": "Biến Dòng / Áp",
+    "subCategory": "Điện trở cách điện cuộn dây",
+    "item": "R_cách_điện Sơ cấp & Thứ cấp",
+    "limit": "• Sơ cấp: ≥1.000 MΩ (110kV), ≥500 MΩ (Trung thế)\n• Thứ cấp: ≥10 MΩ",
+    "standard": "IEC 61869-1/2/3, TCVN 7697"
+  },
+  {
+    "id": "CTVT_02",
+    "category": "Biến Dòng / Áp",
+    "subCategory": "Tỷ số biến & Sai lệch góc pha",
+    "item": "Tỷ số dòng/áp & Sai số đo lường/bảo vệ",
+    "limit": "Đạt cấp chính xác đăng ký (Ví dụ: Cấp 0.2, 0.5, 5P20, 10P20...)",
+    "standard": "IEC 61869-2 (CT), IEC 61869-3 (VT)"
+  },
+  {
+    "id": "CTVT_03",
+    "category": "Biến Dòng / Áp",
+    "subCategory": "Thử đặc tính từ hóa (CT)",
+    "item": "Điện áp đầu gối (Knee-point Voltage)",
+    "limit": "Thỏa mãn đồ thị từ hóa thiết kế / nhà sản xuất",
+    "standard": "IEC 61869-2"
+  }
+]

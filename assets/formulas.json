@@ -1,0 +1,322 @@
+[
+  {
+    "test_id": "MBA_Rcd",
+    "name": "Quy đổi điện trở cách điện",
+    "inputs": [
+      "R_do",
+      "T_do",
+      "T_tc"
+    ],
+    "formula": "R_do * pow(1.5, (T_do - T_tc)/10)",
+    "unit": "MΩ"
+  },
+  {
+    "test_id": "MBA_R_dc",
+    "name": "Quy đổi điện trở một chiều (Đồng)",
+    "inputs": [
+      "R_do",
+      "T_do",
+      "T_tc"
+    ],
+    "formula": "R_do * ((235 + T_tc)/(235 + T_do))",
+    "unit": "mΩ"
+  },
+  {
+    "test_id": "MBA_R_dc_Al",
+    "name": "Quy đổi điện trở một chiều (Nhôm)",
+    "inputs": [
+      "R_do",
+      "T_do",
+      "T_tc"
+    ],
+    "formula": "R_do * ((225 + T_tc)/(225 + T_do))",
+    "unit": "mΩ"
+  },
+  {
+    "test_id": "MBA_K_error",
+    "name": "Sai số tỷ số biến",
+    "inputs": [
+      "K_tt",
+      "K_dm"
+    ],
+    "formula": "((K_tt - K_dm)/K_dm) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "MC_Time_Delta",
+    "name": "Độ không đồng thời Máy cắt",
+    "inputs": [
+      "t_max",
+      "t_min"
+    ],
+    "formula": "t_max - t_min",
+    "unit": "ms"
+  },
+  {
+    "test_id": "TITU_Ratio_Error",
+    "name": "Sai số tỷ số TI/TU",
+    "inputs": [
+      "K_tt",
+      "K_dm"
+    ],
+    "formula": "((K_tt - K_dm) / K_dm) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "LA_Leakage_Current",
+    "name": "Quy đổi dòng rò LA (Nhiệt độ)",
+    "inputs": [
+      "I_do",
+      "T_do",
+      "T_tc"
+    ],
+    "formula": "I_do / pow(1.1, (T_do - T_tc)/10)",
+    "unit": "mA"
+  },
+  {
+    "test_id": "TD_R_QuyDoi",
+    "name": "Điện trở tiếp địa quy đổi",
+    "inputs": [
+      "R_do",
+      "K_mua"
+    ],
+    "formula": "R_do * K_mua",
+    "unit": "Ω"
+  },
+  {
+    "test_id": "CAP_Tan_Delta",
+    "name": "Tổn hao điện môi (Quy đổi 20°C)",
+    "inputs": [
+      "Tan_do",
+      "T_do"
+    ],
+    "formula": "Tan_do / (1 + 0.04 * (T_do - 20))",
+    "unit": "%"
+  },
+  {
+    "test_id": "RL_IDMT_NormalInverse",
+    "name": "Thời gian tác động Rơ le (IEC Normal)",
+    "inputs": [
+      "I_f",
+      "I_set",
+      "TMS"
+    ],
+    "formula": "0.14 / (pow(I_f / I_set, 0.02) - 1) * TMS",
+    "unit": "s"
+  },
+  {
+    "test_id": "APT_P_Calc",
+    "name": "Tính công suất từ U, I, cosphi",
+    "inputs": [
+      "U",
+      "I",
+      "cosphi"
+    ],
+    "formula": "1.732 * U * I * cosphi / 1000",
+    "unit": "kW"
+  },
+  {
+    "test_id": "MBA_Unbalance",
+    "name": "Độ lệch điện trở 1 chiều",
+    "inputs": [
+      "R_max",
+      "R_min",
+      "R_avg"
+    ],
+    "formula": "((R_max - R_min) / R_avg) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "MBA_NoLoad",
+    "name": "Dòng không tải (%)",
+    "inputs": [
+      "I0_avg",
+      "I_dm"
+    ],
+    "formula": "(I0_avg / I_dm) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "MBA_ShortCircuit",
+    "name": "Điện áp ngắn mạch (%)",
+    "inputs": [
+      "Uk_avg",
+      "U_dm"
+    ],
+    "formula": "(Uk_avg / U_dm) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "INS_PI",
+    "name": "Hệ số phân cực PI",
+    "inputs": [
+      "R_10m",
+      "R_1m"
+    ],
+    "formula": "R_10m / R_1m",
+    "unit": ""
+  },
+  {
+    "test_id": "INS_DAR",
+    "name": "Tỉ số hấp thụ điện môi DAR",
+    "inputs": [
+      "R_60s",
+      "R_15s"
+    ],
+    "formula": "R_60s / R_15s",
+    "unit": ""
+  },
+  {
+    "test_id": "LA_Operating_Leakage",
+    "name": "Dòng rò tổng LA (Ir + Ic)",
+    "inputs": [
+      "I_r",
+      "I_c"
+    ],
+    "formula": "sqrt(pow(I_r, 2) + pow(I_c, 2))",
+    "unit": "mA"
+  },
+  {
+    "test_id": "LA_Ir_20",
+    "name": "Dòng rò điện trở LA quy đổi 20°C",
+    "inputs": [
+      "I_r",
+      "T_do"
+    ],
+    "formula": "I_r / pow(1.1, (T_do - 20)/10)",
+    "unit": "µA"
+  },
+  {
+    "test_id": "LA_Ref_Voltage_Error",
+    "name": "Sai số điện áp rò 1mA LA",
+    "inputs": [
+      "U_do",
+      "U_dm"
+    ],
+    "formula": "((U_do - U_dm) / U_dm) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "CABLE_Rdc_20_Cu",
+    "name": "Điện trở ruột dẫn cáp Đồng (20°C)",
+    "inputs": [
+      "R_do",
+      "T_do"
+    ],
+    "formula": "R_do * ((235 + 20)/(235 + T_do))",
+    "unit": "Ω/km"
+  },
+  {
+    "test_id": "CABLE_Rdc_20_Al",
+    "name": "Điện trở ruột dẫn cáp Nhôm (20°C)",
+    "inputs": [
+      "R_do",
+      "T_do"
+    ],
+    "formula": "R_do * ((228 + 20)/(228 + T_do))",
+    "unit": "Ω/km"
+  },
+  {
+    "test_id": "CABLE_Unbalance",
+    "name": "Bất cân bằng dòng rò cáp",
+    "inputs": [
+      "I_max",
+      "I_min"
+    ],
+    "formula": "((I_max - I_min) / I_min) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "RL_F51_IEC_VeryInverse",
+    "name": "Thời gian F51 (IEC Very Inverse)",
+    "inputs": [
+      "I",
+      "I_s",
+      "TMS"
+    ],
+    "formula": "13.5 / ((I / I_s) - 1) * TMS",
+    "unit": "s"
+  },
+  {
+    "test_id": "RL_F51_IEC_ExtremelyInverse",
+    "name": "Thời gian F51 (IEC Extremely Inverse)",
+    "inputs": [
+      "I",
+      "I_s",
+      "TMS"
+    ],
+    "formula": "80 / (pow(I / I_s, 2) - 1) * TMS",
+    "unit": "s"
+  },
+  {
+    "test_id": "RL_F51_IEC_LongTime",
+    "name": "Thời gian F51 (IEC Long Time Inverse)",
+    "inputs": [
+      "I",
+      "I_s",
+      "TMS"
+    ],
+    "formula": "120 / ((I / I_s) - 1) * TMS",
+    "unit": "s"
+  },
+  {
+    "test_id": "RL_F21_K0_Factor",
+    "name": "Hệ số bù đất K0 Rơ le F21",
+    "inputs": [
+      "Z_0",
+      "Z_1"
+    ],
+    "formula": "(Z_0 - Z_1) / (3 * Z_1)",
+    "unit": ""
+  },
+  {
+    "test_id": "RL_F21_Z_Error",
+    "name": "Sai số tổng trở tác động F21",
+    "inputs": [
+      "Z_do",
+      "Z_set"
+    ],
+    "formula": "((Z_do - Z_set) / Z_set) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "RL_F87T_Idiff",
+    "name": "Dòng so lệch MBA F87T",
+    "inputs": [
+      "I_H",
+      "I_L"
+    ],
+    "formula": "abs(I_H - I_L)",
+    "unit": "A"
+  },
+  {
+    "test_id": "RL_F87T_Ibias",
+    "name": "Dòng hãm MBA F87T",
+    "inputs": [
+      "I_H",
+      "I_L"
+    ],
+    "formula": "(I_H + I_L) / 2",
+    "unit": "A"
+  },
+  {
+    "test_id": "RL_F87T_Slope",
+    "name": "Tỉ lệ hãm F87T (%)",
+    "inputs": [
+      "I_diff",
+      "I_bias"
+    ],
+    "formula": "(I_diff / I_bias) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "RL_F87T_Harmonic2",
+    "name": "Hàm lượng Sóng hài bậc 2 F87T",
+    "inputs": [
+      "I_2h",
+      "I_1h"
+    ],
+    "formula": "(I_2h / I_1h) * 100",
+    "unit": "%"
+  }
+]

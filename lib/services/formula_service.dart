@@ -4,6 +4,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:function_tree/function_tree.dart';
 import 'package:hive/hive.dart';
 
+import 'package:flutter/services.dart' show rootBundle;
+
 class FormulaModel {
   final String testId;
   final String name;
@@ -41,9 +43,35 @@ class FormulaModel {
 class FormulaService {
   static const String boxName = 'formulasBox';
 
-  /// Khởi tạo Box chứa công thức
+  /// Khởi tạo Box chứa công thức và nạp mặc định nếu rỗng
   static Future<void> init() async {
-    await Hive.openBox(boxName);
+    final box = await Hive.openBox(boxName);
+    if (box.isEmpty) {
+      await loadDefaultFormulas();
+    }
+  }
+
+  /// Nạp công thức mặc định từ assets
+  static Future<void> loadDefaultFormulas() async {
+    try {
+      String content = await rootBundle.loadString('assets/formulas.json');
+      List<dynamic> parsedJson = jsonDecode(content);
+      final box = Hive.box(boxName);
+      await box.clear();
+
+      for (var item in parsedJson) {
+        FormulaModel model = FormulaModel.fromJson(Map<String, dynamic>.from(item));
+        await box.put(model.testId, model.toJson());
+      }
+    } catch (e) {
+      // Catch fallback
+    }
+  }
+
+  /// Khôi phục công thức về mặc định gốc
+  static Future<String> resetToDefault() async {
+    await loadDefaultFormulas();
+    return "Đã khôi phục Công thức về dữ liệu mặc định ban đầu.";
   }
 
   /// Nạp file JSON cấu hình công thức từ thiết bị

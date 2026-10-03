@@ -40,6 +40,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/formulas.json
+    - assets/standards.json
+
   
 flutter_launcher_icons:
   image_path: "assets/icon/Cal_notes_icon.png" # Đường dẫn tới file thiết kế của anh
