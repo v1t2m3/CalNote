@@ -43,6 +43,8 @@ flutter:
   assets:
     - assets/formulas.json
     - assets/standards.json
+    - assets/standardTT02.json
+    - assets/standardCBM.json
 
   
 flutter_launcher_icons:

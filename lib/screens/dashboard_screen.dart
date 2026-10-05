@@ -49,77 +49,102 @@ class DashboardScreen extends StatelessWidget {
               ),
             ],
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Vui lòng chọn loại dữ liệu cấu hình JSON bạn muốn nạp vào ứng dụng:',
-                style: TextStyle(color: Colors.white70, fontSize: 14),
-              ),
-              const SizedBox(height: 16),
-              ListTile(
-                tileColor: AppTheme.myMedNavy,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  side: const BorderSide(color: AppTheme.myOrangeAccent, width: 0.8),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Vui lòng chọn loại file JSON bạn muốn nạp vào ứng dụng:',
+                  style: TextStyle(color: Colors.white70, fontSize: 13),
                 ),
-                leading: const Icon(Icons.calculate, color: AppTheme.myOrangeAccent),
-                title: const Text(
-                  'Nhập file Công thức',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                const SizedBox(height: 12),
+                _buildImportTile(
+                  context,
+                  dialogContext,
+                  title: 'Nhập file Công thức (formulas.json)',
+                  subtitle: 'Nạp công thức tính toán toán học',
+                  icon: Icons.calculate,
+                  iconColor: AppTheme.myOrangeAccent,
+                  onImport: () => FormulaService.importFormulasFromFile(),
                 ),
-                subtitle: const Text(
-                  'Nạp công thức tính toán toán học',
-                  style: TextStyle(color: Colors.white70, fontSize: 12),
+                const SizedBox(height: 8),
+                _buildImportTile(
+                  context,
+                  dialogContext,
+                  title: 'Nhập file Tiêu chuẩn Thử nghiệm',
+                  subtitle: 'Nạp file standards.json',
+                  icon: Icons.science,
+                  iconColor: Colors.amberAccent,
+                  onImport: () => ReferenceStandardService.importStandardsFromFile(),
                 ),
-                onTap: () async {
-                  Navigator.pop(dialogContext);
-                  String? message = await FormulaService.importFormulasFromFile();
-                  if (context.mounted && message != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(message)),
-                    );
-                    Navigator.pop(context); // Đóng Drawer
-                  }
-                },
-              ),
-              const SizedBox(height: 10),
-              ListTile(
-                tileColor: AppTheme.myMedNavy,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  side: const BorderSide(color: Colors.cyanAccent, width: 0.8),
+                const SizedBox(height: 8),
+                _buildImportTile(
+                  context,
+                  dialogContext,
+                  title: 'Nhập file Tiêu chuẩn Kiểm định TT02',
+                  subtitle: 'Nạp file standardTT02.json (TT02/2025/TT-BCT)',
+                  icon: Icons.verified_user,
+                  iconColor: Colors.blueAccent,
+                  onImport: () => ReferenceStandardService.importTT02FromFile(),
                 ),
-                leading: const Icon(Icons.menu_book, color: Colors.cyanAccent),
-                title: const Text(
-                  'Nhập file Tiêu chuẩn',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                const SizedBox(height: 8),
+                _buildImportTile(
+                  context,
+                  dialogContext,
+                  title: 'Nhập file Tiêu chuẩn CBM',
+                  subtitle: 'Nạp file standardCBM.json (Đánh giá 4 mức)',
+                  icon: Icons.analytics,
+                  iconColor: Colors.purpleAccent,
+                  onImport: () => ReferenceStandardService.importCBMFromFile(),
                 ),
-                subtitle: const Text(
-                  'Nạp dữ liệu giới hạn tiêu chuẩn thử nghiệm',
-                  style: TextStyle(color: Colors.white70, fontSize: 12),
-                ),
-                onTap: () async {
-                  Navigator.pop(dialogContext);
-                  String? message =
-                      await ReferenceStandardService.importStandardsFromFile();
-                  if (context.mounted && message != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(message)),
-                    );
-                    Navigator.pop(context); // Đóng Drawer
-                  }
-                },
-              ),
-            ],
+              ],
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Hủy', style: TextStyle(color: Colors.white54)),
+              child: const Text('Đóng', style: TextStyle(color: Colors.white54)),
             ),
           ],
         );
+      },
+    );
+  }
+
+  Widget _buildImportTile(
+    BuildContext context,
+    BuildContext dialogContext, {
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color iconColor,
+    required Future<String?> Function() onImport,
+  }) {
+    return ListTile(
+      tileColor: AppTheme.myMedNavy,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide(color: iconColor.withValues(alpha: 0.6), width: 0.8),
+      ),
+      leading: Icon(icon, color: iconColor),
+      title: Text(
+        title,
+        style: const TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: const TextStyle(color: Colors.white70, fontSize: 11),
+      ),
+      onTap: () async {
+        Navigator.pop(dialogContext);
+        String? message = await onImport();
+        if (context.mounted && message != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(message)),
+          );
+          Navigator.pop(context); // Đóng Drawer
+        }
       },
     );
   }
@@ -139,48 +164,81 @@ class DashboardScreen extends StatelessWidget {
               Icon(Icons.restart_alt, color: Colors.orangeAccent),
               SizedBox(width: 10),
               Text(
-                'Khôi phục dữ liệu gốc',
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                'Khôi phục mặc định',
+                style: TextStyle(color: Colors.white, fontSize: 19),
               ),
             ],
           ),
           content: const Text(
-            'Chọn loại dữ liệu bạn muốn khôi phục về giá trị mặc định ban đầu:',
-            style: TextStyle(color: Colors.white70, fontSize: 14),
+            'Chọn loại dữ liệu bạn muốn khôi phục về giá trị gốc mặc định ban đầu:',
+            style: TextStyle(color: Colors.white70, fontSize: 13),
           ),
           actions: [
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(dialogContext);
-                String msg = await FormulaService.resetToDefault();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(msg)),
-                  );
-                  Navigator.pop(context); // Đóng Drawer
-                }
-              },
-              child: const Text('Khôi phục Công thức',
-                  style: TextStyle(color: AppTheme.myOrangeAccent)),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(dialogContext);
-                String msg = await ReferenceStandardService.resetToDefault();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(msg)),
-                  );
-                  Navigator.pop(context); // Đóng Drawer
-                }
-              },
-              child: const Text('Khôi phục Tiêu chuẩn',
-                  style: TextStyle(color: Colors.cyanAccent)),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Hủy', style: TextStyle(color: Colors.white54)),
-            ),
+            Wrap(
+              alignment: WrapAlignment.end,
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(dialogContext);
+                    String msg = await FormulaService.resetToDefault();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(msg)));
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text('Khôi phục Công thức',
+                      style: TextStyle(color: AppTheme.myOrangeAccent, fontSize: 12)),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(dialogContext);
+                    String msg =
+                        await ReferenceStandardService.resetStandardsToDefault();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(msg)));
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text('Khôi phục Thử nghiệm',
+                      style: TextStyle(color: Colors.amberAccent, fontSize: 12)),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(dialogContext);
+                    String msg = await ReferenceStandardService.resetTT02ToDefault();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(msg)));
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text('Khôi phục TT02',
+                      style: TextStyle(color: Colors.blueAccent, fontSize: 12)),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(dialogContext);
+                    String msg = await ReferenceStandardService.resetCBMToDefault();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(msg)));
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text('Khôi phục CBM',
+                      style: TextStyle(color: Colors.purpleAccent, fontSize: 12)),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text('Hủy',
+                      style: TextStyle(color: Colors.white54, fontSize: 12)),
+                ),
+              ],
+            )
           ],
         );
       },
@@ -244,7 +302,7 @@ class DashboardScreen extends StatelessWidget {
                   color: AppTheme.myOrangeAccent, size: 32),
               title: const Text('Tra cứu Tiêu chuẩn',
                   style: TextStyle(fontSize: 18, color: Colors.white)),
-              subtitle: const Text('Tra cứu nhanh tiêu chuẩn đạt của thiết bị',
+              subtitle: const Text('Thử nghiệm, Kiểm định TT02 & CBM 4 Mức',
                   style: TextStyle(color: Colors.white70)),
               onTap: () {
                 Navigator.pop(context); // Close drawer
@@ -261,7 +319,7 @@ class DashboardScreen extends StatelessWidget {
                   color: AppTheme.myOrangeAccent, size: 32),
               title: const Text('Nhập file JSON cấu hình',
                   style: TextStyle(fontSize: 18, color: Colors.white)),
-              subtitle: const Text('Nạp công thức hoặc tiêu chuẩn mới vào ứng dụng',
+              subtitle: const Text('Nạp Công thức, Thử nghiệm, TT02 hoặc CBM',
                   style: TextStyle(color: Colors.white70)),
               onTap: () => _showImportDialog(context),
             ),
@@ -270,7 +328,7 @@ class DashboardScreen extends StatelessWidget {
                   color: Colors.orangeAccent, size: 28),
               title: const Text('Khôi phục mặc định',
                   style: TextStyle(fontSize: 16, color: Colors.white)),
-              subtitle: const Text('Khôi phục công thức/tiêu chuẩn về ban đầu',
+              subtitle: const Text('Khôi phục dữ liệu gốc từ hệ thống',
                   style: TextStyle(color: Colors.white70, fontSize: 12)),
               onTap: () => _showResetDialog(context),
             ),

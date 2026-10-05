@@ -1,0 +1,74 @@
+[
+  {
+    "id": "TT02_001",
+    "category": "Chống Sét Van",
+    "categoryCode": "surge_arrester",
+    "subCategory": "Chống sét van (> 1kV) (Biểu mẫu II.1)",
+    "item": "1. Kiểm tra bên ngoài 2. Đo điện trở cách điện (Rcđ) 3. Đo dòng điện rò ở điện áp vận hành liên tục / điện áp ở dòng điện tham chiếu (Uref)",
+    "period": "• Lần đầu: Trước khi đưa vào sử dụng\n• Định kỳ: Trong quá trình vận hành\n• Bất thường: Sau sự cố/sửa chữa",
+    "limit": "1. Kiểm tra ngoại quan: Thân sứ/polymer sạch sẽ, không nứt vỡ, rò rỉ.\n2. Điện trở cách điện (Rcđ):\n   - Phần thân chính (Mêgômmét ≥1000V): Rcđ ≥ 1000 MΩ\n   - Đế cách điện (Mêgômmét 500V): Rcđ ≥ 2 MΩ\n3. Dòng điện rò / Uref: Đạt theo quy định NSX; không thay đổi bất thường so với lần kiểm định trước.",
+    "standard": "• TCVN 8097-1:2010 (IEC 60099-1), • IEC 60099-4:2014, • IEC 60099-5:2018, • Quy chuẩn KTQG về an toàn điện",
+    "voltageLevel": "ALL",
+    "recommendation": "Thiết bị bắt buộc kiểm định an toàn kỹ thuật theo Thông tư 02/2025/TT-BCT trước khi đưa vào vận hành và định kỳ. Nếu không đạt phải khắc phục/thay mới."
+  },
+  {
+    "id": "TT02_002",
+    "category": "Máy Biến Áp",
+    "categoryCode": "transformer",
+    "subCategory": "Máy biến áp lực (> 1kV) (Biểu mẫu II.2)",
+    "item": "1. Kiểm tra bên ngoài 2. Đo điện trở cách điện 3. Đo điện dung, tổn hao điện môi tgδ (≥100kV hoặc 35kV ≥10MVA) 4. Đo điện trở 1 chiều cuộn dây 5. Đo tỷ số biến đổi & tổ đấu dây 6. Kiểm tra dầu cách điện (Uphóng điện, độ ẩm, khí, trị số axit, Rsuất)",
+    "period": "• Lần đầu: Trước khi đưa vào vận hành\n• Định kỳ: Trong quá trình sử dụng\n• Bất thường: Sau sửa chữa lớn/sự cố",
+    "limit": "1. Rcđ cuộn dây tối thiểu (ở 20°C):\n   - Cấp ≤35kV (công suất <10MVA): Rcđ ≥ 300 MΩ\n   - Cấp >35kV hoặc công suất ≥10MVA / cấp 110kV: Rcđ ≥ 600 MΩ\n2. Tỷ số biến: Độ lệch không quá 0.5% so với thiết kế/mác máy.\n3. Dầu cách điện (Uphóng định kỳ):\n   - Cấp ≤15kV: Upđ ≥ 25 kV/2.5mm\n   - Cấp 15÷35kV: Upđ≥ 30 kV/2.5mm\n   - Cấp 110kV: Upđ ≥ 55 kV/2.5mm",
+    "standard": "• TCVN 6306-1:2015 (IEC 60076-1), • TCVN 6306-3:2006 (IEC 60076-3), • TCVN 6306-5:2006 (IEC 60076-5), • TCVN 6306-11:2009 (IEC 60076-11)",
+    "voltageLevel": "110kV",
+    "recommendation": "Thiết bị bắt buộc kiểm định an toàn kỹ thuật theo Thông tư 02/2025/TT-BCT trước khi đưa vào vận hành và định kỳ. Nếu không đạt phải khắc phục/thay mới."
+  },
+  {
+    "id": "TT02_003",
+    "category": "Máy Cắt & Tủ Đóng Cắt",
+    "categoryCode": "circuit_breaker",
+    "subCategory": "Máy cắt (> 1kV) (Biểu mẫu II.3)",
+    "item": "1. Kiểm tra bên ngoài 2. Kiểm tra vận hành đóng cắt 3. Đo điện trở cách điện (Mạch chính, cuộn đóng/cắt) 4. Đo điện trở tiếp xúc mạch chính (Rtx) 5. Đo thời gian đóng, cắt & độ không đồng pha 6. Thử nghiệm điện áp xoay chiều tăng cao (1 phút) 7. Thử dầu cách điện (MC dầu) / Độ ẩm, SO2 (MC SF6)",
+    "period": "• Lần đầu: Trước khi đưa vào sử dụng\n• Định kỳ: Theo chu kỳ vận hành/CBM\n• Bất thường: Khi xảy ra cắt sự cố nặng",
+    "limit": "1. Thao tác đóng cắt: Đóng cắt bằng tay & từ xa 3 lần không bất thường.\n2. Điện trở tiếp xúc (Rtx): Đạt theo NSX (độ lệch giữa các pha ≤ 50%).\n3. Thời gian đóng/cắt (IEC 62271-100):\n   - Độ không đồng thời khi đóng < 0.0050 s (5 ms)\n   - Độ không đồng thời khi cắt < 0.0033 s (3.3 ms)\n4. Thử cao áp AC trong 1 phút không phóng điện/đánh thủng:\n   - Cấp 6kV: ≥ 20 kV | Cấp 10kV: ≥ 28 kV\n   - Cấp 22kV: ≥ 50 kV | Cấp 35kV: ≥ 70 kV\n   - Cấp 110kV: ≥ 200/235 kV",
+    "standard": "• TCVN 8096-200:2010 (IEC 62271-200), • IEC 62271-1:2017, • IEC 62271-100:2021, • IEC 62271-203:2022",
+    "voltageLevel": "110kV",
+    "recommendation": "Thiết bị bắt buộc kiểm định an toàn kỹ thuật theo Thông tư 02/2025/TT-BCT trước khi đưa vào vận hành và định kỳ. Nếu không đạt phải khắc phục/thay mới."
+  },
+  {
+    "id": "TT02_004",
+    "category": "Cáp Điện Lực",
+    "categoryCode": "cable",
+    "subCategory": "Cáp điện (> 1kV) (Biểu mẫu II.4)",
+    "item": "1. Kiểm tra bên ngoài 2. Đo điện trở cách điện chính & vỏ cáp (≥110kV) 3. Thử độ bền điện môi bằng điện áp DC cho vỏ cáp (110kV) 4. Thử độ bền điện môi bằng điện áp tăng cao cho cách điện chính (DC/VLF/DAC/AC)",
+    "period": "• Lần đầu: Sau khi lắp đặt xong tuyến cáp\n• Định kỳ: Trong quá trình sử dụng\n• Bất thường: Sau khi sửa chữa hộp nối/đầu cáp",
+    "limit": "1. Điện trở cách điện: Đạt theo tiêu chuẩn Nhà sản xuất / CBM.\n2. Vỏ cáp 110kV: Đặt điện áp 10kV DC trong 1 phút không bị đánh thủng.\n3. Điện áp thử độ bền điện môi cách điện chính (1 phút không đánh thủng):\n   - Cấp 24kV: 50kV DC / 45kVpeak VLF / 24kV AC\n   - Cấp 35kV: 80kV DC / 62kVpeak VLF / 35kV AC\n   - Cấp 110kV: 181kVpeak DAC / 128kV AC",
+    "standard": "• TCVN 5935-1/2 (IEC 60502-1/2), • TCVN 12226:2018 / TCVN 12227:2018, • IEEE Std 400.2-2013 / IEEE Std 400.4-2015",
+    "voltageLevel": "110kV",
+    "recommendation": "Thiết bị bắt buộc kiểm định an toàn kỹ thuật theo Thông tư 02/2025/TT-BCT trước khi đưa vào vận hành và định kỳ. Nếu không đạt phải khắc phục/thay mới."
+  },
+  {
+    "id": "TT02_005",
+    "category": "Dao Cách Ly & Cầu Chì",
+    "categoryCode": "disconnector",
+    "subCategory": "Cầu dao cách ly, cầu dao tiếp địa (> 1kV) (Biểu mẫu II.5)",
+    "item": "1. Kiểm tra bên ngoài 2. Kiểm tra thao tác đóng cắt bằng tay & từ xa 3. Đo điện trở cách điện mạch chính & động cơ 4. Đo điện trở tiếp xúc mạch chính & dao tiếp địa 5. Thử nghiệm điện áp xoay chiều tăng cao (1 phút)",
+    "period": "• Lần đầu: Trước khi đưa vào vận hành\n• Định kỳ: Trong quá trình sử dụng\n• Bất thường: Sau sự cố/sửa chữa",
+    "limit": "1. Thao tác đóng cắt: Đóng mở bằng tay & từ xa 3 lần không bất thường.\n2. Điện trở tiếp xúc: Đạt theo NSX (độ lệch giữa các pha ≤ 50%).\n3. Thử cao áp AC 1 phút không phóng điện/đánh thủng:\n   - Cấp 35kV: ≥ 70 kV\n   - Cấp 110kV: ≥ 200 kV",
+    "standard": "• TCVN 8096-107:2010 (IEC 62271-107), • IEC 62271-1:2017, • IEC 62271-102:2022",
+    "voltageLevel": "110kV",
+    "recommendation": "Thiết bị bắt buộc kiểm định an toàn kỹ thuật theo Thông tư 02/2025/TT-BCT trước khi đưa vào vận hành và định kỳ. Nếu không đạt phải khắc phục/thay mới."
+  },
+  {
+    "id": "TT02_006",
+    "category": "Rơ Le & Dụng Cụ An Toàn",
+    "categoryCode": "relay_safety",
+    "subCategory": "Sào cách điện (> 1kV) (Biểu mẫu II.6)",
+    "item": "1. Kiểm tra bên ngoài 2. Đo điện trở cách điện 3. Kiểm tra độ bền điện môi (Thử nghiệm điện áp xoay chiều tăng cao tần số công nghiệp)",
+    "period": "• Lần đầu: Trước khi đưa vào sử dụng\n• Định kỳ: 06 - 12 tháng/lần\n• Bất thường: Khi có nghi ngờ hư hỏng",
+    "limit": "1. Kiểm tra ngoại quan: Bề mặt nhẵn bóng, không nứt nẻ, rạn rỡ, trầy xước.\n2. Điện trở cách điện: Đạt theo thông số kỹ thuật của NSX.\n3. Độ bền điện môi: Sào chịu được điện áp xoay chiều 100 kV hiệu dụng (50Hz) đặt trên khoảng cách 300 mm trong thời gian 1 phút mà không xảy ra đánh thủng, phóng điện bề mặt hoặc đốt nóng cục bộ.",
+    "standard": "• TCVN 9628-1:2013 (IEC 60832-1:2010), • Quy chuẩn KTQG về an toàn điện",
+    "voltageLevel": "ALL",
+    "recommendation": "Thiết bị bắt buộc kiểm định an toàn kỹ thuật theo Thông tư 02/2025/TT-BCT trước khi đưa vào vận hành và định kỳ. Nếu không đạt phải khắc phục/thay mới."
+  }
+]
