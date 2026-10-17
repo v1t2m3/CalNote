@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/formula_service.dart';
 import '../services/reference_standard_service.dart';
+import '../services/calibration_service.dart';
 import 'transformer_calculator_screen.dart';
 import '../core/theme/app_theme.dart';
 import 'history_screen.dart';
@@ -14,9 +15,14 @@ import 'insulation_screen.dart'; // THÊM IMPORT ĐO CÁCH ĐIỆN (DAR & PI)
 import 'cable_screen.dart'; // THÊM IMPORT CÁP LỰC
 import 'reference_standard_screen.dart'; // THÊM IMPORT TRA CỨU TIÊU CHUẨN
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
   final List<Map<String, dynamic>> _devices = const [
     {'name': 'Máy Biến Áp', 'icon': Icons.flash_on},
     {'name': 'Máy Cắt', 'icon': Icons.electric_moped_outlined},
@@ -96,6 +102,16 @@ class DashboardScreen extends StatelessWidget {
                   icon: Icons.analytics,
                   iconColor: Colors.purpleAccent,
                   onImport: () => ReferenceStandardService.importCBMFromFile(),
+                ),
+                const SizedBox(height: 8),
+                _buildImportTile(
+                  context,
+                  dialogContext,
+                  title: 'Nhập file Thiết bị Hiệu chuẩn (k, P, u%)',
+                  subtitle: 'Nạp file calibrated_equipment.json',
+                  icon: Icons.precision_manufacturing,
+                  iconColor: Colors.tealAccent,
+                  onImport: () => CalibrationService.importEquipmentFromFile(),
                 ),
               ],
             ),
@@ -233,6 +249,19 @@ class DashboardScreen extends StatelessWidget {
                       style: TextStyle(color: Colors.purpleAccent, fontSize: 12)),
                 ),
                 TextButton(
+                  onPressed: () async {
+                    Navigator.pop(dialogContext);
+                    String msg = await CalibrationService.resetToDefault();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text(msg)));
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text('Khôi phục Thiết bị Hiệu chuẩn',
+                      style: TextStyle(color: Colors.tealAccent, fontSize: 12)),
+                ),
+                TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
                   child: const Text('Hủy',
                       style: TextStyle(color: Colors.white54, fontSize: 12)),
@@ -247,6 +276,8 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isUncertaintyOn = CalibrationService.isUncertaintyEnabled;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('MTE-LAB Cal-Notes',
@@ -297,6 +328,38 @@ class DashboardScreen extends StatelessWidget {
                 ],
               ),
             ),
+            // CÔNG TẮC BẬT TẮT ĐỘ KHÔNG ĐẢM BẢO ĐO (ĐKĐBĐ)
+            StatefulBuilder(
+              builder: (ctx, setDrawerState) {
+                bool enabled = CalibrationService.isUncertaintyEnabled;
+                return Container(
+                  color: enabled ? AppTheme.myOrangeAccent.withValues(alpha: 0.1) : Colors.transparent,
+                  child: SwitchListTile(
+                    value: enabled,
+                    activeThumbColor: AppTheme.myOrangeAccent,
+                    title: const Text('Độ không đảm bảo đo (ĐKĐBĐ)',
+                        style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)),
+                    subtitle: Text(
+                      enabled
+                          ? 'Đang BẬT: Áp dụng hiệu chuẩn & ĐKĐBĐ (ISO 17025)'
+                          : 'Đang TẮT: Tính toán theo giá trị đo thông thường',
+                      style: TextStyle(
+                          color: enabled ? Colors.greenAccent : Colors.white54,
+                          fontSize: 12),
+                    ),
+                    secondary: Icon(Icons.tune,
+                        color: enabled ? AppTheme.myOrangeAccent : Colors.white54,
+                        size: 30),
+                    onChanged: (val) async {
+                      await CalibrationService.setUncertaintyEnabled(val);
+                      setDrawerState(() {});
+                      setState(() {});
+                    },
+                  ),
+                );
+              },
+            ),
+            const Divider(color: AppTheme.myMedNavy, thickness: 1),
             ListTile(
               leading: const Icon(Icons.menu_book,
                   color: AppTheme.myOrangeAccent, size: 32),
@@ -319,7 +382,7 @@ class DashboardScreen extends StatelessWidget {
                   color: AppTheme.myOrangeAccent, size: 32),
               title: const Text('Nhập file JSON cấu hình',
                   style: TextStyle(fontSize: 18, color: Colors.white)),
-              subtitle: const Text('Nạp Công thức, Thử nghiệm, TT02 hoặc CBM',
+              subtitle: const Text('Công thức, Tiêu chuẩn hoặc Thiết bị hiệu chuẩn',
                   style: TextStyle(color: Colors.white70)),
               onTap: () => _showImportDialog(context),
             ),
@@ -338,11 +401,18 @@ class DashboardScreen extends StatelessWidget {
                   color: Colors.white70, size: 24),
               title: const Text('MTE-LAB Cal-Notes v1.0',
                   style: TextStyle(fontSize: 16, color: Colors.white70)),
+              subtitle: Text(
+                isUncertaintyOn ? 'Chế độ: ĐKĐBĐ ISO 17025 BẬT' : 'Chế độ: Tiêu chuẩn',
+                style: TextStyle(
+                    color: isUncertaintyOn ? Colors.greenAccent : Colors.white38,
+                    fontSize: 11),
+              ),
               onTap: () {},
             ),
           ],
         ),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: GridView.builder(

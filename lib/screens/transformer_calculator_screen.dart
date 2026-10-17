@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mte_calculator_pro/models/test_record.dart';
 import '../services/formula_service.dart';
+import '../services/calibration_service.dart';
+import '../widgets/uncertainty_widget.dart';
 import '../core/theme/app_theme.dart';
 import 'note_detail_screen.dart';
 
@@ -30,6 +32,8 @@ class _TransformerCalculatorScreenState
   final TextEditingController tTcCtrl = TextEditingController();
   String _material = 'Dong';
   double? rResultA, rResultB, rResultC, deltaR;
+  CalibratedEquipmentModel? _selectedRdcEquipment;
+  UncertaintyResult? _rdcUncertaintyResult;
 
   // M3. TỶ SỐ BIẾN
   final TextEditingController kDmCtrl = TextEditingController();
@@ -37,6 +41,21 @@ class _TransformerCalculatorScreenState
   final TextEditingController kTtBCtrl = TextEditingController();
   final TextEditingController kTtCCtrl = TextEditingController();
   double? errA, errB, errC;
+  CalibratedEquipmentModel? _selectedRatioEquipment;
+  UncertaintyResult? _ratioUncertaintyResult;
+
+  @override
+  void initState() {
+    super.initState();
+    final rdcEqs = CalibrationService.getEquipmentsForTest('MBA_R_dc');
+    if (rdcEqs.isNotEmpty) {
+      _selectedRdcEquipment = rdcEqs.first;
+    }
+    final ratioEqs = CalibrationService.getEquipmentsForTest('MBA_K_error');
+    if (ratioEqs.isNotEmpty) {
+      _selectedRatioEquipment = ratioEqs.first;
+    }
+  }
 
   // M4. KHÔNG TẢI
   final TextEditingController i0ACtrl = TextEditingController();
@@ -125,6 +144,21 @@ class _TransformerCalculatorScreenState
       } else {
         deltaR = null;
       }
+
+      if (CalibrationService.isUncertaintyEnabled) {
+        final rdcEqs = CalibrationService.getEquipmentsForTest('MBA_R_dc');
+        final eq = _selectedRdcEquipment ?? (rdcEqs.isNotEmpty ? rdcEqs.first : null);
+        if (eq != null && validRs.isNotEmpty) {
+          double repR = validRs.first;
+          _rdcUncertaintyResult = CalibrationService.calculateUncertainty(
+            equipment: eq,
+            measuredValue: repR,
+            unit: 'mΩ',
+          );
+        }
+      } else {
+        _rdcUncertaintyResult = null;
+      }
       
       setState(() {});
     } catch (e) {
@@ -154,6 +188,23 @@ class _TransformerCalculatorScreenState
       if (kTtCCtrl.text.isNotEmpty) {
         errC = model != null ? FormulaService.calculate(model.formula, {'K_tt': kC, 'K_dm': kDm}) : (((kC - kDm)/kDm)*100);
       } else { errC = null; }
+
+      if (CalibrationService.isUncertaintyEnabled) {
+        final ratioEqs = CalibrationService.getEquipmentsForTest('MBA_K_error');
+        final eq = _selectedRatioEquipment ?? (ratioEqs.isNotEmpty ? ratioEqs.first : null);
+        if (eq != null) {
+          double repK = kA > 0 ? kA : (kB > 0 ? kB : kC);
+          if (repK > 0) {
+            _ratioUncertaintyResult = CalibrationService.calculateUncertainty(
+              equipment: eq,
+              measuredValue: repK,
+              unit: '',
+            );
+          }
+        }
+      } else {
+        _ratioUncertaintyResult = null;
+      }
 
       setState(() {});
     } catch (e) {
@@ -258,10 +309,17 @@ class _TransformerCalculatorScreenState
         theUnit = '% sai lệch (Max Rtc: ${maxTemp.toStringAsFixed(3)} mΩ)';
       }
 
+      String rdcUncertaintyStr = '';
+      if (_rdcUncertaintyResult != null) {
+        final res = _rdcUncertaintyResult!;
+        rdcUncertaintyStr = ' [ISO 17025: X_hc=${res.correctedValue.toStringAsFixed(3)} ± ${res.expandedUncertainty.toStringAsFixed(3)} ${res.unit} (${res.equipment.type} SN:${res.equipment.serial})]';
+      }
+
       cals.add(TestCalculation(
-        name: _material == 'Dong'
-            ? 'Quy đổi điện trở DC (Đồng)'
-            : 'Quy đổi điện trở DC (Nhôm)',
+        name: (_material == 'Dong'
+                ? 'Quy đổi điện trở DC (Đồng)'
+                : 'Quy đổi điện trở DC (Nhôm)') +
+            rdcUncertaintyStr,
         inputs: {
           if (rDoACtrl.text.isNotEmpty) 'Ra': parseInput(rDoACtrl.text),
           if (rDoBCtrl.text.isNotEmpty) 'Rb': parseInput(rDoBCtrl.text),
@@ -280,8 +338,14 @@ class _TransformerCalculatorScreenState
       if (errB != null) maxErr = max(maxErr, errB!.abs());
       if (errC != null) maxErr = max(maxErr, errC!.abs());
 
+      String ratioUncertaintyStr = '';
+      if (_ratioUncertaintyResult != null) {
+        final res = _ratioUncertaintyResult!;
+        ratioUncertaintyStr = ' [ISO 17025: Ktt_hc=${res.correctedValue.toStringAsFixed(4)} ± ${res.expandedUncertainty.toStringAsFixed(4)} (${res.equipment.type} SN:${res.equipment.serial})]';
+      }
+
       cals.add(TestCalculation(
-        name: 'Sai số Tỷ số biến (Max)',
+        name: 'Sai số Tỷ số biến (Max)$ratioUncertaintyStr',
         inputs: {
           'K_dm': parseInput(kDmCtrl.text),
           if (kTtACtrl.text.isNotEmpty) 'Ka': parseInput(kTtACtrl.text),
@@ -486,8 +550,23 @@ class _TransformerCalculatorScreenState
                             padding: EdgeInsets.only(top: 4),
                             child: Text('CẢNH BÁO: Lệch pha > 2%!', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
                           ),
-                      ]
-                    ]
+                      ],
+                    ],
+                    UncertaintyEquipmentSection(
+                      testId: 'MBA_R_dc',
+                      selectedEquipment: _selectedRdcEquipment,
+                      onEquipmentChanged: (newEq) {
+                        setState(() {
+                          _selectedRdcEquipment = newEq;
+                          if (rResultA != null || rResultB != null || rResultC != null) {
+                            _tinhDienTroDC();
+                          }
+                        });
+                      },
+                      uncertaintyResult: _rdcUncertaintyResult,
+                      standardLimit: 2.0, // Độ lệch deltaR <= 2.0%
+                      isUpperBound: true,
+                    ),
                   ],
                 ),
               ),
@@ -526,7 +605,22 @@ class _TransformerCalculatorScreenState
                           if (errC != null) Text('C: ${errC!.toStringAsFixed(2)}%', style: TextStyle(color: errC!.abs() > 0.5 ? Colors.redAccent : Colors.lightGreenAccent, fontWeight: FontWeight.bold)),
                         ],
                       ),
-                    ]
+                    ],
+                    UncertaintyEquipmentSection(
+                      testId: 'MBA_K_error',
+                      selectedEquipment: _selectedRatioEquipment,
+                      onEquipmentChanged: (newEq) {
+                        setState(() {
+                          _selectedRatioEquipment = newEq;
+                          if (errA != null || errB != null || errC != null) {
+                            _tinhTySoBien();
+                          }
+                        });
+                      },
+                      uncertaintyResult: _ratioUncertaintyResult,
+                      standardLimit: 0.5, // Sai số tỷ số biến <= 0.5%
+                      isUpperBound: true,
+                    ),
                   ],
                 ),
               ),

@@ -45,6 +45,7 @@ flutter:
     - assets/standards.json
     - assets/standardTT02.json
     - assets/standardCBM.json
+    - assets/calibrated_equipment.json
 
   
 flutter_launcher_icons:

@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mte_calculator_pro/models/test_record.dart';
 import '../services/formula_service.dart';
+import '../services/calibration_service.dart';
+import '../widgets/uncertainty_widget.dart';
 import '../core/theme/app_theme.dart';
 import 'note_detail_screen.dart';
 
@@ -26,6 +28,8 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
   final TextEditingController rTxCCtrl = TextEditingController();
   final TextEditingController resolutionCtrl = TextEditingController();
   double? maxRtx;
+  CalibratedEquipmentModel? _selectedRtxEquipment;
+  UncertaintyResult? _rtxUncertaintyResult;
   
   // 3. Thời gian không đồng thời
   final TextEditingController tACtrl = TextEditingController();
@@ -34,6 +38,15 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
   String _actionType = 'Close'; // Close hoặc Open
   double? timeResult; // delta t
   bool hasTimeWarning = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final eqs = CalibrationService.getEquipmentsForTest('MC_R_tx');
+    if (eqs.isNotEmpty) {
+      _selectedRtxEquipment = eqs.first;
+    }
+  }
 
   double parseInput(String val) {
     if (val.isEmpty) return 0;
@@ -65,12 +78,27 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
 
     if (rTxACtrl.text.isEmpty && rTxBCtrl.text.isEmpty && rTxCCtrl.text.isEmpty) {
        maxRtx = null;
+       _rtxUncertaintyResult = null;
     } else {
        List<double> vals = [];
        if (rTxACtrl.text.isNotEmpty) vals.add(rA);
        if (rTxBCtrl.text.isNotEmpty) vals.add(rB);
        if (rTxCCtrl.text.isNotEmpty) vals.add(rC);
        maxRtx = vals.reduce(max);
+
+       if (CalibrationService.isUncertaintyEnabled) {
+         final eqs = CalibrationService.getEquipmentsForTest('MC_R_tx');
+         final eq = _selectedRtxEquipment ?? (eqs.isNotEmpty ? eqs.first : null);
+         if (eq != null) {
+           _rtxUncertaintyResult = CalibrationService.calculateUncertainty(
+             equipment: eq,
+             measuredValue: maxRtx!,
+             unit: 'microΩ',
+           );
+         }
+       } else {
+         _rtxUncertaintyResult = null;
+       }
     }
     setState(() {});
   }
@@ -120,22 +148,27 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
     }
 
     if (maxRtx != null) {
-      double resolution = parseInput(resolutionCtrl.text);
       String uBString = '';
-      if (resolution > 0) {
-        double uB = resolution / (2 * sqrt(3));
-        uBString = ' (uB: ${uB.toStringAsFixed(4)})';
+      if (_rtxUncertaintyResult != null) {
+        final res = _rtxUncertaintyResult!;
+        uBString = ' [ISO 17025: X_hc=${res.correctedValue.toStringAsFixed(2)} ± ${res.expandedUncertainty.toStringAsFixed(2)} ${res.unit} (${res.equipment.type} SN:${res.equipment.serial})]';
+      } else {
+        double resolution = parseInput(resolutionCtrl.text);
+        if (resolution > 0) {
+          double uB = resolution / (2 * sqrt(3));
+          uBString = ' (uB: ${uB.toStringAsFixed(4)})';
+        }
       }
 
       cals.add(TestCalculation(
-        name: 'Điện trở tiếp xúc (Max)',
+        name: 'Điện trở tiếp xúc (Max)$uBString',
         inputs: {
           'R_txA': parseInput(rTxACtrl.text),
           'R_txB': parseInput(rTxBCtrl.text),
           'R_txC': parseInput(rTxCCtrl.text),
         },
-        result: maxRtx!,
-        unit: 'μΩ$uBString', 
+        result: _rtxUncertaintyResult?.correctedValue ?? maxRtx!,
+        unit: 'μΩ', 
       ));
     }
 
@@ -292,7 +325,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                        Builder(
                          builder: (context) {
                            double res = parseInput(resolutionCtrl.text);
-                           if (res > 0) {
+                           if (res > 0 && !CalibrationService.isUncertaintyEnabled) {
                              double uB = res / (2 * sqrt(3));
                              return Padding(
                                padding: const EdgeInsets.only(top: 4.0),
@@ -305,8 +338,23 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                            }
                            return const SizedBox.shrink();
                          }
-                       )
-                    ]
+                       ),
+                    ],
+                    UncertaintyEquipmentSection(
+                      testId: 'MC_R_tx',
+                      selectedEquipment: _selectedRtxEquipment,
+                      onEquipmentChanged: (newEq) {
+                        setState(() {
+                          _selectedRtxEquipment = newEq;
+                          if (maxRtx != null) {
+                            _tinhTiepXuc();
+                          }
+                        });
+                      },
+                      uncertaintyResult: _rtxUncertaintyResult,
+                      standardLimit: 100.0,
+                      isUpperBound: true,
+                    ),
                   ],
                 ),
               ),

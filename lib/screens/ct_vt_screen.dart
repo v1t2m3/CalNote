@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mte_calculator_pro/models/test_record.dart';
 import '../services/formula_service.dart';
+import '../services/calibration_service.dart';
+import '../widgets/uncertainty_widget.dart';
 import '../core/theme/app_theme.dart';
 import 'note_detail_screen.dart';
 
@@ -21,6 +23,18 @@ class _CtVtScreenState extends State<CtVtScreen> {
   String _accuracyClass = '0.2'; // 0.2 hoặc 0.5
   double? errorResult;
   bool isFailed = false;
+
+  CalibratedEquipmentModel? _selectedTituEquipment;
+  UncertaintyResult? _tituUncertaintyResult;
+
+  @override
+  void initState() {
+    super.initState();
+    final eqs = CalibrationService.getEquipmentsForTest('TITU_Ratio_Error');
+    if (eqs.isNotEmpty) {
+      _selectedTituEquipment = eqs.first;
+    }
+  }
 
   double parseInput(String val) {
     if (val.isEmpty) return 0;
@@ -49,6 +63,21 @@ class _CtVtScreenState extends State<CtVtScreen> {
       
       double allowedError = double.parse(_accuracyClass);
       isFailed = errorResult!.abs() > allowedError;
+
+      if (CalibrationService.isUncertaintyEnabled) {
+        final eqs = CalibrationService.getEquipmentsForTest('TITU_Ratio_Error');
+        final eq = _selectedTituEquipment ?? (eqs.isNotEmpty ? eqs.first : null);
+        if (eq != null) {
+          // Tính hiệu chuẩn trực tiếp trên tỷ số biến K_tt
+          _tituUncertaintyResult = CalibrationService.calculateUncertainty(
+            equipment: eq,
+            measuredValue: ktt,
+            unit: '',
+          );
+        }
+      } else {
+        _tituUncertaintyResult = null;
+      }
       
       setState(() {});
     } catch (e) {
@@ -60,22 +89,27 @@ class _CtVtScreenState extends State<CtVtScreen> {
   void _saveAllNotes() {
     List<TestCalculation> cals = [];
 
-    double resolution = parseInput(resolutionCtrl.text);
-    String uBString = '';
-    if (resolution > 0) {
-      double uB = resolution / (2 * sqrt(3));
-      uBString = ' (uB: ${uB.toStringAsFixed(4)})';
-    }
-
     if (errorResult != null) {
+      String uBString = '';
+      if (_tituUncertaintyResult != null) {
+        final res = _tituUncertaintyResult!;
+        uBString = ' [ISO 17025: Ktt_hc=${res.correctedValue.toStringAsFixed(4)} ± ${res.expandedUncertainty.toStringAsFixed(4)} (${res.equipment.type} SN:${res.equipment.serial})]';
+      } else {
+        double resolution = parseInput(resolutionCtrl.text);
+        if (resolution > 0) {
+          double uB = resolution / (2 * sqrt(3));
+          uBString = ' (uB: ${uB.toStringAsFixed(4)})';
+        }
+      }
+
       cals.add(TestCalculation(
-        name: 'Sai số tỷ số TI/TU (Class $_accuracyClass)',
+        name: 'Sai số tỷ số TI/TU (Class $_accuracyClass)$uBString',
         inputs: {
           'K_dm': parseInput(kDmCtrl.text),
           'K_tt': parseInput(kTtCtrl.text)
         },
         result: errorResult!,
-        unit: '%$uBString',
+        unit: '%',
       ));
     }
 
@@ -241,7 +275,22 @@ class _CtVtScreenState extends State<CtVtScreen> {
                                   color: Colors.lightGreenAccent,
                                   fontWeight: FontWeight.bold)),
                         ),
-                    ]
+                    ],
+                    UncertaintyEquipmentSection(
+                      testId: 'TITU_Ratio_Error',
+                      selectedEquipment: _selectedTituEquipment,
+                      onEquipmentChanged: (newEq) {
+                        setState(() {
+                          _selectedTituEquipment = newEq;
+                          if (errorResult != null) {
+                            _tinhSaiSo();
+                          }
+                        });
+                      },
+                      uncertaintyResult: _tituUncertaintyResult,
+                      standardLimit: double.tryParse(_accuracyClass),
+                      isUpperBound: true,
+                    ),
                   ],
                 ),
               ),

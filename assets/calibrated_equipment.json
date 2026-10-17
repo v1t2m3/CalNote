@@ -1,0 +1,944 @@
+[
+  {
+    "id": "CAL_EQ_01_DLRO_200",
+    "name": "Thiết bị đo điện trở tiếp xúc",
+    "type": "DLRO-200",
+    "serial": "EN/080308/1454",
+    "targetItem": [
+      "Đo điện trở tiếp xúc các tiếp điểm"
+    ],
+    "applicableTests": [
+      "MC_R_tx",
+      "APT_R_tx",
+      "DCL_R_tx"
+    ],
+    "k": 2.0,
+    "confidenceLevel": "95%",
+    "scales": [
+      {
+        "scaleId": "scale_1",
+        "scaleName": "Điện trở",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "microΩ",
+            "min": 0.1,
+            "max": 999900.0,
+            "uPercent": 0.07,
+            "calibrationPoints": [
+              {
+                "baseValue": 83.33,
+                "deviceValue": 82.6,
+                "correction": 0.73
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.4,
+                "correction": 0.6
+              },
+              {
+                "baseValue": 150.0,
+                "deviceValue": 149.0,
+                "correction": 1.0
+              },
+              {
+                "baseValue": 333.33,
+                "deviceValue": 332.0,
+                "correction": 1.33
+              }
+            ]
+          },
+          {
+            "rangeId": "range_2",
+            "unit": "mΩ",
+            "min": 1e-05,
+            "max": 999.9,
+            "uPercent": 0.07,
+            "calibrationPoints": [
+              {
+                "baseValue": 2.0,
+                "deviceValue": 1.992,
+                "correction": 0.008
+              },
+              {
+                "baseValue": 4.0,
+                "deviceValue": 3.983,
+                "correction": 0.017
+              },
+              {
+                "baseValue": 10.0,
+                "deviceValue": 9.951,
+                "correction": 0.049
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CAL_EQ_02_ATRT_03B",
+    "name": "Thiết bị đo tỉ số biến",
+    "type": "ATRT-03B",
+    "serial": "14226",
+    "targetItem": [
+      "Đo tỷ số biến đổi"
+    ],
+    "applicableTests": [
+      "MBA_K_error",
+      "TITU_Ratio_Error"
+    ],
+    "k": 2.0,
+    "confidenceLevel": "95%",
+    "scales": [
+      {
+        "scaleId": "scale_1",
+        "scaleName": "40 VAC",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "",
+            "min": 0.8,
+            "max": 15000.0,
+            "uPercent": 0.07,
+            "calibrationPoints": [
+              {
+                "baseValue": 60.0,
+                "deviceValue": 60.013,
+                "correction": -0.013
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 100.04,
+                "correction": -0.04
+              },
+              {
+                "baseValue": 150.0,
+                "deviceValue": 150.04,
+                "correction": -0.04
+              },
+              {
+                "baseValue": 220.0,
+                "deviceValue": 220.11,
+                "correction": -0.11
+              },
+              {
+                "baseValue": 350.0,
+                "deviceValue": 350.18,
+                "correction": -0.18
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "scaleId": "scale_2",
+        "scaleName": "100 VAC",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "",
+            "min": 0.8,
+            "max": 15000.0,
+            "uPercent": 0.07,
+            "calibrationPoints": [
+              {
+                "baseValue": 1100.0,
+                "deviceValue": 1100.3,
+                "correction": -0.3
+              },
+              {
+                "baseValue": 2200.0,
+                "deviceValue": 2200.9,
+                "correction": -0.9
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CAL_EQ_03_TRM_20_S2",
+    "name": "Phương tiện đo điện trở một chiều",
+    "type": "TRM-20 S2",
+    "serial": "41026",
+    "targetItem": [
+      "Đo điện trở một chiều các cuộn dây"
+    ],
+    "applicableTests": [
+      "MBA_R_dc",
+      "MBA_R_dc_Al",
+      "CABLE_Rdc_20_Cu",
+      "CABLE_Rdc_20_Al"
+    ],
+    "k": 2.0,
+    "confidenceLevel": "95%",
+    "scales": [
+      {
+        "scaleId": "scale_1",
+        "scaleName": "Điện trở (kênh V1)",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "microΩ",
+            "min": 0.0,
+            "max": 999.0,
+            "uPercent": 0.58,
+            "calibrationPoints": [
+              {
+                "baseValue": 100.0,
+                "deviceValue": 100.0,
+                "correction": 0.0
+              },
+              {
+                "baseValue": 150.0,
+                "deviceValue": 150.0,
+                "correction": 0.0
+              }
+            ]
+          },
+          {
+            "rangeId": "range_2",
+            "unit": "mΩ",
+            "min": 0.0,
+            "max": 999.0,
+            "uPercent": 0.58,
+            "calibrationPoints": [
+              {
+                "baseValue": 1.0,
+                "deviceValue": 1.0,
+                "correction": 0.0
+              },
+              {
+                "baseValue": 2.0,
+                "deviceValue": 1.999,
+                "correction": 0.001
+              },
+              {
+                "baseValue": 4.0,
+                "deviceValue": 4.002,
+                "correction": -0.002
+              },
+              {
+                "baseValue": 10.0,
+                "deviceValue": 10.02,
+                "correction": -0.02
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.7,
+                "correction": 0.3
+              }
+            ]
+          },
+          {
+            "rangeId": "range_3",
+            "unit": "Ω",
+            "min": 0.0,
+            "max": 2000.0,
+            "uPercent": 0.06,
+            "calibrationPoints": [
+              {
+                "baseValue": 1.0,
+                "deviceValue": 0.995,
+                "correction": 0.005
+              },
+              {
+                "baseValue": 10.0,
+                "deviceValue": 10.03,
+                "correction": -0.03
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.6,
+                "correction": 0.4
+              },
+              {
+                "baseValue": 300.0,
+                "deviceValue": 300.4,
+                "correction": -0.4
+              },
+              {
+                "baseValue": 1000.0,
+                "deviceValue": 999.6,
+                "correction": 0.4
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "scaleId": "scale_2",
+        "scaleName": "Điện trở (kênh V2)",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "microΩ",
+            "min": 0.0,
+            "max": 999.0,
+            "uPercent": 0.58,
+            "calibrationPoints": [
+              {
+                "baseValue": 100.0,
+                "deviceValue": 100.0,
+                "correction": 0.0
+              },
+              {
+                "baseValue": 150.0,
+                "deviceValue": 150.0,
+                "correction": 0.0
+              }
+            ]
+          },
+          {
+            "rangeId": "range_2",
+            "unit": "mΩ",
+            "min": 0.0,
+            "max": 999.0,
+            "uPercent": 0.58,
+            "calibrationPoints": [
+              {
+                "baseValue": 1.0,
+                "deviceValue": 1.001,
+                "correction": -0.001
+              },
+              {
+                "baseValue": 2.0,
+                "deviceValue": 2.004,
+                "correction": -0.004
+              },
+              {
+                "baseValue": 4.0,
+                "deviceValue": 4.002,
+                "correction": -0.002
+              },
+              {
+                "baseValue": 10.0,
+                "deviceValue": 10.0,
+                "correction": 0.0
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 100.5,
+                "correction": -0.5
+              }
+            ]
+          },
+          {
+            "rangeId": "range_3",
+            "unit": "Ω",
+            "min": 0.0,
+            "max": 2000.0,
+            "uPercent": 0.06,
+            "calibrationPoints": [
+              {
+                "baseValue": 1.0,
+                "deviceValue": 0.998,
+                "correction": 0.002
+              },
+              {
+                "baseValue": 10.0,
+                "deviceValue": 9.97,
+                "correction": 0.03
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.9,
+                "correction": 0.1
+              },
+              {
+                "baseValue": 300.0,
+                "deviceValue": 299.7,
+                "correction": 0.3
+              },
+              {
+                "baseValue": 1000.0,
+                "deviceValue": 999.5,
+                "correction": 0.5
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CAL_EQ_04_TRM_20_S2",
+    "name": "Phương tiện đo điện trở một chiều",
+    "type": "TRM-20 S2",
+    "serial": "41070",
+    "targetItem": [
+      "Đo điện trở một chiều các cuộn dây"
+    ],
+    "applicableTests": [
+      "MBA_R_dc",
+      "MBA_R_dc_Al",
+      "CABLE_Rdc_20_Cu",
+      "CABLE_Rdc_20_Al"
+    ],
+    "k": 2.0,
+    "confidenceLevel": "95%",
+    "scales": [
+      {
+        "scaleId": "scale_1",
+        "scaleName": "Điện trở (kênh V1)",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "microΩ",
+            "min": 0.0,
+            "max": 999.0,
+            "uPercent": 0.58,
+            "calibrationPoints": [
+              {
+                "baseValue": 100.0,
+                "deviceValue": 100.0,
+                "correction": 0.0
+              },
+              {
+                "baseValue": 150.0,
+                "deviceValue": 150.0,
+                "correction": 0.0
+              }
+            ]
+          },
+          {
+            "rangeId": "range_2",
+            "unit": "mΩ",
+            "min": 0.0,
+            "max": 999.0,
+            "uPercent": 0.58,
+            "calibrationPoints": [
+              {
+                "baseValue": 1.0,
+                "deviceValue": 1.0,
+                "correction": 0.0
+              },
+              {
+                "baseValue": 2.0,
+                "deviceValue": 2.001,
+                "correction": -0.001
+              },
+              {
+                "baseValue": 4.0,
+                "deviceValue": 3.003,
+                "correction": 0.997
+              },
+              {
+                "baseValue": 10.0,
+                "deviceValue": 9.97,
+                "correction": 0.03
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 100.0,
+                "correction": 0.0
+              }
+            ]
+          },
+          {
+            "rangeId": "range_3",
+            "unit": "Ω",
+            "min": 0.0,
+            "max": 2000.0,
+            "uPercent": 0.06,
+            "calibrationPoints": [
+              {
+                "baseValue": 1.0,
+                "deviceValue": 1.003,
+                "correction": -0.003
+              },
+              {
+                "baseValue": 10.0,
+                "deviceValue": 9.99,
+                "correction": 0.01
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.8,
+                "correction": 0.2
+              },
+              {
+                "baseValue": 300.0,
+                "deviceValue": 299.6,
+                "correction": 0.4
+              },
+              {
+                "baseValue": 1000.0,
+                "deviceValue": 1000.2,
+                "correction": -0.2
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "scaleId": "scale_2",
+        "scaleName": "Điện trở (kênh V2)",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "microΩ",
+            "min": 0.0,
+            "max": 999.0,
+            "uPercent": 0.58,
+            "calibrationPoints": [
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.0,
+                "correction": 1.0
+              },
+              {
+                "baseValue": 150.0,
+                "deviceValue": 150.0,
+                "correction": 0.0
+              }
+            ]
+          },
+          {
+            "rangeId": "range_2",
+            "unit": "mΩ",
+            "min": 0.0,
+            "max": 999.0,
+            "uPercent": 0.58,
+            "calibrationPoints": [
+              {
+                "baseValue": 1.0,
+                "deviceValue": 1.001,
+                "correction": -0.001
+              },
+              {
+                "baseValue": 2.0,
+                "deviceValue": 2.005,
+                "correction": -0.005
+              },
+              {
+                "baseValue": 4.0,
+                "deviceValue": 3.995,
+                "correction": 0.005
+              },
+              {
+                "baseValue": 10.0,
+                "deviceValue": 10.26,
+                "correction": -0.26
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 100.2,
+                "correction": -0.2
+              }
+            ]
+          },
+          {
+            "rangeId": "range_3",
+            "unit": "Ω",
+            "min": 0.0,
+            "max": 2000.0,
+            "uPercent": 0.06,
+            "calibrationPoints": [
+              {
+                "baseValue": 1.0,
+                "deviceValue": 0.994,
+                "correction": 0.006
+              },
+              {
+                "baseValue": 10.0,
+                "deviceValue": 10.05,
+                "correction": -0.05
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 100.3,
+                "correction": -0.3
+              },
+              {
+                "baseValue": 300.0,
+                "deviceValue": 299.2,
+                "correction": 0.8
+              },
+              {
+                "baseValue": 1000.0,
+                "deviceValue": 999.6,
+                "correction": 0.4
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CAL_EQ_05_STS_5000",
+    "name": "Thiết bị thí nghiệm nhất thứ",
+    "type": "STS 5000",
+    "serial": "2014/21017-1",
+    "targetItem": [
+      "Đo tỷ số biến đổi",
+      "Đo điện trở một chiều các cuộn dây"
+    ],
+    "applicableTests": [
+      "MBA_K_error",
+      "TITU_Ratio_Error",
+      "MBA_R_dc"
+    ],
+    "k": 2.0,
+    "confidenceLevel": "95%",
+    "scales": [
+      {
+        "scaleId": "scale_1",
+        "scaleName": "Dòng DC",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "A",
+            "min": 0.0,
+            "max": 400.0,
+            "uPercent": 0.06,
+            "calibrationPoints": [
+              {
+                "baseValue": 1.0,
+                "deviceValue": 0.999,
+                "correction": 0.001
+              },
+              {
+                "baseValue": 2.0,
+                "deviceValue": 4.999,
+                "correction": -2.999
+              },
+              {
+                "baseValue": 5.0,
+                "deviceValue": 9.996,
+                "correction": -4.996
+              },
+              {
+                "baseValue": 10.0,
+                "deviceValue": 49.99,
+                "correction": -39.99
+              },
+              {
+                "baseValue": 50.0,
+                "deviceValue": 99.98,
+                "correction": -49.98
+              },
+              {
+                "baseValue": 300.0,
+                "deviceValue": 299.95,
+                "correction": 0.05
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "scaleId": "scale_2",
+        "scaleName": "Dòng AC",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "A",
+            "min": 0.0,
+            "max": 800.0,
+            "uPercent": 0.06,
+            "calibrationPoints": [
+              {
+                "baseValue": 1.0,
+                "deviceValue": 0.997,
+                "correction": 0.003
+              },
+              {
+                "baseValue": 2.0,
+                "deviceValue": 1.997,
+                "correction": 0.003
+              },
+              {
+                "baseValue": 5.0,
+                "deviceValue": 4.995,
+                "correction": 0.005
+              },
+              {
+                "baseValue": 10.0,
+                "deviceValue": 9.99,
+                "correction": 0.01
+              },
+              {
+                "baseValue": 50.0,
+                "deviceValue": 49.98,
+                "correction": 0.02
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.96,
+                "correction": 0.04
+              },
+              {
+                "baseValue": 500.0,
+                "deviceValue": 499.3,
+                "correction": 0.7
+              },
+              {
+                "baseValue": 700.0,
+                "deviceValue": 699.0,
+                "correction": 1.0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "scaleId": "scale_3",
+        "scaleName": "Áp AC",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "V",
+            "min": 0.0,
+            "max": 2000.0,
+            "uPercent": 0.06,
+            "calibrationPoints": [
+              {
+                "baseValue": 10.0,
+                "deviceValue": 9.9989,
+                "correction": 0.0011
+              },
+              {
+                "baseValue": 20.0,
+                "deviceValue": 19.9982,
+                "correction": 0.0018
+              },
+              {
+                "baseValue": 50.0,
+                "deviceValue": 49.998,
+                "correction": 0.002
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.985,
+                "correction": 0.015
+              },
+              {
+                "baseValue": 500.0,
+                "deviceValue": 499.894,
+                "correction": 0.106
+              },
+              {
+                "baseValue": 1000.0,
+                "deviceValue": 999.81,
+                "correction": 0.19
+              },
+              {
+                "baseValue": 2000.0,
+                "deviceValue": 1999.52,
+                "correction": 0.48
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CAL_EQ_06_Delta_4110",
+    "name": "Thiết bị đo tang delta",
+    "type": "Delta 4110",
+    "serial": "15161013",
+    "targetItem": [
+      "Đo tổn hao điện môi tgδ cuộn dây"
+    ],
+    "applicableTests": [
+      "CAP_Tan_Delta",
+      "MBA_Tan_Delta"
+    ],
+    "k": 2.0,
+    "confidenceLevel": "95%",
+    "scales": [
+      {
+        "scaleId": "scale_1",
+        "scaleName": "Điện áp ra (50Hz)",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "kV",
+            "min": 0.025,
+            "max": 12.0,
+            "uPercent": 0.5,
+            "calibrationPoints": [
+              {
+                "baseValue": 5.03,
+                "deviceValue": 5.0,
+                "correction": 0.03
+              },
+              {
+                "baseValue": 10.07,
+                "deviceValue": 10.0,
+                "correction": 0.07
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "scaleId": "scale_2",
+        "scaleName": "Điện dung",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "pF",
+            "min": 0.0,
+            "max": 5.0,
+            "uPercent": 0.06,
+            "calibrationPoints": [
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.54,
+                "correction": 0.46
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.41,
+                "correction": 0.59
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.7,
+                "correction": 0.3
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.6,
+                "correction": 0.4
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.49,
+                "correction": 0.51
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.56,
+                "correction": 0.44
+              },
+              {
+                "baseValue": 100.0,
+                "deviceValue": 99.88,
+                "correction": 0.12
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "scaleId": "scale_3",
+        "scaleName": "Hệ số tổn thất",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "%",
+            "min": 0.0,
+            "max": 5.0,
+            "uPercent": 0.06,
+            "calibrationPoints": [
+              {
+                "baseValue": 0.01,
+                "deviceValue": 0.011,
+                "correction": -0.001
+              },
+              {
+                "baseValue": 0.05,
+                "deviceValue": 0.052,
+                "correction": -0.002
+              },
+              {
+                "baseValue": 0.1,
+                "deviceValue": 0.1,
+                "correction": 0.0
+              },
+              {
+                "baseValue": 0.5,
+                "deviceValue": 0.521,
+                "correction": -0.021
+              },
+              {
+                "baseValue": 1.0,
+                "deviceValue": 1.037,
+                "correction": -0.037
+              },
+              {
+                "baseValue": 5.0,
+                "deviceValue": 5.156,
+                "correction": -0.156
+              },
+              {
+                "baseValue": 10.0,
+                "deviceValue": 10.35,
+                "correction": -0.35
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CAL_EQ_07_iCT1",
+    "name": "Thiết bị đo tỉ số biến",
+    "type": "iCT1",
+    "serial": "24/1701701",
+    "targetItem": [
+      "Đo tỷ số biến đổi"
+    ],
+    "applicableTests": [
+      "TITU_Ratio_Error",
+      "MBA_K_error"
+    ],
+    "k": 2.0,
+    "confidenceLevel": "95%",
+    "scales": [
+      {
+        "scaleId": "scale_1",
+        "scaleName": "Tỉ số biến",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "",
+            "min": 0.8,
+            "max": 20000.0,
+            "uPercent": 0.01,
+            "calibrationPoints": [
+              {
+                "baseValue": 100.0,
+                "deviceValue": 100.00542,
+                "correction": -0.00542
+              },
+              {
+                "baseValue": 500.0,
+                "deviceValue": 500.03265,
+                "correction": -0.03265
+              },
+              {
+                "baseValue": 1000.0,
+                "deviceValue": 999.9874,
+                "correction": 0.0126
+              },
+              {
+                "baseValue": 2000.0,
+                "deviceValue": 1999.32562,
+                "correction": 0.67438
+              },
+              {
+                "baseValue": 3000.0,
+                "deviceValue": 2999.67214,
+                "correction": 0.32786
+              },
+              {
+                "baseValue": 5000.0,
+                "deviceValue": 4999.32658,
+                "correction": 0.67342
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
