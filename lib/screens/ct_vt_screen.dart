@@ -69,10 +69,29 @@ class _CtVtScreenState extends State<CtVtScreen> {
         final eq = _selectedTituEquipment ?? (eqs.isNotEmpty ? eqs.first : null);
         if (eq != null) {
           // Tính hiệu chuẩn trực tiếp trên tỷ số biến K_tt
-          _tituUncertaintyResult = CalibrationService.calculateUncertainty(
+          final rawRes = CalibrationService.calculateUncertainty(
             equipment: eq,
             measuredValue: ktt,
             unit: '',
+          );
+          double fHc = ((rawRes.correctedValue - kdm) / kdm) * 100.0;
+          double fMin = min(
+            ((rawRes.minBound - kdm) / kdm) * 100.0,
+            ((rawRes.maxBound - kdm) / kdm) * 100.0,
+          );
+          double fMax = max(
+            ((rawRes.minBound - kdm) / kdm) * 100.0,
+            ((rawRes.maxBound - kdm) / kdm) * 100.0,
+          );
+          double stdLimit = double.tryParse(_accuracyClass) ?? 0.5;
+          _tituUncertaintyResult = rawRes.withDerived(
+            derivedName: 'Sai số f_hc (Class $_accuracyClass)',
+            derivedCorrected: fHc,
+            derivedMinBound: fMin,
+            derivedMaxBound: fMax,
+            derivedUnit: '%',
+            standardLimit: stdLimit,
+            isUpperBound: true,
           );
         }
       } else {
@@ -93,7 +112,10 @@ class _CtVtScreenState extends State<CtVtScreen> {
       String uBString = '';
       if (_tituUncertaintyResult != null) {
         final res = _tituUncertaintyResult!;
-        uBString = ' [ISO 17025: Ktt_hc=${res.correctedValue.toStringAsFixed(4)} ± ${res.expandedUncertainty.toStringAsFixed(4)} (${res.equipment.type} SN:${res.equipment.serial})]';
+        String derStr = res.derivedCorrected != null
+            ? ' (f_hc: ${res.derivedCorrected! >= 0 ? "+" : ""}${res.derivedCorrected!.toStringAsFixed(2)}%)'
+            : '';
+        uBString = ' [ISO 17025: Ktt_hc=${res.correctedValue.toStringAsFixed(4)}$derStr (${res.equipment.type} SN:${res.equipment.serial})]';
       } else {
         double resolution = parseInput(resolutionCtrl.text);
         if (resolution > 0) {

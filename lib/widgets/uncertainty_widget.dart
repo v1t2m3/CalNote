@@ -3,7 +3,8 @@ import '../services/calibration_service.dart';
 import '../core/theme/app_theme.dart';
 
 /// Widget chọn phương tiện đo hiệu chuẩn và hiển thị kết quả ĐKĐBĐ (ISO 17025)
-/// Hỗ trợ cả phép đo 1 giá trị lẫn phép đo 3 pha (Pha A, B, C)
+/// Hỗ trợ cả tính toán 2 bước (Đo lường sơ cấp & Chỉ số quy chuẩn đối chiếu)
+/// Hỗ trợ phép đo 1 giá trị lẫn phép đo 3 pha (Pha A, B, C)
 class UncertaintyEquipmentSection extends StatelessWidget {
   final String testId;
   final CalibratedEquipmentModel? selectedEquipment;
@@ -328,13 +329,16 @@ class UncertaintyEquipmentSection extends StatelessWidget {
     String corrStr =
         "C: $corrSign${res.correction.toStringAsFixed(4)} ${res.unit}";
 
+    final effectiveLimit = res.standardLimit ?? standardLimit;
+    final effectiveIsUpper =
+        res.standardLimit != null ? res.isUpperBound : isUpperBound;
     UncertaintyVerdict? verdict;
-    if (standardLimit != null) {
-      verdict = res.evaluate(standardLimit!, isUpperBound: isUpperBound);
+    if (effectiveLimit != null) {
+      verdict = res.evaluateStandard(effectiveLimit);
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: AppTheme.myDarkNavy,
@@ -376,7 +380,7 @@ class UncertaintyEquipmentSection extends StatelessWidget {
           ),
           const SizedBox(height: 6),
 
-          // Dòng X_hc và ±U
+          // TẦNG 1: GIÁ TRỊ ĐO HIỆU CHUẨN
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -408,7 +412,7 @@ class UncertaintyEquipmentSection extends StatelessWidget {
           ),
           const SizedBox(height: 6),
 
-          // Dòng Dải thực [X-U ÷ X+U]
+          // Dòng Dải thực đo [X-U ÷ X+U]
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
@@ -419,25 +423,96 @@ class UncertaintyEquipmentSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Dải thực [X-U ÷ X+U]:",
-                  style: TextStyle(color: Colors.white60, fontSize: 13),
+                  "Dải thực đo [X-U ÷ X+U]:",
+                  style: TextStyle(color: Colors.white60, fontSize: 12),
                 ),
                 Text(
                   "[ ${res.minBound.toStringAsFixed(4)} ÷ ${res.maxBound.toStringAsFixed(4)} ] ${res.unit}",
                   style: const TextStyle(
                     color: Colors.greenAccent,
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: 13,
                   ),
                 ),
               ],
             ),
           ),
 
-          // Đánh giá nếu có standardLimit
-          if (verdict != null && standardLimit != null) ...[
+          // TẦNG 2: CHỈ SỐ QUY CHUẨN DẪN XUẤT (NẾU CÓ)
+          if (res.derivedName != null && res.derivedCorrected != null) ...[
             const SizedBox(height: 6),
-            _buildMiniVerdict(verdict, res, standardLimit!, isUpperBound),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppTheme.myMedNavy,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  color: (verdict == UncertaintyVerdict.fail)
+                      ? Colors.redAccent.withValues(alpha: 0.6)
+                      : (verdict == UncertaintyVerdict.warningRisk)
+                          ? Colors.amberAccent.withValues(alpha: 0.6)
+                          : Colors.tealAccent.withValues(alpha: 0.4),
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${res.derivedName}:",
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "${(res.derivedUnit == '%' && res.derivedCorrected! > 0) ? '+' : ''}${res.derivedCorrected!.toStringAsFixed(3)} ${res.derivedUnit ?? ''}",
+                        style: TextStyle(
+                          color: (verdict == UncertaintyVerdict.fail)
+                              ? Colors.redAccent
+                              : (verdict == UncertaintyVerdict.warningRisk)
+                                  ? Colors.amberAccent
+                                  : Colors.yellowAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (res.derivedMinBound != null &&
+                      res.derivedMaxBound != null) ...[
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Dải quy chuẩn thực:",
+                          style: TextStyle(color: Colors.white60, fontSize: 12),
+                        ),
+                        Text(
+                          "[ ${(res.derivedUnit == '%' && res.derivedMinBound! > 0) ? '+' : ''}${res.derivedMinBound!.toStringAsFixed(3)} ÷ ${(res.derivedUnit == '%' && res.derivedMaxBound! > 0) ? '+' : ''}${res.derivedMaxBound!.toStringAsFixed(3)} ] ${res.derivedUnit ?? ''}",
+                          style: const TextStyle(
+                            color: Colors.lightGreenAccent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+
+          // ĐÁNH GIÁ TIÊU CHUẨN NẾU CÓ LIMIT
+          if (verdict != null && effectiveLimit != null) ...[
+            const SizedBox(height: 6),
+            _buildMiniVerdict(verdict, res, effectiveLimit, effectiveIsUpper),
           ]
         ],
       ),
@@ -454,36 +529,58 @@ class UncertaintyEquipmentSection extends StatelessWidget {
     Color color;
     IconData icon;
     String text;
-    String symbol = isUpper ? "≤" : "≥";
+    String targetUnit = res.derivedUnit ?? res.unit;
+    String targetName = res.derivedName ?? '';
+    bool isBilateral = targetUnit == '%' &&
+        (targetName.toLowerCase().contains('sai số') ||
+            targetName.toLowerCase().contains('f'));
+
+    String limitText = isBilateral
+        ? "±$limit%"
+        : "${isUpper ? '≤' : '≥'} $limit $targetUnit";
 
     switch (verdict) {
       case UncertaintyVerdict.pass:
         color = Colors.greenAccent;
         icon = Icons.check_circle;
-        text = "ĐẠT (Toàn dải $symbol $limit ${res.unit})";
+        text = "ĐẠT (Toàn dải nằm trong $limitText)";
         break;
       case UncertaintyVerdict.warningRisk:
         color = Colors.amberAccent;
         icon = Icons.warning_amber;
-        text = "CẢNH BÁO: Rủi ro biên (Chạm ngưỡng $limit ${res.unit})";
+        text = "CẢNH BÁO: Rủi ro biên (Dải chạm/vượt ngưỡng $limitText)";
         break;
       case UncertaintyVerdict.fail:
         color = Colors.redAccent;
         icon = Icons.cancel;
-        text = "K.ĐẠT (Vượt ngưỡng $limit ${res.unit})";
+        text = "KHÔNG ĐẠT (Vượt giới hạn $limitText)";
         break;
     }
 
-    return Row(
-      children: [
-        Icon(icon, color: color, size: 16),
-        const SizedBox(width: 4),
-        Text(
-          text,
-          style: TextStyle(
-              color: color, fontSize: 12, fontWeight: FontWeight.bold),
-        ),
-      ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: color.withValues(alpha: 0.6)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 16),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              text,
+              style: TextStyle(
+                color: color,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -493,9 +590,12 @@ class UncertaintyEquipmentSection extends StatelessWidget {
     String corrStr =
         "$corrSign${res.correction.toStringAsFixed(4)} ${res.unit}";
 
+    final effectiveLimit = res.standardLimit ?? standardLimit;
+    final effectiveIsUpper =
+        res.standardLimit != null ? res.isUpperBound : isUpperBound;
     UncertaintyVerdict? verdict;
-    if (standardLimit != null) {
-      verdict = res.evaluate(standardLimit!, isUpperBound: isUpperBound);
+    if (effectiveLimit != null) {
+      verdict = res.evaluateStandard(effectiveLimit);
     }
 
     return Column(
@@ -565,7 +665,7 @@ class UncertaintyEquipmentSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "Dải thực [X-U ÷ X+U]:",
+                "Dải thực đo [X-U ÷ X+U]:",
                 style: TextStyle(color: Colors.white60, fontSize: 13),
               ),
               Text(
@@ -580,10 +680,81 @@ class UncertaintyEquipmentSection extends StatelessWidget {
           ),
         ),
 
-        // ĐÁNH GIÁ SỰ PHÙ HỢP NẾU CÓ TIÊU CHUẨN
-        if (verdict != null && standardLimit != null) ...[
+        // TẦNG 2: KẾT QUẢ DẪN XUẤT QUY CHUẨN (NẾU CÓ)
+        if (res.derivedName != null && res.derivedCorrected != null) ...[
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppTheme.myDarkNavy,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: (verdict == UncertaintyVerdict.fail)
+                    ? Colors.redAccent.withValues(alpha: 0.6)
+                    : (verdict == UncertaintyVerdict.warningRisk)
+                        ? Colors.amberAccent.withValues(alpha: 0.6)
+                        : Colors.tealAccent.withValues(alpha: 0.5),
+                width: 1.2,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "${res.derivedName}:",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "${(res.derivedUnit == '%' && res.derivedCorrected! > 0) ? '+' : ''}${res.derivedCorrected!.toStringAsFixed(4)} ${res.derivedUnit ?? ''}",
+                      style: TextStyle(
+                        color: (verdict == UncertaintyVerdict.fail)
+                            ? Colors.redAccent
+                            : (verdict == UncertaintyVerdict.warningRisk)
+                                ? Colors.amberAccent
+                                : Colors.yellowAccent,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                if (res.derivedMinBound != null &&
+                    res.derivedMaxBound != null) ...[
+                  const SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Dải quy chuẩn thực:",
+                        style: TextStyle(color: Colors.white60, fontSize: 13),
+                      ),
+                      Text(
+                        "[ ${(res.derivedUnit == '%' && res.derivedMinBound! > 0) ? '+' : ''}${res.derivedMinBound!.toStringAsFixed(4)} ÷ ${(res.derivedUnit == '%' && res.derivedMaxBound! > 0) ? '+' : ''}${res.derivedMaxBound!.toStringAsFixed(4)} ] ${res.derivedUnit ?? ''}",
+                        style: const TextStyle(
+                          color: Colors.lightGreenAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+
+        // ĐÁNH GIÁ SỰ PHÙ HỢP ILAC-G8
+        if (verdict != null && effectiveLimit != null) ...[
           const SizedBox(height: 10),
-          _buildVerdictBadge(verdict, res, standardLimit!, isUpperBound),
+          _buildVerdictBadge(verdict, res, effectiveLimit, effectiveIsUpper),
         ]
       ],
     );
@@ -602,28 +773,41 @@ class UncertaintyEquipmentSection extends StatelessWidget {
     String desc;
 
     String boundSymbol = isUpper ? "≤" : "≥";
+    String targetUnit = res.derivedUnit ?? res.unit;
+    String targetName = res.derivedName ?? '';
+    bool isBilateral = targetUnit == '%' &&
+        (targetName.toLowerCase().contains('sai số') ||
+            targetName.toLowerCase().contains('f'));
+
+    String limitText = isBilateral
+        ? "±$limit%"
+        : "$boundSymbol $limit $targetUnit";
+
+    String valRangeText = (res.derivedMinBound != null &&
+            res.derivedMaxBound != null)
+        ? "[${(res.derivedMinBound! > 0 && targetUnit == '%') ? '+' : ''}${res.derivedMinBound!.toStringAsFixed(3)} ÷ ${(res.derivedMaxBound! > 0 && targetUnit == '%') ? '+' : ''}${res.derivedMaxBound!.toStringAsFixed(3)}] $targetUnit"
+        : "[${res.minBound.toStringAsFixed(3)} ÷ ${res.maxBound.toStringAsFixed(3)}] $targetUnit";
 
     switch (verdict) {
       case UncertaintyVerdict.pass:
         badgeColor = Colors.greenAccent;
         icon = Icons.check_circle;
         title = "ĐẠT (Độ tin cậy cao ≥ 95%)";
-        desc =
-            "Toàn bộ khoảng [${res.minBound.toStringAsFixed(3)} ÷ ${res.maxBound.toStringAsFixed(3)}] nằm trong giới hạn $boundSymbol $limit ${res.unit}.";
+        desc = "Toàn bộ khoảng $valRangeText nằm trong giới hạn $limitText.";
         break;
       case UncertaintyVerdict.warningRisk:
         badgeColor = Colors.amberAccent;
         icon = Icons.warning_amber;
         title = "CẢNH BÁO: RỦI RO BIÊN (Vùng nghi ngờ)";
         desc =
-            "Giá trị đo đạt nhưng khoảng ĐKĐBĐ chạm/vượt ngưỡng tiêu chuẩn $limit ${res.unit}. Khuyến cáo kiểm tra lại.";
+            "Giá trị đo đạt nhưng khoảng ĐKĐBĐ $valRangeText chạm/vượt ngưỡng tiêu chuẩn $limitText. Khuyến cáo kiểm tra lại.";
         break;
       case UncertaintyVerdict.fail:
         badgeColor = Colors.redAccent;
         icon = Icons.cancel;
         title = "KHÔNG ĐẠT (Vượt ngưỡng quy định)";
         desc =
-            "Kết quả vượt quá giới hạn tiêu chuẩn cho phép ($boundSymbol $limit ${res.unit}).";
+            "Kết quả $valRangeText vượt quá giới hạn tiêu chuẩn cho phép ($limitText).";
         break;
     }
 

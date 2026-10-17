@@ -433,7 +433,7 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                     const SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: _tinhCachDien,
-                      child: const Text('CẬP NHẬT R_cd LA'),
+                      child: const Text('TÍNH Rcd LA'),
                     ),
                     if (minRcdLa != null)
                       Padding(

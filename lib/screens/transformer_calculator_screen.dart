@@ -151,25 +151,48 @@ class _TransformerCalculatorScreenState
         final eq = _selectedRdcEquipment ?? (rdcEqs.isNotEmpty ? rdcEqs.first : null);
         if (eq != null) {
           _rdcPhaseUncertainty = {};
+          double ttc = parseInput(tTcCtrl.text);
+          String ttcLabel = ttc > 0 ? '${ttc.toStringAsFixed(0)}°C' : 'T_tc';
           if (rResultA != null) {
-            _rdcPhaseUncertainty['Pha A'] = CalibrationService.calculateUncertainty(
+            final rawA = CalibrationService.calculateUncertainty(
               equipment: eq,
               measuredValue: rResultA!,
               unit: 'mΩ',
             );
+            _rdcPhaseUncertainty['Pha A'] = rawA.withDerived(
+              derivedName: 'R_qd ($ttcLabel)',
+              derivedCorrected: rawA.correctedValue,
+              derivedMinBound: rawA.minBound,
+              derivedMaxBound: rawA.maxBound,
+              derivedUnit: 'mΩ',
+            );
           }
           if (rResultB != null) {
-            _rdcPhaseUncertainty['Pha B'] = CalibrationService.calculateUncertainty(
+            final rawB = CalibrationService.calculateUncertainty(
               equipment: eq,
               measuredValue: rResultB!,
               unit: 'mΩ',
             );
+            _rdcPhaseUncertainty['Pha B'] = rawB.withDerived(
+              derivedName: 'R_qd ($ttcLabel)',
+              derivedCorrected: rawB.correctedValue,
+              derivedMinBound: rawB.minBound,
+              derivedMaxBound: rawB.maxBound,
+              derivedUnit: 'mΩ',
+            );
           }
           if (rResultC != null) {
-            _rdcPhaseUncertainty['Pha C'] = CalibrationService.calculateUncertainty(
+            final rawC = CalibrationService.calculateUncertainty(
               equipment: eq,
               measuredValue: rResultC!,
               unit: 'mΩ',
+            );
+            _rdcPhaseUncertainty['Pha C'] = rawC.withDerived(
+              derivedName: 'R_qd ($ttcLabel)',
+              derivedCorrected: rawC.correctedValue,
+              derivedMinBound: rawC.minBound,
+              derivedMaxBound: rawC.maxBound,
+              derivedUnit: 'mΩ',
             );
           }
 
@@ -227,24 +250,66 @@ class _TransformerCalculatorScreenState
         if (eq != null) {
           _ratioPhaseUncertainty = {};
           if (kA > 0) {
-            _ratioPhaseUncertainty['Pha A'] = CalibrationService.calculateUncertainty(
+            final rawA = CalibrationService.calculateUncertainty(
               equipment: eq,
               measuredValue: kA,
               unit: '',
             );
+            double fHc = ((rawA.correctedValue - kDm) / kDm) * 100.0;
+            double fMin = min(((rawA.minBound - kDm) / kDm) * 100.0,
+                ((rawA.maxBound - kDm) / kDm) * 100.0);
+            double fMax = max(((rawA.minBound - kDm) / kDm) * 100.0,
+                ((rawA.maxBound - kDm) / kDm) * 100.0);
+            _ratioPhaseUncertainty['Pha A'] = rawA.withDerived(
+              derivedName: 'Sai số f_hc',
+              derivedCorrected: fHc,
+              derivedMinBound: fMin,
+              derivedMaxBound: fMax,
+              derivedUnit: '%',
+              standardLimit: 0.5,
+              isUpperBound: true,
+            );
           }
           if (kB > 0) {
-            _ratioPhaseUncertainty['Pha B'] = CalibrationService.calculateUncertainty(
+            final rawB = CalibrationService.calculateUncertainty(
               equipment: eq,
               measuredValue: kB,
               unit: '',
             );
+            double fHc = ((rawB.correctedValue - kDm) / kDm) * 100.0;
+            double fMin = min(((rawB.minBound - kDm) / kDm) * 100.0,
+                ((rawB.maxBound - kDm) / kDm) * 100.0);
+            double fMax = max(((rawB.minBound - kDm) / kDm) * 100.0,
+                ((rawB.maxBound - kDm) / kDm) * 100.0);
+            _ratioPhaseUncertainty['Pha B'] = rawB.withDerived(
+              derivedName: 'Sai số f_hc',
+              derivedCorrected: fHc,
+              derivedMinBound: fMin,
+              derivedMaxBound: fMax,
+              derivedUnit: '%',
+              standardLimit: 0.5,
+              isUpperBound: true,
+            );
           }
           if (kC > 0) {
-            _ratioPhaseUncertainty['Pha C'] = CalibrationService.calculateUncertainty(
+            final rawC = CalibrationService.calculateUncertainty(
               equipment: eq,
               measuredValue: kC,
               unit: '',
+            );
+            double fHc = ((rawC.correctedValue - kDm) / kDm) * 100.0;
+            double fMin = min(((rawC.minBound - kDm) / kDm) * 100.0,
+                ((rawC.maxBound - kDm) / kDm) * 100.0);
+            double fMax = max(((rawC.minBound - kDm) / kDm) * 100.0,
+                ((rawC.maxBound - kDm) / kDm) * 100.0);
+            _ratioPhaseUncertainty['Pha C'] = rawC.withDerived(
+              derivedName: 'Sai số f_hc',
+              derivedCorrected: fHc,
+              derivedMinBound: fMin,
+              derivedMaxBound: fMax,
+              derivedUnit: '%',
+              standardLimit: 0.5,
+              isUpperBound: true,
             );
           }
         }
@@ -395,8 +460,13 @@ class _TransformerCalculatorScreenState
         final eq = _selectedRatioEquipment;
         final parts = _ratioPhaseUncertainty.entries
             .where((e) => e.value != null)
-            .map((e) =>
-                '${e.key}: ${e.value!.correctedValue.toStringAsFixed(4)}±${e.value!.expandedUncertainty.toStringAsFixed(4)}')
+            .map((e) {
+              final res = e.value!;
+              String derStr = res.derivedCorrected != null
+                  ? ' (${res.derivedName}: ${res.derivedCorrected! >= 0 ? "+" : ""}${res.derivedCorrected!.toStringAsFixed(2)}%)'
+                  : '';
+              return '${e.key}: K_hc=${res.correctedValue.toStringAsFixed(4)}$derStr';
+            })
             .join(', ');
         ratioUncertaintyStr =
             ' [ISO 17025: $parts (${eq?.type ?? ''} SN:${eq?.serial ?? ''})]';
@@ -581,7 +651,7 @@ class _TransformerCalculatorScreenState
                         const Text('Nhôm'),
                       ],
                     ),
-                    ElevatedButton(onPressed: _tinhDienTroDC, child: const Text('TÍNH QUY ĐỔI & LỆCH PHA')),
+                    ElevatedButton(onPressed: _tinhDienTroDC, child: const Text('TÍNH Rđc - Rqd')),
                     if (rResultA != null || rResultB != null || rResultC != null) ...[
                       const SizedBox(height: 12),
                       Row(
@@ -716,7 +786,7 @@ class _TransformerCalculatorScreenState
                        ],
                     ),
                     const SizedBox(height: 8),
-                    ElevatedButton(onPressed: _tinhKhongTai, child: const Text('CẬP NHẬT GIAO TỬ')),
+                    ElevatedButton(onPressed: _tinhKhongTai, child: const Text('TÍNH I0% & P0')),
                     if (i0Percent != null || p0Total != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
@@ -762,7 +832,7 @@ class _TransformerCalculatorScreenState
                        ],
                     ),
                     const SizedBox(height: 8),
-                    ElevatedButton(onPressed: _tinhNganMach, child: const Text('CẬP NHẬT GIAO TỬ')),
+                    ElevatedButton(onPressed: _tinhNganMach, child: const Text('TÍNH Uk% & Pk')),
                     if (ukPercent != null || pkTotal != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8),

@@ -195,6 +195,15 @@ class UncertaintyResult {
   final CalibratedEquipmentModel equipment;
   final CalibrationRangeModel? range;
 
+  // --- BƯỚC 2: CHỈ SỐ QUY CHUẨN DẪN XUẤT (DERIVED RESULT ĐỂ ĐỐI CHIẾU TIÊU CHUẨN) ---
+  final String? derivedName;          // Tên chỉ số: VD "Sai số f_hc" hoặc "R_qd (75°C)"
+  final double? derivedCorrected;     // Giá trị quy chuẩn sau HC: VD +2.014 (%)
+  final double? derivedMinBound;      // Cận dưới dải quy chuẩn: VD +1.943 (%)
+  final double? derivedMaxBound;      // Cận trên dải quy chuẩn: VD +2.085 (%)
+  final String? derivedUnit;          // Đơn vị quy chuẩn: VD "%" hoặc "mΩ"
+  final double? standardLimit;        // Giới hạn tiêu chuẩn: VD 0.5 (%) hoặc 100 (µΩ)
+  final bool isUpperBound;            // true nếu quy định <= limit, false nếu >= limit
+
   UncertaintyResult({
     required this.measuredValue,
     required this.correction,
@@ -208,29 +217,107 @@ class UncertaintyResult {
     required this.unit,
     required this.equipment,
     this.range,
+    this.derivedName,
+    this.derivedCorrected,
+    this.derivedMinBound,
+    this.derivedMaxBound,
+    this.derivedUnit,
+    this.standardLimit,
+    this.isUpperBound = true,
   });
 
-  /// Đánh giá sự phù hợp với ngưỡng giới hạn tiêu chuẩn (limit)
-  /// [isUpperBound]: true nếu tiêu chuẩn là <= limit (ví dụ R_tx <= 100 uOhm)
-  ///                 false nếu tiêu chuẩn là >= limit (ví dụ R_cd >= 1000 MOhm)
-  UncertaintyVerdict evaluate(double limit, {bool isUpperBound = true}) {
-    if (isUpperBound) {
-      if (maxBound <= limit) {
+  /// Tạo bản sao kèm kết quả dẫn xuất Bước 2 để đối chiếu tiêu chuẩn
+  UncertaintyResult withDerived({
+    required String derivedName,
+    required double derivedCorrected,
+    required double derivedMinBound,
+    required double derivedMaxBound,
+    required String derivedUnit,
+    double? standardLimit,
+    bool isUpperBound = true,
+  }) {
+    return UncertaintyResult(
+      measuredValue: measuredValue,
+      correction: correction,
+      correctedValue: correctedValue,
+      uPercent: uPercent,
+      expandedUncertainty: expandedUncertainty,
+      k: k,
+      confidenceLevel: confidenceLevel,
+      minBound: minBound,
+      maxBound: maxBound,
+      unit: unit,
+      equipment: equipment,
+      range: range,
+      derivedName: derivedName,
+      derivedCorrected: derivedCorrected,
+      derivedMinBound: derivedMinBound,
+      derivedMaxBound: derivedMaxBound,
+      derivedUnit: derivedUnit,
+      standardLimit: standardLimit ?? this.standardLimit,
+      isUpperBound: isUpperBound,
+    );
+  }
+
+  /// Đánh giá sự phù hợp ILAC-G8 tự động
+  UncertaintyVerdict? evaluateStandard([double? customLimit]) {
+    final limit = customLimit ?? standardLimit;
+    if (limit == null) return null;
+
+    final valToCheck = derivedCorrected ?? correctedValue;
+    final minToCheck = derivedMinBound ?? minBound;
+    final maxToCheck = derivedMaxBound ?? maxBound;
+    final unitToCheck = derivedUnit ?? unit;
+    final nameToCheck = derivedName ?? '';
+
+    // Kiểm tra sai số 2 phía (VD: sai số tỷ số |f| <= 0.5%)
+    if (unitToCheck == '%' &&
+        (nameToCheck.toLowerCase().contains('sai số') ||
+            nameToCheck.toLowerCase().contains('f'))) {
+      double absLim = limit.abs();
+      if (minToCheck >= -absLim && maxToCheck <= absLim) {
         return UncertaintyVerdict.pass;
-      } else if (correctedValue <= limit && maxBound > limit) {
-        return UncertaintyVerdict.warningRisk;
-      } else {
-        return UncertaintyVerdict.fail;
-      }
-    } else {
-      if (minBound >= limit) {
-        return UncertaintyVerdict.pass;
-      } else if (correctedValue >= limit && minBound < limit) {
+      } else if (valToCheck >= -absLim && valToCheck <= absLim) {
         return UncertaintyVerdict.warningRisk;
       } else {
         return UncertaintyVerdict.fail;
       }
     }
+
+    // Kiểm tra 1 phía (<= limit hoặc >= limit)
+    if (isUpperBound) {
+      if (maxToCheck <= limit) {
+        return UncertaintyVerdict.pass;
+      } else if (valToCheck <= limit) {
+        return UncertaintyVerdict.warningRisk;
+      } else {
+        return UncertaintyVerdict.fail;
+      }
+    } else {
+      if (minToCheck >= limit) {
+        return UncertaintyVerdict.pass;
+      } else if (valToCheck >= limit) {
+        return UncertaintyVerdict.warningRisk;
+      } else {
+        return UncertaintyVerdict.fail;
+      }
+    }
+  }
+
+  /// Đánh giá sự phù hợp với ngưỡng giới hạn tiêu chuẩn (tương thích ngược)
+  UncertaintyVerdict evaluate(double limit, {bool isUpperBound = true}) {
+    return evaluateStandard(limit) ??
+        (isUpperBound
+            ? (maxBound <= limit
+                ? UncertaintyVerdict.pass
+                : (correctedValue <= limit
+                    ? UncertaintyVerdict.warningRisk
+                    : UncertaintyVerdict.fail))
+            : (minBound >= limit
+                ? UncertaintyVerdict.pass
+                : (correctedValue >= limit
+                    ? UncertaintyVerdict.warningRisk
+                    : UncertaintyVerdict.fail)));
   }
 
   String getVerdictMessage(double limit, {bool isUpperBound = true}) {
