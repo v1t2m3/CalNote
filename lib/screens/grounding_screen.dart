@@ -104,7 +104,7 @@ class _GroundingScreenState extends State<GroundingScreen> {
       child: TextField(
         controller: ctrl,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
@@ -158,21 +158,21 @@ class _GroundingScreenState extends State<GroundingScreen> {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         const Text('Ngưỡng cho phép: ',
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16, color: Colors.white70)),
                         Radio<String>(
                           value: '4',
                           groupValue: _thresholdClass,
                           activeColor: AppTheme.myOrangeAccent,
                           onChanged: (val) => setState(() => _thresholdClass = val!),
                         ),
-                        const Text('≤ 4 Ω'),
+                        const Text('≤ 4 Ω', style: TextStyle(color: Colors.white)),
                         Radio<String>(
                           value: '10',
                           groupValue: _thresholdClass,
                           activeColor: AppTheme.myOrangeAccent,
                           onChanged: (val) => setState(() => _thresholdClass = val!),
                         ),
-                        const Text('≤ 10 Ω'),
+                        const Text('≤ 10 Ω', style: TextStyle(color: Colors.white)),
                       ],
                     ),
                     ElevatedButton(
@@ -207,7 +207,7 @@ class _GroundingScreenState extends State<GroundingScreen> {
                           children: [
                             const Text('R_qđ = ',
                                 style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold)),
+                                    fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
                             Expanded(
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,

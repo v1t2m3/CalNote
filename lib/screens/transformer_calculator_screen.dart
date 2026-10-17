@@ -546,7 +546,7 @@ class _TransformerCalculatorScreenState
       child: TextField(
         controller: ctrl,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
         decoration: InputDecoration(
           labelText: label,
           contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
@@ -706,11 +706,11 @@ class _TransformerCalculatorScreenState
                     Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        const Text('Cuộn dây: ', style: TextStyle(fontSize: 14)),
+                        const Text('Cuộn dây: ', style: TextStyle(fontSize: 14, color: Colors.white70)),
                         Radio<String>(value: 'Dong', groupValue: _material, activeColor: AppTheme.myOrangeAccent, onChanged: (val) => setState(() => _material = val!)),
-                        const Text('Đồng'),
+                        const Text('Đồng', style: TextStyle(color: Colors.white)),
                         Radio<String>(value: 'Nhom', groupValue: _material, activeColor: AppTheme.myOrangeAccent, onChanged: (val) => setState(() => _material = val!)),
-                        const Text('Nhôm'),
+                        const Text('Nhôm', style: TextStyle(color: Colors.white)),
                       ],
                     ),
                     ElevatedButton(onPressed: _tinhDienTroDC, child: const Text('TÍNH Rđc - Rqd')),

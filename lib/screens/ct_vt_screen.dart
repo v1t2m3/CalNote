@@ -160,7 +160,7 @@ class _CtVtScreenState extends State<CtVtScreen> {
       child: TextField(
         controller: ctrl,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
@@ -214,21 +214,21 @@ class _CtVtScreenState extends State<CtVtScreen> {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         const Text('Cấp chính xác: ',
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16, color: Colors.white70)),
                         Radio<String>(
                           value: '0.2',
                           groupValue: _accuracyClass,
                           activeColor: AppTheme.myOrangeAccent,
                           onChanged: (val) => setState(() => _accuracyClass = val!),
                         ),
-                        const Text('Class 0.2'),
+                        const Text('Class 0.2', style: TextStyle(color: Colors.white)),
                         Radio<String>(
                           value: '0.5',
                           groupValue: _accuracyClass,
                           activeColor: AppTheme.myOrangeAccent,
                           onChanged: (val) => setState(() => _accuracyClass = val!),
                         ),
-                        const Text('Class 0.5'),
+                        const Text('Class 0.5', style: TextStyle(color: Colors.white)),
                       ],
                     ),
                     ElevatedButton(
@@ -263,7 +263,7 @@ class _CtVtScreenState extends State<CtVtScreen> {
                           children: [
                             const Text('f = ',
                                 style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold)),
+                                    fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
                             Expanded(
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,

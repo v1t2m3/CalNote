@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import '../core/theme/app_theme.dart';
 import '../models/breaker_curve.dart';
 import '../services/breaker_curve_manager.dart';
-import 'note_detail_screen.dart';
 
 
 class CurveDigitizerScreen extends StatefulWidget {
@@ -167,13 +166,14 @@ class _CurveDigitizerScreenState extends State<CurveDigitizerScreen> {
      showDialog(
        context: context,
        builder: (ctx) => AlertDialog(
-          title: const Text('Lưu Đặc Tuyến'),
+          backgroundColor: AppTheme.myDarkNavy,
+          title: const Text('Lưu Đặc Tuyến', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-               TextField(controller: brandCtrl, decoration: const InputDecoration(labelText: 'Hãng sản xuất')),
-               TextField(controller: seriesCtrl, decoration: const InputDecoration(labelText: 'Dòng máy (Series)')),
-               TextField(controller: typeCtrl, decoration: const InputDecoration(labelText: 'Loại (Type B/C/D)')),
+               TextField(controller: brandCtrl, style: const TextStyle(color: Colors.white), decoration: const InputDecoration(labelText: 'Hãng sản xuất')),
+               TextField(controller: seriesCtrl, style: const TextStyle(color: Colors.white), decoration: const InputDecoration(labelText: 'Dòng máy (Series)')),
+               TextField(controller: typeCtrl, style: const TextStyle(color: Colors.white), decoration: const InputDecoration(labelText: 'Loại (Type B/C/D)')),
             ],
           ),
           actions: [

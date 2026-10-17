@@ -55,7 +55,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           : _box!.isEmpty
               ? const Center(
                   child: Text('Chưa có bản ghi nào lưu trong sổ tay hết trơn.',
-                      style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16)),
+                      style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16, color: Colors.white70)),
                 )
               : ListView.builder(
                   padding: const EdgeInsets.all(12),
@@ -78,14 +78,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       ),
                       child: ListTile(
                         contentPadding: const EdgeInsets.all(16),
-                        leading: CircleAvatar(
+                        leading: const CircleAvatar(
                           backgroundColor: AppTheme.myBrightBlue,
-                          child: const Icon(Icons.description, color: Colors.white),
+                          child: Icon(Icons.description, color: Colors.white),
                         ),
-                        title: Text(record.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                        title: Text(record.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white)),
                         subtitle: Text(
                           'Tính toán: $calcNamesStr\nNgày lưu: ${record.timestamp.day}/${record.timestamp.month}/${record.timestamp.year}',
-                          style: const TextStyle(height: 1.5),
+                          style: const TextStyle(height: 1.5, color: Colors.white70),
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,

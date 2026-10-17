@@ -236,7 +236,7 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
       child: TextField(
         controller: ctrl,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,

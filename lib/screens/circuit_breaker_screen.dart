@@ -245,7 +245,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
       child: TextField(
         controller: ctrl,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
@@ -495,21 +495,21 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         const Text('Thao tác: ',
-                            style: TextStyle(fontSize: 16)),
+                            style: TextStyle(fontSize: 16, color: Colors.white70)),
                         Radio<String>(
                           value: 'Close',
                           groupValue: _actionType,
                           activeColor: AppTheme.myOrangeAccent,
                           onChanged: (val) => setState(() => _actionType = val!),
                         ),
-                        const Text('Đóng'),
+                        const Text('Đóng', style: TextStyle(color: Colors.white)),
                         Radio<String>(
                           value: 'Open',
                           groupValue: _actionType,
                           activeColor: AppTheme.myOrangeAccent,
                           onChanged: (val) => setState(() => _actionType = val!),
                         ),
-                        const Text('Cắt'),
+                        const Text('Cắt', style: TextStyle(color: Colors.white)),
                       ],
                     ),
                     ElevatedButton(
@@ -528,7 +528,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                           children: [
                             const Text('Δt = ',
                                 style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold)),
+                                    fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
                             Expanded(
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,

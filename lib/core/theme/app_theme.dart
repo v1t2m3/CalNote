@@ -27,9 +27,10 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
-          fontSize: 22,
+          color: Colors.white,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
-          letterSpacing: 1.2,
+          letterSpacing: 1.1,
         ),
       ),
       cardTheme: CardThemeData(
@@ -73,9 +74,19 @@ class AppTheme {
         ),
       ),
       textTheme: const TextTheme(
+        headlineLarge: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+        headlineMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+        headlineSmall: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+        titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+        titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+        titleSmall: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white70),
         bodyLarge: TextStyle(fontSize: 18, color: Colors.white),
         bodyMedium: TextStyle(fontSize: 16, color: Colors.white),
-        displayMedium: TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: myOrangeAccent), // Số siêu bự
+        bodySmall: TextStyle(fontSize: 14, color: Colors.white70),
+        labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+        labelMedium: TextStyle(fontSize: 12, color: Colors.white70),
+        labelSmall: TextStyle(fontSize: 11, color: Colors.white60),
+        displayMedium: TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: myOrangeAccent),
       ),
     );
   }

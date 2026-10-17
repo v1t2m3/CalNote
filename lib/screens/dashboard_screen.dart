@@ -24,14 +24,14 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final List<Map<String, dynamic>> _devices = const [
-    {'name': 'Máy Biến Áp', 'icon': Icons.flash_on},
-    {'name': 'Máy Cắt', 'icon': Icons.electric_moped_outlined},
+    {'name': 'Máy Biến Áp', 'icon': Icons.electrical_services},
+    {'name': 'Máy Cắt', 'icon': Icons.power_settings_new},
     {'name': 'Đo Cách Điện (DAR/PI)', 'icon': Icons.speed},
-    {'name': 'TI / TU', 'icon': Icons.settings_input_component},
-    {'name': 'Chống Sét Van', 'icon': Icons.bolt},
-    {'name': 'Tiếp Địa', 'icon': Icons.horizontal_rule},
-    {'name': 'Aptomat (MCB/MCCB)', 'icon': Icons.power},
-    {'name': 'Rơ Le Số', 'icon': Icons.memory},
+    {'name': 'TI / TU', 'icon': Icons.donut_large},
+    {'name': 'Chống Sét Van', 'icon': Icons.flash_on},
+    {'name': 'Tiếp Địa', 'icon': Icons.format_line_spacing},
+    {'name': 'Aptomat (MCB/MCCB)', 'icon': Icons.toggle_on},
+    {'name': 'Rơ Le Số', 'icon': Icons.shield},
     {'name': 'Cáp Lực', 'icon': Icons.cable},
   ];
 

@@ -1,30 +1,56 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:mte_calculator_pro/main.dart';
+import 'package:mte_calculator_pro/services/reference_standard_service.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('ReferenceStandardService Unit Tests', () {
+    test('matchVoltage tests', () {
+      expect(ReferenceStandardService.matchVoltage('<=35kV', 'ALL'), isTrue);
+      expect(ReferenceStandardService.matchVoltage('>35kV', 'ALL'), isTrue);
+      expect(ReferenceStandardService.matchVoltage('<=35kV', '<=35kV'), isTrue);
+      expect(ReferenceStandardService.matchVoltage('110kV', '>35kV'), isTrue);
+      expect(ReferenceStandardService.matchVoltage('>35kV', '>35kV'), isTrue);
+      expect(ReferenceStandardService.matchVoltage('<=35kV', '>35kV'), isFalse);
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('ReferenceItemModel deserializes separated categories correctly', () {
+      final itemRot = ReferenceItemModel.fromJson({
+        'id': 'rot_1',
+        'category': 'Máy Điện Quay',
+        'categoryCode': 'rotating_machine',
+        'subCategory': 'Máy phát điện',
+        'item': 'Điện trở cách điện cuộn dây stator',
+        'limit': '≥ 1 MΩ/kV',
+        'standard': 'TCVN',
+        'voltageLevel': 'ALL',
+      });
+      expect(itemRot.categoryCode, 'rotating_machine');
+      expect(itemRot.category, 'Máy Điện Quay');
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      final itemPq = ReferenceItemModel.fromJson({
+        'id': 'pq_1',
+        'category': 'Chất Lượng Điện Năng',
+        'categoryCode': 'power_quality',
+        'subCategory': 'Sóng hài',
+        'item': 'Tổng độ biến dạng sóng hài điện áp THD',
+        'limit': '≤ 5%',
+        'standard': 'TT 39/2015',
+        'voltageLevel': 'ALL',
+      });
+      expect(itemPq.categoryCode, 'power_quality');
+      expect(itemPq.category, 'Chất Lượng Điện Năng');
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      final itemCap = ReferenceItemModel.fromJson({
+        'id': 'cap_1',
+        'category': 'Tụ Điện / Tụ Bù',
+        'categoryCode': 'capacitor',
+        'subCategory': 'Tụ bù hạ thế',
+        'item': 'Điện dung thực tế',
+        'limit': '-5% ~ +10%',
+        'standard': 'IEC 60831',
+        'voltageLevel': '<=35kV',
+      });
+      expect(itemCap.categoryCode, 'capacitor');
+      expect(itemCap.voltageLevel, '<=35kV');
+    });
   });
 }

@@ -32,9 +32,9 @@ class NoteViewScreen extends StatelessWidget {
                   children: [
                     const Text('Tên phép thử nghiệm', style: TextStyle(color: Colors.white70, fontSize: 14)),
                     const SizedBox(height: 4),
-                    Text(record.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                    Text(record.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
                     const SizedBox(height: 8),
-                    Text('Ngày đo: ${record.timestamp.toString().substring(0, 16)}', style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic)),
+                    Text('Ngày đo: ${record.timestamp.toString().substring(0, 16)}', style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.white70)),
                   ],
                 ),
               ),
@@ -59,8 +59,8 @@ class NoteViewScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(entry.key, style: const TextStyle(fontSize: 16)),
-                            Text('${entry.value}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            Text(entry.key, style: const TextStyle(fontSize: 16, color: Colors.white70)),
+                            Text('${entry.value}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                           ],
                         ),
                       );
@@ -69,7 +69,7 @@ class NoteViewScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('=> Kết quả tính:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        const Text('=> Kết quả tính:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                         Expanded(
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
@@ -87,12 +87,12 @@ class NoteViewScreen extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Khu vực ảnh đính kèm
-            const Text('Hình ảnh đính kèm:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Hình ảnh đính kèm:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
             const SizedBox(height: 8),
             if (record.imagePaths.isEmpty)
               const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text('Bản ghi này hông có chụp hình máy đo.', style: TextStyle(fontStyle: FontStyle.italic)),
+                child: Text('Bản ghi này hông có chụp hình máy đo.', style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white60)),
               )
             else
               SizedBox(

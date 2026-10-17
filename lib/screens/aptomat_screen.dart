@@ -253,9 +253,9 @@ class _AptomatScreenState extends State<AptomatScreen> {
                    ),
                    child: Column(
                      children: [
-                        Text('TỶ LỆ QUÁ DÒNG K: ${kCalc?.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        Text('TỶ LỆ QUÁ DÒNG K: ${kCalc?.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                         const SizedBox(height: 8),
-                        Text('THỜI GIAN LÝ THUYẾT: ${tMinLth?.toStringAsFixed(3)}s ~ ${tMaxLth?.toStringAsFixed(3)}s', style: const TextStyle(fontSize: 16)),
+                        Text('THỜI GIAN LÝ THUYẾT: ${tMinLth?.toStringAsFixed(3)}s ~ ${tMaxLth?.toStringAsFixed(3)}s', style: const TextStyle(fontSize: 16, color: Colors.white70)),
                         const Divider(),
                         Text(
                           evaluateResult!,

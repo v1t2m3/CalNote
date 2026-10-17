@@ -208,7 +208,7 @@ class _InsulationCalculatorScreenState
       child: TextField(
         controller: ctrl,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
@@ -305,7 +305,7 @@ class _InsulationCalculatorScreenState
                           const Text(
                             'DAR (R_60s / R_15s):',
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                           Text(
                             darResult!.toStringAsFixed(3),
@@ -357,7 +357,7 @@ class _InsulationCalculatorScreenState
                           const Text(
                             'PI (R_10m / R_1m):',
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                           Text(
                             piResult!.toStringAsFixed(3),
@@ -406,7 +406,7 @@ class _InsulationCalculatorScreenState
                       Text(
                         'R_cd Quy đổi (${tTcCtrl.text}°C):',
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                       Text(
                         '${r60sConverted!.toStringAsFixed(1)} MΩ',
@@ -438,18 +438,26 @@ class _InsulationCalculatorScreenState
                     ),
                     Divider(),
                     Text('• Hệ số phân cực (PI = R_10m / R_1m):',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text('  - PI < 1.0: Nguy hiểm / Kém (Cần sấy/kiểm tra)'),
-                    Text('  - 1.0 ≤ PI < 2.0: Nghi ngờ / Trung bình'),
-                    Text('  - 2.0 ≤ PI < 4.0: Tốt (Đạt tiêu chuẩn)'),
-                    Text('  - PI ≥ 4.0: Rất tốt'),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                    Text('  - PI < 1.0: Nguy hiểm / Kém (Cần sấy/kiểm tra)',
+                        style: TextStyle(color: Colors.white70)),
+                    Text('  - 1.0 ≤ PI < 2.0: Nghi ngờ / Trung bình',
+                        style: TextStyle(color: Colors.white70)),
+                    Text('  - 2.0 ≤ PI < 4.0: Tốt (Đạt tiêu chuẩn)',
+                        style: TextStyle(color: Colors.white70)),
+                    Text('  - PI ≥ 4.0: Rất tốt',
+                        style: TextStyle(color: Colors.white70)),
                     SizedBox(height: 8),
                     Text('• Tỉ số hấp thụ điện môi (DAR = R_60s / R_15s):',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text('  - DAR < 1.0: Kém / Không đạt'),
-                    Text('  - 1.0 ≤ DAR < 1.25: Nghi ngờ / Tối thiểu'),
-                    Text('  - 1.25 ≤ DAR < 1.6: Tốt'),
-                    Text('  - DAR ≥ 1.6: Rất tốt'),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                    Text('  - DAR < 1.0: Kém / Không đạt',
+                        style: TextStyle(color: Colors.white70)),
+                    Text('  - 1.0 ≤ DAR < 1.25: Nghi ngờ / Tối thiểu',
+                        style: TextStyle(color: Colors.white70)),
+                    Text('  - 1.25 ≤ DAR < 1.6: Tốt',
+                        style: TextStyle(color: Colors.white70)),
+                    Text('  - DAR ≥ 1.6: Rất tốt',
+                        style: TextStyle(color: Colors.white70)),
                   ],
                 ),
               ),

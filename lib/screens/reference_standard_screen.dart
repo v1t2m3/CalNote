@@ -26,31 +26,31 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
     {
       'code': 'transformer',
       'name': 'Máy Biến Áp',
-      'icon': Icons.flash_on,
+      'icon': Icons.electrical_services,
       'color': Colors.amberAccent
     },
     {
       'code': 'circuit_breaker',
       'name': 'Máy Cắt & Tủ Đóng Cắt',
-      'icon': Icons.toggle_on,
+      'icon': Icons.power_settings_new,
       'color': Colors.lightBlueAccent
     },
     {
       'code': 'disconnector',
       'name': 'Dao Cách Ly & Cầu Chì',
-      'icon': Icons.alt_route,
+      'icon': Icons.power_off,
       'color': Colors.orangeAccent
     },
     {
       'code': 'surge_arrester',
       'name': 'Chống Sét Van',
-      'icon': Icons.bolt,
+      'icon': Icons.flash_on,
       'color': Colors.yellowAccent
     },
     {
       'code': 'instrument_transformer',
       'name': 'Biến Dòng & Biến Áp (TI/TU)',
-      'icon': Icons.settings_input_component,
+      'icon': Icons.donut_large,
       'color': Colors.cyanAccent
     },
     {
@@ -62,13 +62,31 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
     {
       'code': 'grounding',
       'name': 'Hệ Thống Nối Đất',
-      'icon': Icons.horizontal_rule,
+      'icon': Icons.format_line_spacing,
       'color': Colors.tealAccent
+    },
+    {
+      'code': 'rotating_machine',
+      'name': 'Máy Điện Quay',
+      'icon': Icons.rotate_right,
+      'color': Colors.deepOrangeAccent
+    },
+    {
+      'code': 'power_quality',
+      'name': 'Chất Lượng Điện Năng',
+      'icon': Icons.waves,
+      'color': Colors.limeAccent
+    },
+    {
+      'code': 'capacitor',
+      'name': 'Tụ Điện / Tụ Bù',
+      'icon': Icons.pause,
+      'color': Colors.pinkAccent
     },
     {
       'code': 'relay_safety',
       'name': 'Rơ Le & Dụng Cụ An Toàn',
-      'icon': Icons.security,
+      'icon': Icons.shield,
       'color': Colors.purpleAccent
     },
   ];
@@ -159,6 +177,7 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
                 // Thanh Tìm kiếm
                 TextField(
                   controller: _searchController,
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: "Tìm kiếm hạng mục, tiêu chuẩn, thiết bị...",
                     prefixIcon:
@@ -676,7 +695,14 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.categoryName),
+        title: Text(
+          widget.categoryName,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: AppTheme.myOrangeAccent,

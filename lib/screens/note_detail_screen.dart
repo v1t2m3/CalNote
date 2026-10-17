@@ -136,7 +136,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
                   controller: _titleController,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                   decoration: const InputDecoration(
                     labelText: 'Tên phép thử nghiệm',
                     border: OutlineInputBorder(),
@@ -165,8 +165,8 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(entry.key, style: const TextStyle(fontSize: 16)),
-                            Text('${entry.value}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            Text(entry.key, style: const TextStyle(fontSize: 16, color: Colors.white70)),
+                            Text('${entry.value}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                           ],
                         ),
                       );
@@ -175,7 +175,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('=> Kết quả tính:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        const Text('=> Kết quả tính:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                         Text('${calc.result.toStringAsFixed(3)} ${calc.unit}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orangeAccent)),
                       ],
                     ),
@@ -187,12 +187,12 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
             const SizedBox(height: 16),
 
             // Khu vực ảnh đính kèm
-            const Text('Hình ảnh đính kèm (cho tất cả phép đo):', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text('Hình ảnh đính kèm (cho tất cả phép đo):', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
             const SizedBox(height: 8),
             if (_attachedImages.isEmpty)
               const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text('Chưa có chộp tấm hình nào nghen.', style: TextStyle(fontStyle: FontStyle.italic)),
+                child: Text('Chưa có chộp tấm hình nào nghen.', style: TextStyle(fontStyle: FontStyle.italic, color: Colors.white60)),
               )
             else
               SizedBox(
