@@ -593,7 +593,7 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
               ],
             ),
             const SizedBox(height: 6),
-            Text(item.item,
+            Text(item.displayItem,
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -955,7 +955,7 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
                   ],
                 ),
                 const SizedBox(height: 6),
-                Text(item.item,
+                Text(item.displayItem,
                     style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,

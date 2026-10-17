@@ -52,5 +52,30 @@ void main() {
       expect(itemCap.categoryCode, 'capacitor');
       expect(itemCap.voltageLevel, '<=35kV');
     });
+
+    test('CbmItemModel displayItem includes symbol in parenthesis', () {
+      final cbmWithSym = CbmItemModel.fromJson({
+        'id': 'STD_052',
+        'category': 'Máy biến áp lực',
+        'categoryCode': 'transformer',
+        'item': 'Đo điện trở một chiều các cuộn dây (ΔR)',
+        'symbol': 'ΔR',
+        'good': '≤ 2.0 %',
+        'poor': '> 2.0 %',
+      });
+      expect(cbmWithSym.displayItem, 'Đo điện trở một chiều các cuộn dây (ΔR)');
+
+      // If item did not have parenthesis in raw json, displayItem auto appends it
+      final cbmRaw = CbmItemModel.fromJson({
+        'id': 'STD_050',
+        'category': 'Máy biến áp lực',
+        'categoryCode': 'transformer',
+        'item': 'Đo điện trở cách điện gông từ',
+        'symbol': 'IR',
+        'good': '> 500 MΩ',
+        'poor': '< 10 MΩ',
+      });
+      expect(cbmRaw.displayItem, 'Đo điện trở cách điện gông từ (IR)');
+    });
   });
 }

@@ -302,6 +302,18 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
             ],
           ),
           const SizedBox(height: 6),
+          if (res.item != null && res.item!.item.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Text(
+                res.item!.displayItem,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
+              ),
+            ),
           if (res.rangeText.isNotEmpty)
             Row(
               children: [
