@@ -30,6 +30,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
   double? maxRtx;
   CalibratedEquipmentModel? _selectedRtxEquipment;
   UncertaintyResult? _rtxUncertaintyResult;
+  Map<String, UncertaintyResult?> _rtxPhaseUncertainty = {};
   
   // 3. Thời gian không đồng thời
   final TextEditingController tACtrl = TextEditingController();
@@ -90,13 +91,36 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
          final eqs = CalibrationService.getEquipmentsForTest('MC_R_tx');
          final eq = _selectedRtxEquipment ?? (eqs.isNotEmpty ? eqs.first : null);
          if (eq != null) {
+           _rtxPhaseUncertainty = {};
+           if (rTxACtrl.text.isNotEmpty) {
+             _rtxPhaseUncertainty['Pha A'] = CalibrationService.calculateUncertainty(
+               equipment: eq,
+               measuredValue: rA,
+               unit: 'µΩ',
+             );
+           }
+           if (rTxBCtrl.text.isNotEmpty) {
+             _rtxPhaseUncertainty['Pha B'] = CalibrationService.calculateUncertainty(
+               equipment: eq,
+               measuredValue: rB,
+               unit: 'µΩ',
+             );
+           }
+           if (rTxCCtrl.text.isNotEmpty) {
+             _rtxPhaseUncertainty['Pha C'] = CalibrationService.calculateUncertainty(
+               equipment: eq,
+               measuredValue: rC,
+               unit: 'µΩ',
+             );
+           }
            _rtxUncertaintyResult = CalibrationService.calculateUncertainty(
              equipment: eq,
              measuredValue: maxRtx!,
-             unit: 'microΩ',
+             unit: 'µΩ',
            );
          }
        } else {
+         _rtxPhaseUncertainty = {};
          _rtxUncertaintyResult = null;
        }
     }
@@ -149,7 +173,15 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
 
     if (maxRtx != null) {
       String uBString = '';
-      if (_rtxUncertaintyResult != null) {
+      if (_rtxPhaseUncertainty.isNotEmpty) {
+        final eq = _selectedRtxEquipment;
+        final parts = _rtxPhaseUncertainty.entries
+            .where((e) => e.value != null)
+            .map((e) =>
+                '${e.key}: ${e.value!.correctedValue.toStringAsFixed(1)}±${e.value!.expandedUncertainty.toStringAsFixed(1)}')
+            .join(', ');
+        uBString = ' [ISO 17025: $parts µΩ (${eq?.type ?? ''} SN:${eq?.serial ?? ''})]';
+      } else if (_rtxUncertaintyResult != null) {
         final res = _rtxUncertaintyResult!;
         uBString = ' [ISO 17025: X_hc=${res.correctedValue.toStringAsFixed(2)} ± ${res.expandedUncertainty.toStringAsFixed(2)} ${res.unit} (${res.equipment.type} SN:${res.equipment.serial})]';
       } else {
@@ -351,6 +383,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                           }
                         });
                       },
+                      phaseResults: _rtxPhaseUncertainty.isNotEmpty ? _rtxPhaseUncertainty : null,
                       uncertaintyResult: _rtxUncertaintyResult,
                       standardLimit: 100.0,
                       isUpperBound: true,

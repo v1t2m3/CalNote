@@ -33,7 +33,8 @@ class _TransformerCalculatorScreenState
   String _material = 'Dong';
   double? rResultA, rResultB, rResultC, deltaR;
   CalibratedEquipmentModel? _selectedRdcEquipment;
-  UncertaintyResult? _rdcUncertaintyResult;
+  Map<String, UncertaintyResult?> _rdcPhaseUncertainty = {};
+  double? deltaRHc;
 
   // M3. TỶ SỐ BIẾN
   final TextEditingController kDmCtrl = TextEditingController();
@@ -42,7 +43,7 @@ class _TransformerCalculatorScreenState
   final TextEditingController kTtCCtrl = TextEditingController();
   double? errA, errB, errC;
   CalibratedEquipmentModel? _selectedRatioEquipment;
-  UncertaintyResult? _ratioUncertaintyResult;
+  Map<String, UncertaintyResult?> _ratioPhaseUncertainty = {};
 
   @override
   void initState() {
@@ -148,16 +149,47 @@ class _TransformerCalculatorScreenState
       if (CalibrationService.isUncertaintyEnabled) {
         final rdcEqs = CalibrationService.getEquipmentsForTest('MBA_R_dc');
         final eq = _selectedRdcEquipment ?? (rdcEqs.isNotEmpty ? rdcEqs.first : null);
-        if (eq != null && validRs.isNotEmpty) {
-          double repR = validRs.first;
-          _rdcUncertaintyResult = CalibrationService.calculateUncertainty(
-            equipment: eq,
-            measuredValue: repR,
-            unit: 'mΩ',
-          );
+        if (eq != null) {
+          _rdcPhaseUncertainty = {};
+          if (rResultA != null) {
+            _rdcPhaseUncertainty['Pha A'] = CalibrationService.calculateUncertainty(
+              equipment: eq,
+              measuredValue: rResultA!,
+              unit: 'mΩ',
+            );
+          }
+          if (rResultB != null) {
+            _rdcPhaseUncertainty['Pha B'] = CalibrationService.calculateUncertainty(
+              equipment: eq,
+              measuredValue: rResultB!,
+              unit: 'mΩ',
+            );
+          }
+          if (rResultC != null) {
+            _rdcPhaseUncertainty['Pha C'] = CalibrationService.calculateUncertainty(
+              equipment: eq,
+              measuredValue: rResultC!,
+              unit: 'mΩ',
+            );
+          }
+
+          // Tính độ lệch pha sau hiệu chỉnh (ΔR_hc)
+          List<double> validHc = _rdcPhaseUncertainty.values
+              .where((res) => res != null)
+              .map((res) => res!.correctedValue)
+              .toList();
+          if (validHc.length > 1) {
+            double maxHc = validHc.reduce(max);
+            double minHc = validHc.reduce(min);
+            double avgHc = validHc.reduce((a, b) => a + b) / validHc.length;
+            deltaRHc = ((maxHc - minHc) / avgHc) * 100.0;
+          } else {
+            deltaRHc = null;
+          }
         }
       } else {
-        _rdcUncertaintyResult = null;
+        _rdcPhaseUncertainty = {};
+        deltaRHc = null;
       }
       
       setState(() {});
@@ -193,17 +225,31 @@ class _TransformerCalculatorScreenState
         final ratioEqs = CalibrationService.getEquipmentsForTest('MBA_K_error');
         final eq = _selectedRatioEquipment ?? (ratioEqs.isNotEmpty ? ratioEqs.first : null);
         if (eq != null) {
-          double repK = kA > 0 ? kA : (kB > 0 ? kB : kC);
-          if (repK > 0) {
-            _ratioUncertaintyResult = CalibrationService.calculateUncertainty(
+          _ratioPhaseUncertainty = {};
+          if (kA > 0) {
+            _ratioPhaseUncertainty['Pha A'] = CalibrationService.calculateUncertainty(
               equipment: eq,
-              measuredValue: repK,
+              measuredValue: kA,
+              unit: '',
+            );
+          }
+          if (kB > 0) {
+            _ratioPhaseUncertainty['Pha B'] = CalibrationService.calculateUncertainty(
+              equipment: eq,
+              measuredValue: kB,
+              unit: '',
+            );
+          }
+          if (kC > 0) {
+            _ratioPhaseUncertainty['Pha C'] = CalibrationService.calculateUncertainty(
+              equipment: eq,
+              measuredValue: kC,
               unit: '',
             );
           }
         }
       } else {
-        _ratioUncertaintyResult = null;
+        _ratioPhaseUncertainty = {};
       }
 
       setState(() {});
@@ -310,9 +356,15 @@ class _TransformerCalculatorScreenState
       }
 
       String rdcUncertaintyStr = '';
-      if (_rdcUncertaintyResult != null) {
-        final res = _rdcUncertaintyResult!;
-        rdcUncertaintyStr = ' [ISO 17025: X_hc=${res.correctedValue.toStringAsFixed(3)} ± ${res.expandedUncertainty.toStringAsFixed(3)} ${res.unit} (${res.equipment.type} SN:${res.equipment.serial})]';
+      if (_rdcPhaseUncertainty.isNotEmpty) {
+        final eq = _selectedRdcEquipment;
+        final parts = _rdcPhaseUncertainty.entries
+            .where((e) => e.value != null)
+            .map((e) =>
+                '${e.key}: ${e.value!.correctedValue.toStringAsFixed(3)}±${e.value!.expandedUncertainty.toStringAsFixed(3)}')
+            .join(', ');
+        rdcUncertaintyStr =
+            ' [ISO 17025: $parts mΩ (${eq?.type ?? ''} SN:${eq?.serial ?? ''})]';
       }
 
       cals.add(TestCalculation(
@@ -339,9 +391,15 @@ class _TransformerCalculatorScreenState
       if (errC != null) maxErr = max(maxErr, errC!.abs());
 
       String ratioUncertaintyStr = '';
-      if (_ratioUncertaintyResult != null) {
-        final res = _ratioUncertaintyResult!;
-        ratioUncertaintyStr = ' [ISO 17025: Ktt_hc=${res.correctedValue.toStringAsFixed(4)} ± ${res.expandedUncertainty.toStringAsFixed(4)} (${res.equipment.type} SN:${res.equipment.serial})]';
+      if (_ratioPhaseUncertainty.isNotEmpty) {
+        final eq = _selectedRatioEquipment;
+        final parts = _ratioPhaseUncertainty.entries
+            .where((e) => e.value != null)
+            .map((e) =>
+                '${e.key}: ${e.value!.correctedValue.toStringAsFixed(4)}±${e.value!.expandedUncertainty.toStringAsFixed(4)}')
+            .join(', ');
+        ratioUncertaintyStr =
+            ' [ISO 17025: $parts (${eq?.type ?? ''} SN:${eq?.serial ?? ''})]';
       }
 
       cals.add(TestCalculation(
@@ -563,9 +621,12 @@ class _TransformerCalculatorScreenState
                           }
                         });
                       },
-                      uncertaintyResult: _rdcUncertaintyResult,
-                      standardLimit: 2.0, // Độ lệch deltaR <= 2.0%
-                      isUpperBound: true,
+                      phaseResults: _rdcPhaseUncertainty.isNotEmpty ? _rdcPhaseUncertainty : null,
+                      summaryTitle: 'Lệch pha sau hiệu chỉnh (ΔR_hc):',
+                      summaryValueText: deltaRHc != null
+                          ? '${deltaRHc!.toStringAsFixed(2)} % ${deltaRHc! <= 2.0 ? "(ĐẠT ≤ 2%)" : "(CẢNH BÁO: > 2%)"}'
+                          : null,
+                      summaryPass: deltaRHc != null ? (deltaRHc! <= 2.0) : null,
                     ),
                   ],
                 ),
@@ -617,9 +678,7 @@ class _TransformerCalculatorScreenState
                           }
                         });
                       },
-                      uncertaintyResult: _ratioUncertaintyResult,
-                      standardLimit: 0.5, // Sai số tỷ số biến <= 0.5%
-                      isUpperBound: true,
+                      phaseResults: _ratioPhaseUncertainty.isNotEmpty ? _ratioPhaseUncertainty : null,
                     ),
                   ],
                 ),

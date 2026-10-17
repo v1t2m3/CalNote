@@ -161,6 +161,16 @@ class CalibratedEquipmentModel {
         'confidenceLevel': confidenceLevel,
         'scales': scales.map((e) => e.toJson()).toList(),
       };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CalibratedEquipmentModel &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 /// Đánh giá kết luận sự phù hợp theo ISO 17025 / ILAC-G8
@@ -347,6 +357,16 @@ class CalibrationService {
         .toList();
   }
 
+  static String _normalizeUnit(String u) {
+    return u
+        .trim()
+        .toLowerCase()
+        .replaceAll('µ', 'u')
+        .replaceAll('micro', 'u')
+        .replaceAll('milli', 'm')
+        .replaceAll('ohm', 'ω');
+  }
+
   /// Tính toán giá trị hiệu chính X_hc và ĐKĐBĐ mở rộng U
   static UncertaintyResult calculateUncertainty({
     required CalibratedEquipmentModel equipment,
@@ -357,11 +377,13 @@ class CalibrationService {
     CalibrationScaleModel? matchedScale;
 
     // Tìm thang đo và dải đo tương ứng
+    String normTargetUnit = _normalizeUnit(unit);
     for (var scale in equipment.scales) {
       for (var r in scale.ranges) {
-        bool unitMatch = unit.isEmpty ||
-            r.unit.isEmpty ||
-            r.unit.toLowerCase() == unit.toLowerCase();
+        String normRangeUnit = _normalizeUnit(r.unit);
+        bool unitMatch = normTargetUnit.isEmpty ||
+            normRangeUnit.isEmpty ||
+            normRangeUnit == normTargetUnit;
         if (unitMatch && measuredValue >= r.min && measuredValue <= r.max) {
           matchedRange = r;
           matchedScale = scale;
