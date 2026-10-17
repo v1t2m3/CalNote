@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mte_calculator_pro/models/test_record.dart';
 import '../services/formula_service.dart';
+import '../widgets/standard_evaluation_widget.dart';
 import '../core/theme/app_theme.dart';
 import 'note_detail_screen.dart';
 
@@ -13,6 +14,8 @@ class SurgeArresterScreen extends StatefulWidget {
 }
 
 class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
+  String _laVoltageLevel = '>35kV';
+
   // Module 1: Dòng rò
   final TextEditingController iDoCtrl = TextEditingController();
   final TextEditingController tDoCtrl = TextEditingController();
@@ -268,6 +271,57 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
+            // CHỌN CẤP ĐIỆN ÁP CHỐNG SÉT VAN
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                color: AppTheme.myMedNavy,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppTheme.myOrangeAccent.withValues(alpha: 0.4)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.bolt, color: AppTheme.myOrangeAccent, size: 22),
+                  const SizedBox(width: 8),
+                  const Text(
+                    "Cấp điện áp LA: ",
+                    style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 13),
+                  ),
+                  const Spacer(),
+                  ChoiceChip(
+                    label: const Text("> 35kV (Cao thế)"),
+                    selected: _laVoltageLevel == '>35kV',
+                    selectedColor: AppTheme.myOrangeAccent,
+                    backgroundColor: AppTheme.myDarkNavy,
+                    labelStyle: TextStyle(
+                      color: _laVoltageLevel == '>35kV' ? Colors.white : Colors.white70,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                    onSelected: (val) {
+                      if (val) setState(() => _laVoltageLevel = '>35kV');
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  ChoiceChip(
+                    label: const Text("≤ 35kV (Trung thế)"),
+                    selected: _laVoltageLevel == '<=35kV',
+                    selectedColor: AppTheme.myOrangeAccent,
+                    backgroundColor: AppTheme.myDarkNavy,
+                    labelStyle: TextStyle(
+                      color: _laVoltageLevel == '<=35kV' ? Colors.white : Colors.white70,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                    onSelected: (val) {
+                      if (val) setState(() => _laVoltageLevel = '<=35kV');
+                    },
+                  ),
+                ],
+              ),
+            ),
+
             // MODULE 1: QUY ĐỔI & PHÂN TÁCH DÒNG RÒ -----------------
             Card(
               child: Padding(
@@ -345,6 +399,14 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                           textAlign: TextAlign.center,
                         ),
                       ),
+                    if (iResult != null || iTotalCalc != null || iR20Calc != null)
+                      StandardEvaluationWidget(
+                        testCode: 'LA_I_leak',
+                        voltageLevel: _laVoltageLevel,
+                        primaryValue: iR20Calc ?? iResult ?? iTotalCalc,
+                        unit: iR20Calc != null ? 'µA' : 'mA',
+                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN DÒNG RÒ LA",
+                      ),
                   ],
                 ),
               ),
@@ -402,6 +464,13 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                         ),
                         textAlign: TextAlign.center,
                       ),
+                      StandardEvaluationWidget(
+                        testCode: 'LA_U_ref',
+                        voltageLevel: _laVoltageLevel,
+                        primaryValue: u1mAError?.abs(),
+                        unit: '%',
+                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐẶC TÍNH V-A (Uref)",
+                      ),
                     ]
                   ],
                 ),
@@ -435,7 +504,7 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                       onPressed: _tinhCachDien,
                       child: const Text('TÍNH Rcd LA'),
                     ),
-                    if (minRcdLa != null)
+                    if (minRcdLa != null) ...[
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(
@@ -446,7 +515,15 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                               fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
-                      )
+                      ),
+                      StandardEvaluationWidget(
+                        testCode: 'LA_R_cd',
+                        voltageLevel: _laVoltageLevel,
+                        primaryValue: minRcdLa,
+                        unit: 'MΩ',
+                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN CÁCH ĐIỆN LA",
+                      ),
+                    ]
                   ],
                 ),
               ),

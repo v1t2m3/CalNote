@@ -4,6 +4,7 @@ import 'package:mte_calculator_pro/models/test_record.dart';
 import '../services/formula_service.dart';
 import '../services/calibration_service.dart';
 import '../widgets/uncertainty_widget.dart';
+import '../widgets/standard_evaluation_widget.dart';
 import '../core/theme/app_theme.dart';
 import 'note_detail_screen.dart';
 
@@ -16,6 +17,8 @@ class CircuitBreakerScreen extends StatefulWidget {
 }
 
 class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
+  String _cbVoltageLevel = '>35kV';
+
   // 1. Điện trở cách điện
   final TextEditingController rCdACtrl = TextEditingController();
   final TextEditingController rCdBCtrl = TextEditingController();
@@ -275,6 +278,57 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
+            // BỘ CHỌN CẤP ĐIỆN ÁP MÁY CẮT
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                color: AppTheme.myMedNavy,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppTheme.myOrangeAccent.withValues(alpha: 0.4)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.toggle_on, color: AppTheme.myOrangeAccent, size: 22),
+                  const SizedBox(width: 8),
+                  const Text(
+                    "Cấp điện áp MC: ",
+                    style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 13),
+                  ),
+                  const Spacer(),
+                  ChoiceChip(
+                    label: const Text("> 35kV (Cao thế)"),
+                    selected: _cbVoltageLevel == '>35kV',
+                    selectedColor: AppTheme.myOrangeAccent,
+                    backgroundColor: AppTheme.myDarkNavy,
+                    labelStyle: TextStyle(
+                      color: _cbVoltageLevel == '>35kV' ? Colors.white : Colors.white70,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                    onSelected: (val) {
+                      if (val) setState(() => _cbVoltageLevel = '>35kV');
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  ChoiceChip(
+                    label: const Text("≤ 35kV (Trung thế)"),
+                    selected: _cbVoltageLevel == '<=35kV',
+                    selectedColor: AppTheme.myOrangeAccent,
+                    backgroundColor: AppTheme.myDarkNavy,
+                    labelStyle: TextStyle(
+                      color: _cbVoltageLevel == '<=35kV' ? Colors.white : Colors.white70,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                    onSelected: (val) {
+                      if (val) setState(() => _cbVoltageLevel = '<=35kV');
+                    },
+                  ),
+                ],
+              ),
+            ),
+
             // MODULE 1: ĐIỆN TRỞ CÁCH ĐIỆN
             Card(
               child: Padding(
@@ -300,9 +354,9 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                     const SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: _tinhCachDien,
-                      child: const Text('CẬP NHẬT Rcd'),
+                      child: const Text('TÍNH Rcd'),
                     ),
-                    if (minRcd != null)
+                    if (minRcd != null) ...[
                       Padding(
                         padding: const EdgeInsets.only(top: 12),
                         child: Text(
@@ -310,7 +364,15 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.greenAccent),
                           textAlign: TextAlign.center,
                         ),
-                      )
+                      ),
+                      StandardEvaluationWidget(
+                        testCode: 'MC_R_cd',
+                        voltageLevel: _cbVoltageLevel,
+                        primaryValue: minRcd,
+                        unit: 'MΩ',
+                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN CÁCH ĐIỆN MÁY CẮT",
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -343,7 +405,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                     const SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: _tinhTiepXuc,
-                      child: const Text('CẬP NHẬT Rtx'),
+                      child: const Text('TÍNH Rtx'),
                     ),
                     if (maxRtx != null) ...[
                        Padding(
@@ -388,6 +450,19 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                       standardLimit: 100.0,
                       isUpperBound: true,
                     ),
+                    if (maxRtx != null)
+                      StandardEvaluationWidget(
+                        testCode: 'MC_R_tx',
+                        voltageLevel: _cbVoltageLevel,
+                        primaryValue: _rtxUncertaintyResult?.correctedValue ?? maxRtx!,
+                        phaseValues: {
+                          if (rTxACtrl.text.isNotEmpty) 'Pha A': parseInput(rTxACtrl.text),
+                          if (rTxBCtrl.text.isNotEmpty) 'Pha B': parseInput(rTxBCtrl.text),
+                          if (rTxCCtrl.text.isNotEmpty) 'Pha C': parseInput(rTxCCtrl.text),
+                        },
+                        unit: 'μΩ',
+                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐIỆN TRỞ TIẾP XÚC",
+                      ),
                   ],
                 ),
               ),
@@ -478,6 +553,18 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                                   color: Colors.redAccent,
                                   fontWeight: FontWeight.bold)),
                         ),
+                      StandardEvaluationWidget(
+                        testCode: _actionType == 'Close' ? 'MC_Time_Close' : 'MC_Time_Open',
+                        voltageLevel: _cbVoltageLevel,
+                        primaryValue: timeResult,
+                        phaseValues: {
+                          if (tACtrl.text.isNotEmpty) 'Pha A': parseInput(tACtrl.text),
+                          if (tBCtrl.text.isNotEmpty) 'Pha B': parseInput(tBCtrl.text),
+                          if (tCCtrl.text.isNotEmpty) 'Pha C': parseInput(tCCtrl.text),
+                        },
+                        unit: 'ms',
+                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN THỜI GIAN THAO TÁC",
+                      ),
                     ]
                   ],
                 ),

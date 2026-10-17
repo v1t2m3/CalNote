@@ -341,8 +341,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)),
                     subtitle: Text(
                       enabled
-                          ? 'Đang BẬT: Áp dụng hiệu chuẩn & ĐKĐBĐ (ISO 17025)'
-                          : 'Đang TẮT: Tính toán theo giá trị đo thông thường',
+                          ? 'BẬT: Tính toán với hiệu chuẩn & ĐKĐBĐ'
+                          : 'TẮT: Tính toán theo giá trị đo',
                       style: TextStyle(
                           color: enabled ? Colors.greenAccent : Colors.white54,
                           fontSize: 12),

@@ -4,6 +4,7 @@ import 'package:mte_calculator_pro/models/test_record.dart';
 import '../services/formula_service.dart';
 import '../services/calibration_service.dart';
 import '../widgets/uncertainty_widget.dart';
+import '../widgets/standard_evaluation_widget.dart';
 import '../core/theme/app_theme.dart';
 import 'note_detail_screen.dart';
 
@@ -18,6 +19,8 @@ class TransformerCalculatorScreen extends StatefulWidget {
 
 class _TransformerCalculatorScreenState
     extends State<TransformerCalculatorScreen> {
+  String _transformerVoltageLevel = '>35kV';
+
   // M1. CÁCH ĐIỆN
   final TextEditingController rcCHCtrl = TextEditingController();
   final TextEditingController rcCVCtrl = TextEditingController();
@@ -576,6 +579,57 @@ class _TransformerCalculatorScreenState
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
+            // CHỌN CẤP ĐIỆN ÁP MBA ĐỂ TỰ ĐỘNG LẤY TIÊU CHUẨN
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                color: AppTheme.myMedNavy,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppTheme.myOrangeAccent.withValues(alpha: 0.4)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.flash_on, color: AppTheme.myOrangeAccent, size: 20),
+                  const SizedBox(width: 8),
+                  const Text(
+                    "Cấp điện áp MBA: ",
+                    style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 13),
+                  ),
+                  const Spacer(),
+                  ChoiceChip(
+                    label: const Text("> 35kV (Cao thế)"),
+                    selected: _transformerVoltageLevel == '>35kV',
+                    selectedColor: AppTheme.myOrangeAccent,
+                    backgroundColor: AppTheme.myDarkNavy,
+                    labelStyle: TextStyle(
+                      color: _transformerVoltageLevel == '>35kV' ? Colors.white : Colors.white70,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                    onSelected: (val) {
+                      if (val) setState(() => _transformerVoltageLevel = '>35kV');
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  ChoiceChip(
+                    label: const Text("≤ 35kV (Trung thế)"),
+                    selected: _transformerVoltageLevel == '<=35kV',
+                    selectedColor: AppTheme.myOrangeAccent,
+                    backgroundColor: AppTheme.myDarkNavy,
+                    labelStyle: TextStyle(
+                      color: _transformerVoltageLevel == '<=35kV' ? Colors.white : Colors.white70,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                    onSelected: (val) {
+                      if (val) setState(() => _transformerVoltageLevel = '<=35kV');
+                    },
+                  ),
+                ],
+              ),
+            ),
+
             // MODULE 1: CÁCH ĐIỆN ---------------------------------
             Card(
               child: Padding(
@@ -600,7 +654,7 @@ class _TransformerCalculatorScreenState
                       onPressed: _tinhCachDien,
                       child: const Text('CẬP NHẬT Rcd'),
                     ),
-                    if (minRcd != null)
+                    if (minRcd != null) ...[
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(
@@ -608,7 +662,15 @@ class _TransformerCalculatorScreenState
                           style: const TextStyle(color: Colors.greenAccent, fontSize: 16, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
-                      )
+                      ),
+                      StandardEvaluationWidget(
+                        testCode: 'MBA_R_cd',
+                        voltageLevel: _transformerVoltageLevel,
+                        primaryValue: minRcd,
+                        unit: 'MΩ',
+                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐIỆN TRỞ CÁCH ĐIỆN",
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -692,12 +754,25 @@ class _TransformerCalculatorScreenState
                         });
                       },
                       phaseResults: _rdcPhaseUncertainty.isNotEmpty ? _rdcPhaseUncertainty : null,
-                      summaryTitle: 'Lệch pha sau hiệu chỉnh (ΔR_hc):',
+                      summaryTitle: 'ΔR_hc:',
                       summaryValueText: deltaRHc != null
                           ? '${deltaRHc!.toStringAsFixed(2)} % ${deltaRHc! <= 2.0 ? "(ĐẠT ≤ 2%)" : "(CẢNH BÁO: > 2%)"}'
                           : null,
                       summaryPass: deltaRHc != null ? (deltaRHc! <= 2.0) : null,
                     ),
+                    if (deltaR != null || rResultA != null)
+                      StandardEvaluationWidget(
+                        testCode: 'MBA_R_dc',
+                        voltageLevel: _transformerVoltageLevel,
+                        primaryValue: deltaRHc ?? deltaR,
+                        phaseValues: {
+                          if (rResultA != null) 'Pha A': rResultA!,
+                          if (rResultB != null) 'Pha B': rResultB!,
+                          if (rResultC != null) 'Pha C': rResultC!,
+                        },
+                        unit: '%',
+                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐIỆN TRỞ 1 CHIỀU",
+                      ),
                   ],
                 ),
               ),
@@ -750,6 +825,21 @@ class _TransformerCalculatorScreenState
                       },
                       phaseResults: _ratioPhaseUncertainty.isNotEmpty ? _ratioPhaseUncertainty : null,
                     ),
+                    if (errA != null || errB != null || errC != null)
+                      StandardEvaluationWidget(
+                        testCode: 'MBA_K_error',
+                        voltageLevel: _transformerVoltageLevel,
+                        primaryValue: [errA, errB, errC].whereType<double>().isNotEmpty
+                            ? [errA, errB, errC].whereType<double>().map((e) => e.abs()).reduce(max)
+                            : 0.0,
+                        phaseValues: {
+                          if (errA != null) 'Pha A': errA!,
+                          if (errB != null) 'Pha B': errB!,
+                          if (errC != null) 'Pha C': errC!,
+                        },
+                        unit: '%',
+                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN SAI LỆCH TỶ SỐ BIẾN",
+                      ),
                   ],
                 ),
               ),

@@ -96,22 +96,23 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
   }
 
   int _getItemCountForCategory(String catCode, int tabIndex) {
-    bool matchesVoltage(String level) {
-      if (_selectedVoltage == "ALL") return true;
-      return level == _selectedVoltage || level == "ALL";
-    }
-
     if (tabIndex == 0) {
       return _standardsList
-          .where((e) => e.categoryCode == catCode && matchesVoltage(e.voltageLevel))
+          .where((e) =>
+              e.categoryCode == catCode &&
+              ReferenceStandardService.matchVoltage(e.voltageLevel, _selectedVoltage))
           .length;
     } else if (tabIndex == 1) {
       return _tt02List
-          .where((e) => e.categoryCode == catCode && matchesVoltage(e.voltageLevel))
+          .where((e) =>
+              e.categoryCode == catCode &&
+              ReferenceStandardService.matchVoltage(e.voltageLevel, _selectedVoltage))
           .length;
     } else {
       return _cbmList
-          .where((e) => e.categoryCode == catCode && matchesVoltage(e.voltageLevel))
+          .where((e) =>
+              e.categoryCode == catCode &&
+              ReferenceStandardService.matchVoltage(e.voltageLevel, _selectedVoltage))
           .length;
     }
   }
@@ -197,7 +198,7 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
                     const SizedBox(width: 6),
                     _buildVoltageChip("≤ 35kV (Trung thế)", "<=35kV"),
                     const SizedBox(width: 6),
-                    _buildVoltageChip("110kV (Cao thế)", "110kV"),
+                    _buildVoltageChip("> 35kV (Cao thế)", ">35kV"),
                   ],
                 ),
               ],
@@ -352,8 +353,7 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
 
   Widget _buildSearchResultsView(int tabIndex) {
     bool matchesVoltage(String level) {
-      if (_selectedVoltage == "ALL") return true;
-      return level == _selectedVoltage || level == "ALL";
+      return ReferenceStandardService.matchVoltage(level, _selectedVoltage);
     }
 
     if (tabIndex == 0) {
@@ -502,8 +502,8 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Chip(
-                  label: const Text("Thông tư 02/2025/TT-BCT",
+                const Chip(
+                  label: Text("Thông tư 02/2025/TT-BCT",
                       style: TextStyle(fontSize: 11, color: Colors.white)),
                   backgroundColor: Colors.blueAccent,
                 ),
@@ -704,7 +704,7 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
                 const SizedBox(width: 6),
                 _buildVoltageChip("≤ 35kV", "<=35kV"),
                 const SizedBox(width: 6),
-                _buildVoltageChip("110kV", "110kV"),
+                _buildVoltageChip("> 35kV", ">35kV"),
               ],
             ),
           ),
@@ -745,8 +745,7 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
   }
 
   bool _matchesVoltage(String level) {
-    if (_currentVoltage == "ALL") return true;
-    return level == _currentVoltage || level == "ALL";
+    return ReferenceStandardService.matchVoltage(level, _currentVoltage);
   }
 
   Widget _buildStandardView() {

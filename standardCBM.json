@@ -1,534 +1,2452 @@
 [
   {
-    "id": "CBM_001",
-    "category": "Máy Biến Áp",
+    "id": "STD_047",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
     "categoryCode": "transformer",
-    "subCategory": "Máy biến áp 110kV",
-    "item": "Điện trở cách điện cuộn dây (Rcđ / PI / Kht)",
-    "voltageLevel": "110kV",
-    "good": "Rcđ ≥ 300% R* hoặc PI > 2.0 hoặc Kht ≥ 1.4",
-    "fair": "200% R* ≤ Rcđ < 300% R* hoặc 1.25 < PI ≤ 2.0 hoặc 1.3 ≤ Kht < 1.4",
-    "average": "100% R* ≤ Rcđ < 200% R* hoặc 1.0 < PI ≤ 1.25 hoặc 1.1 ≤ Kht < 1.3",
-    "poor": "Rcđ < R* hoặc PI ≤ 1.0 hoặc Kht < 1.1",
-    "recommendation": "Tách máy thẩm tra tgδ, FDS, DGA; Lên phương án sấy/xử lý cách điện",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo điện trở cách điện cuộn dây (Rcđ)",
+    "testCode": "MBA_R_cd",
+    "voltageLevel": ">35kV",
+    "symbol": "Rcđ",
+    "unit": "%R*",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 300,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 200,
+        "max": 300,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 100,
+        "max": 200,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 100,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 300 %R*",
+    "fair": "200 ~ 300 %R*",
+    "average": "100 ~ 200 %R*",
+    "poor": "< 100 %R*",
+    "note": "Tốt: Rcđ ≥ 300% R*; Khá: 200% R* ≤ Rcđ < 300% R*; TB: 100% R* ≤ Rcđ < 200% R*; Xấu: Rcđ < 100% R*",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Tách máy thẩm tra tgδ, FDS, DGA; Lên phương án sấy/xử lý cách điện"
   },
   {
-    "id": "CBM_002",
-    "category": "Máy Biến Áp",
+    "id": "STD_048",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
     "categoryCode": "transformer",
-    "subCategory": "Máy biến áp 110kV",
-    "item": "Điện trở cách điện gông từ (IR)",
-    "voltageLevel": "110kV",
-    "good": "IR>500 MW",
-    "fair": "100 < IR ≤ 500 MW",
-    "average": "10 ≤ IR ≤ 100 MW",
-    "poor": "IR < 10 MW",
-    "recommendation": "Cách điện bị phân hủy ở mức độ nặng, cần thẩm tra và giám sát xu hướng suy giảm cách điện sau mỗi 12 tháng kết hợp với thử nghiệm DGA",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo điện trở cách điện cuộn dây (PI)",
+    "testCode": "MBA_PI",
+    "voltageLevel": ">35kV",
+    "symbol": "PI",
+    "unit": "",
+    "levels": {
+      "level1": {
+        "compare": ">",
+        "value": 2.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 1.25,
+        "max": 2.0,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 1.0,
+        "max": 1.25,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "≤",
+        "value": 1.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "> 2.0",
+    "fair": "1.25 ~ 2.0",
+    "average": "1.0 ~ 1.25",
+    "poor": "≤ 1.0",
+    "note": "Tốt: PI > 2.0; Khá: 1.25 < PI ≤ 2.0; TB: 1.0 < PI ≤ 1.25; Xấu: PI ≤ 1.0",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Tách máy thẩm tra tgδ, FDS, DGA; Lên phương án sấy/xử lý cách điện"
   },
   {
-    "id": "CBM_003",
-    "category": "Máy Biến Áp",
+    "id": "STD_049",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
     "categoryCode": "transformer",
-    "subCategory": "Máy biến áp 110kV",
-    "item": "Tổn hao điện môi tgδ cuộn dây (%)",
-    "voltageLevel": "110kV",
-    "good": "tgδ ≤ 0.5%",
-    "fair": "0.5% < tgδ ≤ 0.7%",
-    "average": "0.7% < tgδ ≤ 1.0% hoặc tgδ > 0.5% và độ tăng về tgδ ≥30%",
-    "poor": "tgδ > 1.0% hoặc tgδ > 0.7% và độ tăng về tgδ ≥30%",
-    "recommendation": "Kiểm tra mức độ nhiễm ẩm cách điện cứng, lên kế hoạch lọc/sấy dầu",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo điện trở cách điện cuộn dây (Kht)",
+    "testCode": "MBA_Kht",
+    "voltageLevel": ">35kV",
+    "symbol": "Kht",
+    "unit": "",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 1.4,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 1.3,
+        "max": 1.4,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 1.1,
+        "max": 1.3,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 1.1,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 1.4",
+    "fair": "1.3 ~ 1.4",
+    "average": "1.1 ~ 1.3",
+    "poor": "< 1.1",
+    "note": "Tốt: Kht ≥ 1.4; Khá: 1.3 ≤ Kht < 1.4; TB: 1.1 ≤ Kht < 1.3; Xấu: Kht < 1.1",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Tách máy thẩm tra tgδ, FDS, DGA; Lên phương án sấy/xử lý cách điện"
   },
   {
-    "id": "CBM_004",
-    "category": "Máy Biến Áp",
+    "id": "STD_050",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
     "categoryCode": "transformer",
-    "subCategory": "Máy biến áp 110kV",
-    "item": "Độ lệch Điện trở 1 chiều cuộn dây (% ΔR)",
-    "voltageLevel": "110kV",
-    "good": "ΔR ≤ 1.0%",
-    "fair": "1.0% < ΔR ≤ 2.0%",
-    "average": "2.0% < ΔR ≤ 3.0%",
-    "poor": "ΔR > 3.0%",
-    "recommendation": "Kiểm tra bộ điều áp OLTC, các mối nối đấu dây cuộn dây MBA",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo điện trở cách điện gông từ",
+    "testCode": "MBA_R_gt",
+    "voltageLevel": ">35kV",
+    "symbol": "IR",
+    "unit": "MΩ",
+    "levels": {
+      "level1": {
+        "compare": ">",
+        "value": 500,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 100,
+        "max": 500,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 10,
+        "max": 100,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 10,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "> 500 MΩ",
+    "fair": "100 ~ 500 MΩ",
+    "average": "10 ~ 100 MΩ",
+    "poor": "< 10 MΩ",
+    "note": "Tốt: IR > 500 MΩ; Khá: 100 < IR ≤ 500 MΩ; TB: 10 ≤ IR ≤ 100 MΩ; Xấu: IR < 10 MΩ",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Cách điện bị phân hủy ở mức độ nặng, cần thẩm tra và giám sát xu hướng suy giảm cách điện sau mỗi 12 tháng kết hợp với thử nghiệm DGA"
   },
   {
-    "id": "CBM_005",
-    "category": "Máy Biến Áp",
+    "id": "STD_051",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
     "categoryCode": "transformer",
-    "subCategory": "Máy biến áp 110kV",
-    "item": "Kiểm tra tỉ số biến (ΔKu% )",
-    "voltageLevel": "110kV",
-    "good": "ΔKu% ≤ 0.3",
-    "fair": "0.3 < ΔKu% ≤ 0.5",
-    "average": "0.5 < ΔKu% ≤ 0.7",
-    "poor": "0.7 < ΔKu%",
-    "recommendation": "Nếu xác định nguyên nhân do chất lượng mạch từ cần tiến hành đo tổn hao không tải Po. Tách khỏi vận hành khi giá trị Po vượt quá giá trị xuất xưởng.",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo tổn hao điện môi tgδ cuộn dây",
+    "testCode": "MBA_tg_delta",
+    "voltageLevel": ">35kV",
+    "symbol": "tgδ",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 0.5,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 0.5,
+        "max": 0.7,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 0.7,
+        "max": 1.0,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 1.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 0.5 %",
+    "fair": "0.5 ~ 0.7 %",
+    "average": "0.7 ~ 1.0 %",
+    "poor": "> 1.0 %",
+    "note": "Tốt: tgδ ≤ 0.5%; Khá: 0.5% < tgδ ≤ 0.7%; TB: 0.7% < tgδ ≤ 1.0%; Xấu: tgδ > 1.0%",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Kiểm tra mức độ nhiễm ẩm cách điện cứng, lên kế hoạch lọc/sấy dầu"
   },
   {
-    "id": "CBM_006",
-    "category": "Máy Biến Áp",
+    "id": "STD_052",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
     "categoryCode": "transformer",
-    "subCategory": "Máy biến áp 110kV",
-    "item": "Độ lệch Điện kháng tản (% ΔZk)",
-    "voltageLevel": "110kV",
-    "good": "ΔZk% ≤ 1.0%",
-    "fair": "1.0% < ΔZk% ≤ 3.0%",
-    "average": "3.0% < ΔZk% ≤ 5.0%",
-    "poor": "ΔZk% > 5.0%",
-    "recommendation": "Thẩm tra SFRA, R1c; Tách MBA kiểm tra biến dạng cuộn dây do ngắn mạch",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo điện trở một chiều các cuộn dây",
+    "testCode": "MBA_R_dc",
+    "voltageLevel": ">35kV",
+    "symbol": "ΔR",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 1.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 1.0,
+        "max": 2.0,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 2.0,
+        "max": 3.0,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 3.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 1.0 %",
+    "fair": "1.0 ~ 2.0 %",
+    "average": "2.0 ~ 3.0 %",
+    "poor": "> 3.0 %",
+    "note": "Tốt: ΔR ≤ 1.0%; Khá: 1.0% < ΔR ≤ 2.0%; TB: 2.0% < ΔR ≤ 3.0%; Xấu: ΔR > 3.0%",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Kiểm tra bộ điều áp OLTC, các mối nối đấu dây cuộn dây MBA"
   },
   {
-    "id": "CBM_007",
-    "category": "Máy Biến Áp",
+    "id": "STD_053",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
     "categoryCode": "transformer",
-    "subCategory": "Máy biến áp 110kV",
-    "item": "Sứ đầu vào 110kV (C1): tgδ & ΔC",
-    "voltageLevel": "110kV",
-    "good": "tgδ ≤ 0.4% và ΔC ≤ 3%",
-    "fair": "0.4 < tan δ% ≤ 0.7;\n3% < ΔC ≤ 5%",
-    "average": "0.7 < tan δ% ≤ 1;\n5% < ΔC ≤ 10%",
-    "poor": "tgδ > 1.0% hoặc ΔC > 10%",
-    "recommendation": "Tách MBA thay sứ mới ngay lập tức để tránh nổ sứ đầu vào",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo tỷ số biến đổi",
+    "testCode": "MBA_K_error",
+    "voltageLevel": ">35kV",
+    "symbol": "Δku",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 0.3,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 0.3,
+        "max": 0.5,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 0.5,
+        "max": 0.7,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 0.7,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 0.3 %",
+    "fair": "0.3 ~ 0.5 %",
+    "average": "0.5 ~ 0.7 %",
+    "poor": "> 0.7 %",
+    "note": "Tốt: ΔKu% ≤ 0.3%; Khá: 0.3% < ΔKu% ≤ 0.5%; TB: 0.5% < ΔKu% ≤ 0.7%; Xấu: ΔKu% > 0.7%",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Nếu xác định nguyên nhân do chất lượng mạch từ cần tiến hành đo tổn hao không tải Po. Tách khỏi vận hành khi giá trị Po vượt quá giá trị xuất xưởng."
   },
   {
-    "id": "CBM_008",
-    "category": "Máy Biến Áp",
+    "id": "STD_054",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
     "categoryCode": "transformer",
-    "subCategory": "Máy biến áp 110kV",
-    "item": "Dầu cách điện MBA: Điện áp đánh thủng (Uđt)",
-    "voltageLevel": "110kV",
-    "good": "Uđt ≥ 65 kV/2.5mm",
-    "fair": "60 ≤ Udt < 65kV/2.5mm",
-    "average": "55 ≤ Uđt < 60 kV/2.5mm",
-    "poor": "Udột < 55 kV/2.5mm",
-    "recommendation": "Tách máy lọc dầu vacuumn online/offline hoặc thay dầu mới",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo trở kháng ngắn mạch và tổn thất có tải",
+    "testCode": "MBA_U_k",
+    "voltageLevel": ">35kV",
+    "symbol": "ΔZk",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 1.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 1.0,
+        "max": 3.0,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 3.0,
+        "max": 5.0,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 5.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 1.0 %",
+    "fair": "1.0 ~ 3.0 %",
+    "average": "3.0 ~ 5.0 %",
+    "poor": "> 5.0 %",
+    "note": "Tốt: ΔZk% ≤ 1.0%; Khá: 1.0% < ΔZk% ≤ 3.0%; TB: 3.0% < ΔZk% ≤ 5.0%; Xấu: ΔZk% > 5.0%",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Thẩm tra SFRA, R1c; Tách MBA kiểm tra biến dạng cuộn dây do ngắn mạch"
   },
   {
-    "id": "CBM_009",
-    "category": "Máy Biến Áp",
+    "id": "STD_055",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
     "categoryCode": "transformer",
-    "subCategory": "Máy biến áp 110kV",
-    "item": "Hàm lượng nước trong dầu (ppm)",
-    "voltageLevel": "110kV",
-    "good": "≤ 10ppm",
-    "fair": "> 10¸20ppm",
-    "average": "> 20¸25ppm",
-    "poor": "> 25ppm",
-    "recommendation": "Tách máy lọc dầu vacuumn online/offline hoặc thay dầu mới",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo tổn hao điện môi tgδ sứ",
+    "testCode": "MBA_Bush_tg_delta",
+    "voltageLevel": ">35kV",
+    "symbol": "tgδ",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 0.4,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 0.4,
+        "max": 0.7,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 0.7,
+        "max": 1.0,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 1.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 0.4 %",
+    "fair": "0.4 ~ 0.7 %",
+    "average": "0.7 ~ 1.0 %",
+    "poor": "> 1.0 %",
+    "note": "Sứ đầu vào 110kV (C1): Tốt: tgδ ≤ 0.4% và ΔC ≤ 3%; Khá: 0.4 < tgδ ≤ 0.7%, 3% < ΔC ≤ 5%; TB: 0.7 < tgδ ≤ 1.0%, 5% < ΔC ≤ 10%; Xấu: tgδ > 1.0% hoặc ΔC > 10%",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Tách MBA thay sứ mới ngay lập tức để tránh nổ sứ đầu vào"
   },
   {
-    "id": "CBM_010",
-    "category": "Máy Biến Áp",
+    "id": "STD_056",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
     "categoryCode": "transformer",
-    "subCategory": "Máy biến áp 110kV",
-    "item": "Phóng điện cục bộ (PD Online / Ultrasonic)",
-    "voltageLevel": "110kV",
-    "good": "UHF: PD < 500pC;\nHFCT: PD < 10dB;\nAE: PD < 1.5mV",
-    "fair": "UHF: 500≤ PD <1000pC;\nHFCT: 10 ≤ PD < 20 dB;\nTEV 22-29 dB",
-    "average": "UHF: 1000 ≤PD≤ 2500pC;\nHFCT: 20 ≤ PD ≤ 40 dB;\nAE: 2.5 ≤ PD ≤ 5.5mV;\nTEV: 30-37 dB",
-    "poor": "UHF: PD > 2500pC;\nHFCT: PD > 40 dB;\nAE: PD > 5.5mV;\nTEV: > 38 dB",
-    "recommendation": "Thiết bị có sự cố PD nghiêm trọng, tham khảo chuyên gia & tách vận hành khẩn",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy biến áp lực",
+    "item": "Thử nghiệm điện áp phóng điện (chọc thủng)",
+    "testCode": "MBA_Oil_Udt",
+    "voltageLevel": ">35kV",
+    "symbol": "Uđt",
+    "unit": "kV",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 65,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 60,
+        "max": 65,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 55,
+        "max": 60,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 55,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 65 kV",
+    "fair": "60 ~ 65 kV",
+    "average": "55 ~ 60 kV",
+    "poor": "< 55 kV",
+    "note": "Dầu cách điện MBA: Tốt: ≥ 65 kV/2.5mm; Khá: 60 ÷ 65 kV/2.5mm; TB: 55 ÷ 60 kV/2.5mm; Xấu: < 55 kV/2.5mm",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Tách máy lọc dầu vacuum online/offline hoặc thay dầu mới"
   },
   {
-    "id": "CBM_011",
-    "category": "Máy Cắt & Tủ Đóng Cắt",
+    "id": "STD_057",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
+    "categoryCode": "transformer",
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo độ ẩm dầu cách điện",
+    "testCode": "MBA_R_cd",
+    "voltageLevel": ">35kV",
+    "symbol": "H2O",
+    "unit": "ppm",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 10,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 10,
+        "max": 20,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 20,
+        "max": 25,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 25,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 10 ppm",
+    "fair": "10 ~ 20 ppm",
+    "average": "20 ~ 25 ppm",
+    "poor": "> 25 ppm",
+    "note": "Hàm lượng nước trong dầu: Tốt: ≤ 10ppm; Khá: 10 ÷ 20ppm; TB: 20 ÷ 25ppm; Xấu: > 25ppm",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Tách máy lọc dầu vacuum online/offline hoặc thay dầu mới"
+  },
+  {
+    "id": "STD_058",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
+    "categoryCode": "transformer",
+    "subCategory": "Máy biến áp lực",
+    "item": "Phóng điện cục bộ PD Online (UHF)",
+    "testCode": "MBA_Oil_Udt",
+    "voltageLevel": ">35kV",
+    "symbol": "UHF",
+    "unit": "pC",
+    "levels": {
+      "level1": {
+        "compare": "<",
+        "value": 500,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 500,
+        "max": 1000,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 1000,
+        "max": 2500,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 2500,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "< 500 pC",
+    "fair": "500 ~ 1000 pC",
+    "average": "1000 ~ 2500 pC",
+    "poor": "> 2500 pC",
+    "note": "UHF: Tốt < 500pC; Khá: 500 ÷ 1000pC; TB: 1000 ÷ 2500pC; Xấu: > 2500pC",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Thiết bị có sự cố PD nghiêm trọng, tham khảo chuyên gia & tách vận hành khẩn"
+  },
+  {
+    "id": "STD_059",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
+    "categoryCode": "transformer",
+    "subCategory": "Máy biến áp lực",
+    "item": "Phóng điện cục bộ PD Online (HFCT)",
+    "testCode": "MBA_Oil_Udt",
+    "voltageLevel": ">35kV",
+    "symbol": "HFCT",
+    "unit": "dB",
+    "levels": {
+      "level1": {
+        "compare": "<",
+        "value": 10,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 10,
+        "max": 20,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 20,
+        "max": 40,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 40,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "< 10 dB",
+    "fair": "10 ~ 20 dB",
+    "average": "20 ~ 40 dB",
+    "poor": "> 40 dB",
+    "note": "HFCT: Tốt < 10dB; Khá: 10 ÷ 20dB; TB: 20 ÷ 40dB; Xấu: > 40dB",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Thiết bị có sự cố PD nghiêm trọng, tham khảo chuyên gia & tách vận hành khẩn"
+  },
+  {
+    "id": "STD_060",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
+    "categoryCode": "transformer",
+    "subCategory": "Máy biến áp lực",
+    "item": "Phóng điện cục bộ PD Online (AE)",
+    "testCode": "MBA_Oil_Udt",
+    "voltageLevel": ">35kV",
+    "symbol": "AE",
+    "unit": "mV",
+    "levels": {
+      "level1": {
+        "compare": "<",
+        "value": 1.5,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 1.5,
+        "max": 2.5,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 2.5,
+        "max": 5.5,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 5.5,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "< 1.5 mV",
+    "fair": "1.5 ~ 2.5 mV",
+    "average": "2.5 ~ 5.5 mV",
+    "poor": "> 5.5 mV",
+    "note": "AE: Tốt < 1.5mV; Khá: 1.5 ÷ 2.5mV; TB: 2.5 ÷ 5.5mV; Xấu: > 5.5mV",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Thiết bị có sự cố PD nghiêm trọng, tham khảo chuyên gia & tách vận hành khẩn"
+  },
+  {
+    "id": "STD_061",
+    "type": "cbm",
+    "category": "Máy cắt",
     "categoryCode": "circuit_breaker",
-    "subCategory": "Máy cắt 110kV",
-    "item": "Điện trở cách điện (IR)",
-    "voltageLevel": "110kV",
-    "good": "IR ≥ 5000 MW",
-    "fair": "1000 ≤ IR < 5000 MW",
-    "average": "200 ≤ IR < 1000 MW",
-    "poor": "IR < 200 MW",
-    "recommendation": "Thử điện áp tăng cao để tìm vị trí lỗi",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy cắt",
+    "item": "Đo điện trở cách điện",
+    "testCode": "MC_R_cd",
+    "voltageLevel": ">35kV",
+    "symbol": "Rcđ",
+    "unit": "MΩ",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 5000,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 1000,
+        "max": 5000,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 200,
+        "max": 1000,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 200,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 5000 MΩ",
+    "fair": "1000 ~ 5000 MΩ",
+    "average": "200 ~ 1000 MΩ",
+    "poor": "< 200 MΩ",
+    "note": "Tốt: IR ≥ 5000 MΩ; Khá: 1000 ≤ IR < 5000 MΩ; TB: 200 ≤ IR < 1000 MΩ; Xấu: IR < 200 MΩ",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Thử điện áp tăng cao để tìm vị trí lỗi"
   },
   {
-    "id": "CBM_012",
-    "category": "Máy Cắt & Tủ Đóng Cắt",
+    "id": "STD_062",
+    "type": "cbm",
+    "category": "Máy cắt",
     "categoryCode": "circuit_breaker",
-    "subCategory": "Máy cắt 110kV",
-    "item": "Điện trở tiếp xúc mạch chính (% ΔRtx)",
-    "voltageLevel": "110kV",
-    "good": "ΔRtx ≤ 10% so với tham chiếu NSX",
-    "fair": "10% < ΔRtx ≤ 30%",
-    "average": "30% < ΔRtx ≤ 50%",
-    "poor": "ΔRtx > 50% hoặc Rtx vượt giới hạn NSX",
-    "recommendation": "Bảo dưỡng dập hồ quang, tiếp điểm chính, siết chặt liên kết cơ khí",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy cắt",
+    "item": "Đo điện trở tiếp xúc các tiếp điểm",
+    "testCode": "MC_R_tx",
+    "voltageLevel": ">35kV",
+    "symbol": "ΔRtx",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 10,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 10,
+        "max": 30,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 30,
+        "max": 50,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 50,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 10 %",
+    "fair": "10 ~ 30 %",
+    "average": "30 ~ 50 %",
+    "poor": "> 50 %",
+    "note": "Tốt: ΔRtx ≤ 10% so với NSX; Khá: 10% < ΔRtx ≤ 30%; TB: 30% < ΔRtx ≤ 50%; Xấu: ΔRtx > 50%",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Bảo dưỡng dập hồ quang, tiếp điểm chính, siết chặt liên kết cơ khí"
   },
   {
-    "id": "CBM_013",
-    "category": "Máy Cắt & Tủ Đóng Cắt",
+    "id": "STD_063",
+    "type": "cbm",
+    "category": "Máy cắt",
     "categoryCode": "circuit_breaker",
-    "subCategory": "Máy cắt 110kV",
-    "item": "Thời gian đóng (Δtclose) & Không đồng pha đóng (ΔKĐPclose)",
-    "voltageLevel": "110kV",
-    "good": "Δtclose ≤ 3ms, ΔKĐPclose ≤ 2.5ms",
-    "fair": "3ms < Δtclose ≤ 4ms hoặc\n2.5ms < ΔKĐPclose ≤ 3.5ms",
-    "average": "4ms < Δtclose ≤ 5ms hoặc\nΔKĐP 3.5-5.0ms",
-    "poor": "Δtclose > 5ms hoặc\nΔKĐPclose > 5.0ms",
-    "recommendation": "Bảo dưỡng cơ cấu truyền động, lẫy cuộn đóng, chỉnh lại thanh liên kết pha",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy cắt",
+    "item": "Đo chu trình thao tác máy cắt - đóng",
+    "testCode": "MC_Time_Close",
+    "voltageLevel": ">35kV",
+    "symbol": "ΔtClose",
+    "unit": "ms",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 3.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 3.0,
+        "max": 4.0,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 4.0,
+        "max": 5.0,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 5.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 3.0 ms",
+    "fair": "3.0 ~ 4.0 ms",
+    "average": "4.0 ~ 5.0 ms",
+    "poor": "> 5.0 ms",
+    "note": "Tốt: Δtclose ≤ 3ms, ΔKĐPclose ≤ 2.5ms; Khá: 3-4ms (KĐP 2.5-3.5ms); TB: 4-5ms (KĐP 3.5-5.0ms); Xấu: > 5ms",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Bảo dưỡng cơ cấu truyền động, lẫy cuộn đóng, chỉnh lại thanh liên kết pha"
   },
   {
-    "id": "CBM_014",
-    "category": "Máy Cắt & Tủ Đóng Cắt",
+    "id": "STD_064",
+    "type": "cbm",
+    "category": "Máy cắt",
     "categoryCode": "circuit_breaker",
-    "subCategory": "Máy cắt 110kV",
-    "item": "Thời gian cắt (Δttrip) & Không đồng pha cắt (ΔKĐPopen)",
-    "voltageLevel": "110kV",
-    "good": "Δttrip ≤ 2ms, ΔKĐPopen ≤ 1.5ms",
-    "fair": "2ms < Δttrip ≤ 3ms hoặc\n1.5ms < ΔKĐPopen ≤ 2.5ms",
-    "average": "3ms < Δttrip ≤ 4ms hoặc\n2.5ms < ΔKĐPopen ≤ 3.3ms",
-    "poor": "Δttrip> 4ms hoặc\nΔKĐPopen > 3.3ms",
-    "recommendation": "Bảo dưỡng cơ cấu cắt, đo điện trở động máy cắt SF6",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy cắt",
+    "item": "Đo chu trình thao tác máy cắt - cắt",
+    "testCode": "MC_Time_Open",
+    "voltageLevel": ">35kV",
+    "symbol": "ΔtTrip",
+    "unit": "ms",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 2.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 2.0,
+        "max": 3.0,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 3.0,
+        "max": 4.0,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 4.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 2.0 ms",
+    "fair": "2.0 ~ 3.0 ms",
+    "average": "3.0 ~ 4.0 ms",
+    "poor": "> 4.0 ms",
+    "note": "Tốt: Δttrip ≤ 2ms, ΔKĐPopen ≤ 1.5ms; Khá: 2-3ms (KĐP 1.5-2.5ms); TB: 3-4ms (KĐP 2.5-3.3ms); Xấu: > 4ms (KĐP > 3.3ms)",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Bảo dưỡng cơ cấu cắt, đo điện trở động máy cắt SF6"
   },
   {
-    "id": "CBM_015",
-    "category": "Máy Cắt & Tủ Đóng Cắt",
+    "id": "STD_065",
+    "type": "cbm",
+    "category": "Máy cắt",
     "categoryCode": "circuit_breaker",
-    "subCategory": "Máy cắt 110kV",
-    "item": "Phân tích khí SF6:\nĐộ ẩm (Humidity);\nHàm lượng SO2 ;\nĐộ tinh khiết (Purity)",
-    "voltageLevel": "110kV",
-    "good": "Humidity ≤ 100 ppmv;\nSO2 + SOF2 ≤ 12ppmv;\nPurity ≥ 99%",
-    "fair": "100 < Humidity ≤ 200 ppmv;\n98% < Purity ≤ 99% ppmv",
-    "average": "200 < Humidity ≤ 500 ppmv;\n12ppmv < SO2 + SOF2 ≤ 18ppmv;\n97% < Purity ≤ 98% ppmv",
-    "poor": "Humidity > 500 ppmv;\n18ppmv < SO2 + SOF2;\nPurity < 97% ppmv",
-    "recommendation": "Hút chân không, xử lý khử ẩm hoặc thay mới khí SF6",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Máy cắt",
+    "item": "Phân tích khí SF6 - Độ ẩm (Humidity)",
+    "testCode": "MC_SF6_Hum",
+    "voltageLevel": ">35kV",
+    "symbol": "Humidity",
+    "unit": "ppm",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 100,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 100,
+        "max": 200,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 200,
+        "max": 500,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 500,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 100 ppm",
+    "fair": "100 ~ 200 ppm",
+    "average": "200 ~ 500 ppm",
+    "poor": "> 500 ppm",
+    "note": "Tốt: Humidity ≤ 100 ppmv; Khá: 100 < Humidity ≤ 200 ppmv; TB: 200 < Humidity ≤ 500 ppmv; Xấu: Humidity > 500 ppmv",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Hút chân không, xử lý khử ẩm hoặc thay mới khí SF6"
   },
   {
-    "id": "CBM_016",
-    "category": "Dao Cách Ly & Cầu Chì",
+    "id": "STD_066",
+    "type": "cbm",
+    "category": "Máy cắt",
+    "categoryCode": "circuit_breaker",
+    "subCategory": "Máy cắt",
+    "item": "Phân tích khí SF6 - Hàm lượng SO2",
+    "testCode": "MC_SF6_Hum",
+    "voltageLevel": ">35kV",
+    "symbol": "SO2",
+    "unit": "ppm",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 12,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "≤",
+        "value": 12,
+        "min": null,
+        "max": null,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 12,
+        "max": 18,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 18,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 12 ppm",
+    "fair": "≤ 12 ppm",
+    "average": "12 ~ 18 ppm",
+    "poor": "> 18 ppm",
+    "note": "Tốt/Khá: SO2 + SOF2 ≤ 12ppmv; TB: 12 < SO2 + SOF2 ≤ 18ppmv; Xấu: > 18ppmv",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Hút chân không, xử lý khử ẩm hoặc thay mới khí SF6"
+  },
+  {
+    "id": "STD_067",
+    "type": "cbm",
+    "category": "Máy cắt",
+    "categoryCode": "circuit_breaker",
+    "subCategory": "Máy cắt",
+    "item": "Phân tích khí SF6 - Độ tinh khiết (Purity)",
+    "testCode": "MC_SF6_Hum",
+    "voltageLevel": ">35kV",
+    "symbol": "Purity",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 99,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 98,
+        "max": 99,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 97,
+        "max": 98,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 97,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 99 %",
+    "fair": "98 ~ 99 %",
+    "average": "97 ~ 98 %",
+    "poor": "< 97 %",
+    "note": "Tốt: Purity ≥ 99%; Khá: 98% < Purity ≤ 99%; TB: 97% < Purity ≤ 98%; Xấu: Purity < 97%",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Hút chân không, xử lý khử ẩm hoặc thay mới khí SF6"
+  },
+  {
+    "id": "STD_068",
+    "type": "cbm",
+    "category": "Dao cách ly",
     "categoryCode": "disconnector",
-    "subCategory": "Dao cách ly 110kV",
-    "item": "Điện trở tiếp xúc & Điện trở cách điện",
-    "voltageLevel": "110kV",
-    "good": "ΔRtx ≤ 10%, Rcđ ≥ 1000 MΩ",
-    "fair": "10% < ΔRtx ≤ 30%",
-    "average": "30% < ΔRtx ≤ 50%",
-    "poor": "ΔRtx > 50% hoặc Rcđ < 1000 MΩ",
-    "recommendation": "Vệ sinh, xử lý ngàm tiếp xúc xước/cháy, thay sứ cách điện nứt vỡ",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Dao cách ly",
+    "item": "Đo điện trở tiếp xúc các tiếp điểm",
+    "testCode": "DCL_R_tx",
+    "voltageLevel": ">35kV",
+    "symbol": "ΔRtx",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 10,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 10,
+        "max": 30,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 30,
+        "max": 50,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 50,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 10 %",
+    "fair": "10 ~ 30 %",
+    "average": "30 ~ 50 %",
+    "poor": "> 50 %",
+    "note": "Tốt: ΔRtx ≤ 10%; Khá: 10% < ΔRtx ≤ 30%; TB: 30% < ΔRtx ≤ 50%; Xấu: ΔRtx > 50%",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Vệ sinh, xử lý ngàm tiếp xúc xước/cháy, thay sứ cách điện nứt vỡ"
   },
   {
-    "id": "CBM_017",
-    "category": "Chống Sét Van",
-    "categoryCode": "surge_arrester",
-    "subCategory": "Chống sét van 110kV",
-    "item": "Dòng rò điện trở online Ir (% ΔIr)",
-    "voltageLevel": "110kV",
-    "good": "Ir ≤ 1.2 Ir_thc (hoặc ≤ 50µA)",
-    "fair": "1.2 Ir_thc < Ir ≤ 2 Ir_thc",
-    "average": "2 Ir_thc < Ir ≤ 3 Ir_thc",
-    "poor": "Ir > 3 Ir_thc hoặc > Ircpmax",
-    "recommendation": "Thay mới chống sét van 110kV",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_018",
-    "category": "Chống Sét Van",
-    "categoryCode": "surge_arrester",
-    "subCategory": "Chống sét van 110kV",
-    "item": "Nhiệt độ thân CSV (ΔT so với môi trường)",
-    "voltageLevel": "110kV",
-    "good": "ΔT ≤ 3°C",
-    "fair": "3°C < ΔT ≤ 5°C",
-    "average": "5°C < ΔT ≤ 8°C",
-    "poor": "ΔT > 8°C",
-    "recommendation": "Cắt điện thẩm tra mối nối phát nhiệt, thay mới chống sét van",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_019",
-    "category": "Chống Sét Van",
-    "categoryCode": "surge_arrester",
-    "subCategory": "Chống sét van 110kV",
-    "item": "Độ lệch Điện áp tham chiếu Uref",
-    "voltageLevel": "110kV",
-    "good": "ΔUref ≤ ±5%",
-    "fair": "±5% ≤ ΔUref ≤ ±10%",
-    "average": "±10% < ΔUref ≤ ±15%",
-    "poor": "ΔUref > ±15%",
-    "recommendation": "Thay mới chống sét van",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_020",
-    "category": "Biến Dòng & Biến Áp",
-    "categoryCode": "instrument_transformer",
-    "subCategory": "Biến điện áp (TU) 110kV",
-    "item": "Tỷ số biến (% ΔKu) & Điện trở cuộn dây (% ΔR)",
-    "voltageLevel": "110kV",
-    "good": "ΔKu ≤ 0.7%, ΔR ≤ 3%",
-    "fair": "0.7% < ΔKu ≤ 1.5%, 3% < ΔR ≤ 5%",
-    "average": "1.5% < ΔKu ≤ 2.0%, 5% < ΔR ≤ 10%",
-    "poor": "ΔKu > 2.0% hoặc ΔR > 10%",
-    "recommendation": "Thẩm tra Cấp 2, thay mới TU nếu bị chạm chập vòng dây",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_021",
-    "category": "Biến Dòng & Biến Áp",
-    "categoryCode": "instrument_transformer",
-    "subCategory": "Biến dòng điện (TI) 110kV",
-    "item": "Tỷ số biến (% ΔKi) & Tổn hao điện môi tgδ",
-    "voltageLevel": "110kV",
-    "good": "ΔKi ≤ 0.4%, tgδ ≤ 0.5%",
-    "fair": "0.4% < ΔKi ≤ 0.7%, 0.5% < tgδ ≤ 0.7%",
-    "average": "0.7% < ΔKi ≤ 1.0%, 0.7% < tgδ ≤ 1.0%",
-    "poor": "ΔKi > 1.0% hoặc tgδ > 1.0%",
-    "recommendation": "Tách khỏi vận hành, thay mới TI 110kV",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_022",
-    "category": "Cáp Điện Lực",
-    "categoryCode": "cable",
-    "subCategory": "Cáp ngầm 110kV",
-    "item": "Nhiệt độ hộp đầu cáp (ΔT giữa các pha)",
-    "voltageLevel": "110kV",
-    "good": "ΔT ≤ 5°C",
-    "fair": "5°C < ΔT ≤ 10°C",
-    "average": "10°C < ΔT ≤ 20°C",
-    "poor": "ΔT > 20°C",
-    "recommendation": "Tách vận hành cáp ngầm, xử lý mối nối ép đầu cáp",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_023",
-    "category": "Cáp Điện Lực",
-    "categoryCode": "cable",
-    "subCategory": "Cáp ngầm 110kV",
-    "item": "Phóng điện cục bộ PD Online",
-    "voltageLevel": "110kV",
-    "good": "PD ≤ 500 pC",
-    "fair": "500 < PD ≤ 1000 pC",
-    "average": "1000 < PD ≤ 2500 pC",
-    "poor": "PD > 2500 pC",
-    "recommendation": "Tách cáp, thử nghiệm VLF PD định vị vị trí lỗi và sửa chữa",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_024",
-    "category": "Máy Biến Áp",
-    "categoryCode": "transformer",
-    "subCategory": "MBA Phân phối (≤ 35kV)",
-    "item": "Điện trở cách điện cuộn dây (Rcđ / Kht / PI)",
-    "voltageLevel": "<=35kV",
-    "good": "Kht ≥ 1.3 hoặc PI ≥ 1.5 hoặc Rcđ ≥ 300% R*",
-    "fair": "1.2 ≤ Kht < 1.3 hoặc 1.25 < PI ≤ 1.5",
-    "average": "1.0 ≤ Kht < 1.2 hoặc 1.1 < PI ≤ 1.25",
-    "poor": "Kht < 1.0 hoặc PI ≤ 1.1 hoặc Rcđ < Rmin (300MΩ)",
-    "recommendation": "Tách MBA ra khỏi lưới ngay lập tức để bảo dưỡng/sấy khô cách điện",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_025",
-    "category": "Máy Biến Áp",
-    "categoryCode": "transformer",
-    "subCategory": "MBA Phân phối (≤ 35kV)",
-    "item": "Thử điện áp phóng điện mẫu dầu (Uphóng điện)",
-    "voltageLevel": "<=35kV",
-    "good": "Upđ > 40 kV/2.5mm",
-    "fair": "36 đến 40 kV/2.5mm",
-    "average": "31 đến 35 kV/2.5mm",
-    "poor": "Udột < 30 kV/2.5mm",
-    "recommendation": "Lọc dầu vacuumn online hoặc tách máy thay dầu mới",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_026",
-    "category": "Máy Biến Áp",
-    "categoryCode": "transformer",
-    "subCategory": "MBA Phân phối (≤ 35kV)",
-    "item": "Nhiệt độ phát nóng (ΔT so với môi trường)",
-    "voltageLevel": "<=35kV",
-    "good": "ΔT 1 - 3°C",
-    "fair": "ΔT 4 - 10°C",
-    "average": "ΔT 11 - 15°C",
-    "poor": "ΔT > 15°C (so môi trường > 40°C)",
-    "recommendation": "Xử lý tiếp xúc đầu bushing trung/hạ áp, hệ thống tản nhiệt",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_027",
-    "category": "Máy Biến Áp",
-    "categoryCode": "transformer",
-    "subCategory": "MBA Phân phối (≤ 35kV)",
-    "item": "Dòng không tải (% ΔIo)",
-    "voltageLevel": "<=35kV",
-    "good": "ΔIo ≤ 5%",
-    "fair": "5% < ΔIo ≤ 15%",
-    "average": "15% < ΔIo < 30%",
-    "poor": "ΔIo ≥ 30%",
-    "recommendation": "Tách máy kiểm tra chập vòng dây, mạch từ",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_028",
-    "category": "Máy Cắt & Tủ Đóng Cắt",
-    "categoryCode": "circuit_breaker",
-    "subCategory": "Tủ đóng cắt RMU (≤ 35kV)",
-    "item": "Điện trở cách điện (Rcđ)",
-    "voltageLevel": "<=35kV",
-    "good": "Rcđ ≥ 1000 MΩ",
-    "fair": "(N/A)",
-    "average": "(N/A)",
-    "poor": "Rcđ < 1000 MΩ",
-    "recommendation": "Thực hiện thử Cấp 3, xử lý cách điện đầu búa cáp/bushing RMU",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_029",
-    "category": "Máy Cắt & Tủ Đóng Cắt",
-    "categoryCode": "circuit_breaker",
-    "subCategory": "Tủ đóng cắt RMU (≤ 35kV)",
-    "item": "Điện trở mạch dẫn dòng chính (% ΔR)",
-    "voltageLevel": "<=35kV",
-    "good": "ΔR ≤ 10%",
-    "fair": "10% < ΔR ≤ 30%",
-    "average": "30% < ΔR ≤ 50%",
-    "poor": "ΔR > 50%",
-    "recommendation": "Vệ sinh, siết chặt tiếp điểm hoặc thay ngàm RMU",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_030",
-    "category": "Máy Cắt & Tủ Đóng Cắt",
-    "categoryCode": "circuit_breaker",
-    "subCategory": "Recloser / LBS (≤ 35kV)",
-    "item": "Điện trở cách điện & Điện trở tiếp xúc",
-    "voltageLevel": "<=35kV",
-    "good": "Rcđ ≥ 1000 MΩ, ΔRtx ≤ 10%",
-    "fair": "10% < ΔRtx ≤ 30%",
-    "average": "30% < ΔRtx ≤ 50%",
-    "poor": "Rcđ < 1000 MΩ hoặc ΔRtx > 50%",
-    "recommendation": "Kiểm tra buồng chân không/SF6, bảo dưỡng tiếp điểm",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_031",
-    "category": "Máy Cắt & Tủ Đóng Cắt",
-    "categoryCode": "circuit_breaker",
-    "subCategory": "Recloser / LBS (≤ 35kV)",
-    "item": "Thao tác đóng cắt cơ khí",
-    "voltageLevel": "<=35kV",
-    "good": "Thành công 100%",
-    "fair": "(N/A)",
-    "average": "(N/A)",
-    "poor": "Kẹt cơ khí / Thao tác thất bại",
-    "recommendation": "Tách khỏi vận hành, sửa chữa bộ truyền động/cuộn đóng cắt",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_032",
-    "category": "Chống Sét Van",
-    "categoryCode": "surge_arrester",
-    "subCategory": "Chống sét van (≤ 35kV)",
-    "item": "Nhiệt độ thân vỏ (ΔT so với môi trường)",
-    "voltageLevel": "<=35kV",
-    "good": "ΔT ≤ 3°C",
-    "fair": "3°C < ΔT ≤ 5°C",
-    "average": "5°C < ΔT ≤ 8°C",
-    "poor": "ΔT > 8°C (hoặc thân vỏ > 10°C)",
-    "recommendation": "Cắt điện thay mới chống sét van ngay (tránh nổ sứ)",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_033",
-    "category": "Chống Sét Van",
-    "categoryCode": "surge_arrester",
-    "subCategory": "Chống sét van (≤ 35kV)",
-    "item": "Điện áp tham chiếu Uref & Điện trở cách điện",
-    "voltageLevel": "<=35kV",
-    "good": "ΔUref ≤ ±5%, Rcđ ≥ 3 Rcđmin",
-    "fair": "5% < ΔUref ≤ 10%, 2 Rcđmin ≤ Rcđ < 3 Rcđmin",
-    "average": "10% < ΔUref ≤ 15%, Rcđmin ≤ Rcđ < 2 Rcđmin",
-    "poor": "ΔUref > 15% hoặc Rcđ < Rcđmin",
-    "recommendation": "Loại bỏ, thay mới chống sét van",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
-  },
-  {
-    "id": "CBM_034",
-    "category": "Dao Cách Ly & Cầu Chì",
+    "id": "STD_069",
+    "type": "cbm",
+    "category": "Dao cách ly",
     "categoryCode": "disconnector",
-    "subCategory": "DCL / FCO / LBFCO (≤ 35kV)",
-    "item": "Nhiệt độ tiếp xúc ngàm/đầu nối (ΔT)",
-    "voltageLevel": "<=35kV",
-    "good": "ΔT 1 - 3°C",
-    "fair": "ΔT 4 - 10°C",
-    "average": "ΔT 11 - 15°C",
-    "poor": "ΔT > 15°C (hoặc so môi trường > 40°C)",
-    "recommendation": "Sửa chữa ngay ngàm tiếp xúc, thay ống chì/sứ nứt mẻ",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Dao cách ly",
+    "item": "Đo điện trở cách điện",
+    "testCode": "DCL_R_cd",
+    "voltageLevel": ">35kV",
+    "symbol": "Rcđ",
+    "unit": "MΩ",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 1000,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 1000,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 1000 MΩ",
+    "fair": "Theo NSX",
+    "average": "Theo NSX",
+    "poor": "< 1000 MΩ",
+    "note": "Tốt: Rcđ ≥ 1000 MΩ; Xấu: Rcđ < 1000 MΩ",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Vệ sinh, xử lý ngàm tiếp xúc xước/cháy, thay sứ cách điện nứt vỡ"
   },
   {
-    "id": "CBM_035",
-    "category": "Biến Dòng & Biến Áp",
+    "id": "STD_070",
+    "type": "cbm",
+    "category": "Chống sét van",
+    "categoryCode": "surge_arrester",
+    "subCategory": "Chống sét van",
+    "item": "Đo dòng điện rò điện trở online",
+    "testCode": "LA_I_leak",
+    "voltageLevel": ">35kV",
+    "symbol": "Ir",
+    "unit": "Ir/Ir_thc",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 1.2,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 1.2,
+        "max": 2.0,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 2.0,
+        "max": 3.0,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 3.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 1.2 Ir/Ir_thc",
+    "fair": "1.2 ~ 2.0 Ir/Ir_thc",
+    "average": "2.0 ~ 3.0 Ir/Ir_thc",
+    "poor": "> 3.0 Ir/Ir_thc",
+    "note": "Tốt: Ir ≤ 1.2 Ir_thc (hoặc ≤ 50µA); Khá: 1.2 Ir_thc < Ir ≤ 2 Ir_thc; TB: 2 Ir_thc < Ir ≤ 3 Ir_thc; Xấu: Ir > 3 Ir_thc",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Thay mới chống sét van 110kV"
+  },
+  {
+    "id": "STD_071",
+    "type": "cbm",
+    "category": "Chống sét van",
+    "categoryCode": "surge_arrester",
+    "subCategory": "Chống sét van",
+    "item": "Kiểm tra nhiệt độ phát nóng (ΔT)",
+    "testCode": "LA_Temp_Diff",
+    "voltageLevel": ">35kV",
+    "symbol": "ΔT",
+    "unit": "°C",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 3,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 3,
+        "max": 5,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 5,
+        "max": 8,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 8,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 3 °C",
+    "fair": "3 ~ 5 °C",
+    "average": "5 ~ 8 °C",
+    "poor": "> 8 °C",
+    "note": "Nhiệt độ thân CSV (ΔT so với môi trường): Tốt ≤ 3°C; Khá: 3 ÷ 5°C; TB: 5 ÷ 8°C; Xấu: > 8°C",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Cắt điện thẩm tra mối nối phát nhiệt, thay mới chống sét van"
+  },
+  {
+    "id": "STD_072",
+    "type": "cbm",
+    "category": "Chống sét van",
+    "categoryCode": "surge_arrester",
+    "subCategory": "Chống sét van",
+    "item": "Thử nghiệm đặc tính V-A (Điện áp Uref)",
+    "testCode": "LA_U_ref",
+    "voltageLevel": ">35kV",
+    "symbol": "ΔUref",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 5,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 5,
+        "max": 10,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 10,
+        "max": 15,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 15,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 5 %",
+    "fair": "5 ~ 10 %",
+    "average": "10 ~ 15 %",
+    "poor": "> 15 %",
+    "note": "Độ lệch Điện áp tham chiếu |ΔUref|: Tốt ≤ 5%; Khá: 5% ÷ 10%; TB: 10% ÷ 15%; Xấu: > 15%",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Thay mới chống sét van"
+  },
+  {
+    "id": "STD_073",
+    "type": "cbm",
+    "category": "TU",
     "categoryCode": "instrument_transformer",
-    "subCategory": "TU / TI Trung thế (≤ 35kV)",
-    "item": "Điện trở cách điện (Sơ cấp / Thứ cấp)",
-    "voltageLevel": "<=35kV",
-    "good": "Rcđ_sơ ≥ 1000MΩ (dầu) / 1200MΩ (đúc); \nRcđ_thứ ≥ 2MΩ (dầu) / 5MΩ (đúc)",
-    "fair": "(N/A)",
-    "average": "(N/A)",
-    "poor": "Rcđ < Rcđ_cp_min",
-    "recommendation": "Thực hiện thử Cấp 3, xác định lỗi sấy/thay mới",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "TU",
+    "item": "Đo tỷ số biến đổi",
+    "testCode": "TITU_Ratio",
+    "voltageLevel": ">35kV",
+    "symbol": "Δku",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 0.7,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 0.7,
+        "max": 1.5,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 1.5,
+        "max": 2.0,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 2.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 0.7 %",
+    "fair": "0.7 ~ 1.5 %",
+    "average": "1.5 ~ 2.0 %",
+    "poor": "> 2.0 %",
+    "note": "Tốt: ΔKu ≤ 0.7%, ΔR ≤ 3%; Khá: 0.7% < ΔKu ≤ 1.5%, 3% < ΔR ≤ 5%; TB: 1.5% < ΔKu ≤ 2.0%, 5% < ΔR ≤ 10%; Xấu: ΔKu > 2.0% hoặc ΔR > 10%",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Thẩm tra Cấp 2, thay mới TU nếu bị chạm chập vòng dây"
   },
   {
-    "id": "CBM_036",
-    "category": "Biến Dòng & Biến Áp",
+    "id": "STD_074",
+    "type": "cbm",
+    "category": "TI",
     "categoryCode": "instrument_transformer",
-    "subCategory": "TU / TI Trung thế (≤ 35kV)",
-    "item": "Tỷ số biến (% Δk)",
-    "voltageLevel": "<=35kV",
-    "good": "|% Δk| ≤ 0.5%",
-    "fair": "(N/A)",
-    "average": "(N/A)",
-    "poor": "|% Δk| > 0.5%",
-    "recommendation": "Đo dòng từ hóa, R1c, kiểm định lại sai số / thay mới",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "TI",
+    "item": "Đo tỷ số biến đổi",
+    "testCode": "TITU_Ratio",
+    "voltageLevel": ">35kV",
+    "symbol": "Δki",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 0.4,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 0.4,
+        "max": 0.7,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 0.7,
+        "max": 1.0,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 1.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 0.4 %",
+    "fair": "0.4 ~ 0.7 %",
+    "average": "0.7 ~ 1.0 %",
+    "poor": "> 1.0 %",
+    "note": "Tốt: ΔKi ≤ 0.4%, tgδ ≤ 0.5%; Khá: 0.4% < ΔKi ≤ 0.7%, 0.5% < tgδ ≤ 0.7%; TB: 0.7% < ΔKi ≤ 1.0%, 0.7% < tgδ ≤ 1.0%; Xấu: ΔKi > 1.0% hoặc tgδ > 1.0%",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Tách khỏi vận hành, thay mới TI 110kV"
   },
   {
-    "id": "CBM_037",
-    "category": "Cáp Điện Lực",
+    "id": "STD_075",
+    "type": "cbm",
+    "category": "Cáp điện",
     "categoryCode": "cable",
-    "subCategory": "Cáp ngầm Trung thế (≤ 35kV)",
-    "item": "Phóng điện cục bộ PD Online",
-    "voltageLevel": "<=35kV",
-    "good": "PD 0 - 500 pC",
-    "fair": "PD 500 - 1000 pC",
-    "average": "PD 1000 - 2500 pC",
-    "poor": "PD > 2500 pC",
-    "recommendation": "Thực hiện Cấp 2 sớm nhất, thử VLF PD định vị vị trí phóng điện",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "subCategory": "Cáp điện",
+    "item": "Kiểm tra nhiệt độ phát nóng (ΔT)",
+    "testCode": "CABLE_Temp_Diff",
+    "voltageLevel": ">35kV",
+    "symbol": "ΔT",
+    "unit": "°C",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 5,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 5,
+        "max": 10,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 10,
+        "max": 20,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 20,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 5 °C",
+    "fair": "5 ~ 10 °C",
+    "average": "10 ~ 20 °C",
+    "poor": "> 20 °C",
+    "note": "Nhiệt độ hộp đầu cáp (ΔT giữa các pha): Tốt ≤ 5°C; Khá: 5 ÷ 10°C; TB: 10 ÷ 20°C; Xấu: > 20°C",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Tách vận hành cáp ngầm, xử lý mối nối ép đầu cáp"
   },
   {
-    "id": "CBM_038",
-    "category": "Cáp Điện Lực",
+    "id": "STD_076",
+    "type": "cbm",
+    "category": "Cáp điện",
     "categoryCode": "cable",
-    "subCategory": "Cáp ngầm Trung thế (≤ 35kV)",
-    "item": "Điện trở cách điện ruột cáp (Rcđ / Kht)",
+    "subCategory": "Cáp điện",
+    "item": "Phóng điện cục bộ PD Online (UHF)",
+    "testCode": "CABLE_PD",
+    "voltageLevel": ">35kV",
+    "symbol": "UHF",
+    "unit": "pC",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 500,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 500,
+        "max": 1000,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 1000,
+        "max": 2500,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 2500,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 500 pC",
+    "fair": "500 ~ 1000 pC",
+    "average": "1000 ~ 2500 pC",
+    "poor": "> 2500 pC",
+    "note": "PD Online cáp 110kV: Tốt ≤ 500 pC; Khá: 500 ÷ 1000 pC; TB: 1000 ÷ 2500 pC; Xấu: > 2500 pC",
+    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM)",
+    "recommendation": "Tách cáp, thử nghiệm VLF PD định vị vị trí lỗi và sửa chữa"
+  },
+  {
+    "id": "STD_077",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
+    "categoryCode": "transformer",
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo điện trở cách điện cuộn dây (Rcđ)",
+    "testCode": "MBA_R_cd",
     "voltageLevel": "<=35kV",
-    "good": "Rcđ ≥ 1000 MΩ",
-    "fair": "Rcđ < 1000 MΩ & Kht ≥ 1.6",
-    "average": "Rcđ < 1000 MΩ & 1.1 ≤ Kht < 1.6",
-    "poor": "Rcđ < 1000 MΩ & Kht < 1.1",
-    "recommendation": "Thử tangδ VLF & cao áp VLF, lên kế hoạch xử lý/thay mới cáp",
-    "standard": "EVNCPC-KT/QT.40 (Quy trình SCBD CBM EVNCPC)"
+    "symbol": "Rcđ",
+    "unit": "MΩ",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 300,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 300,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 300 MΩ",
+    "fair": "Theo NSX",
+    "average": "Theo NSX",
+    "poor": "< 300 MΩ",
+    "note": "Tốt: Rcđ ≥ 300% R*; Xấu: Rcđ < 300MΩ",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Tách MBA ra khỏi lưới ngay lập tức để bảo dưỡng/sấy khô cách điện"
+  },
+  {
+    "id": "STD_078",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
+    "categoryCode": "transformer",
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo điện trở cách điện cuộn dây (Kht)",
+    "testCode": "MBA_Kht",
+    "voltageLevel": "<=35kV",
+    "symbol": "Kht",
+    "unit": "",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 1.3,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 1.2,
+        "max": 1.3,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 1.0,
+        "max": 1.2,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 1.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 1.3",
+    "fair": "1.2 ~ 1.3",
+    "average": "1.0 ~ 1.2",
+    "poor": "< 1.0",
+    "note": "Tốt: Kht ≥ 1.3; Khá: 1.2 ≤ Kht < 1.3; TB: 1.0 ≤ Kht < 1.2; Xấu: Kht < 1.0",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Tách MBA ra khỏi lưới ngay lập tức để bảo dưỡng/sấy khô cách điện"
+  },
+  {
+    "id": "STD_079",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
+    "categoryCode": "transformer",
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo điện trở cách điện cuộn dây (PI)",
+    "testCode": "MBA_PI",
+    "voltageLevel": "<=35kV",
+    "symbol": "PI",
+    "unit": "",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 1.5,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 1.25,
+        "max": 1.5,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 1.1,
+        "max": 1.25,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "≤",
+        "value": 1.1,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 1.5",
+    "fair": "1.25 ~ 1.5",
+    "average": "1.1 ~ 1.25",
+    "poor": "≤ 1.1",
+    "note": "Tốt: PI ≥ 1.5; Khá: 1.25 < PI ≤ 1.5; TB: 1.1 < PI ≤ 1.25; Xấu: PI ≤ 1.1",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Tách MBA ra khỏi lưới ngay lập tức để bảo dưỡng/sấy khô cách điện"
+  },
+  {
+    "id": "STD_080",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
+    "categoryCode": "transformer",
+    "subCategory": "Máy biến áp lực",
+    "item": "Thử nghiệm điện áp phóng điện (chọc thủng)",
+    "testCode": "MBA_Oil_Udt",
+    "voltageLevel": "<=35kV",
+    "symbol": "Uđt",
+    "unit": "kV",
+    "levels": {
+      "level1": {
+        "compare": ">",
+        "value": 40,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 36,
+        "max": 40,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 30,
+        "max": 35,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 30,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "> 40 kV",
+    "fair": "36 ~ 40 kV",
+    "average": "30 ~ 35 kV",
+    "poor": "< 30 kV",
+    "note": "Tốt: Upđ > 40 kV/2.5mm; Khá: 36 đến 40 kV/2.5mm; TB: 30 đến 35 kV/2.5mm; Xấu: Upđ < 30 kV/2.5mm",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Lọc dầu vacuum online hoặc tách máy thay dầu mới"
+  },
+  {
+    "id": "STD_081",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
+    "categoryCode": "transformer",
+    "subCategory": "Máy biến áp lực",
+    "item": "Kiểm tra nhiệt độ phát nóng (ΔT)",
+    "testCode": "MBA_Temp_Diff",
+    "voltageLevel": "<=35kV",
+    "symbol": "ΔT",
+    "unit": "°C",
+    "levels": {
+      "level1": {
+        "compare": "between",
+        "value": null,
+        "min": 1,
+        "max": 3,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 4,
+        "max": 10,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 11,
+        "max": 15,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 15,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "1 ~ 3 °C",
+    "fair": "4 ~ 10 °C",
+    "average": "11 ~ 15 °C",
+    "poor": "> 15 °C",
+    "note": "Tốt: ΔT 1 - 3°C; Khá: ΔT 4 - 10°C; TB: ΔT 11 - 15°C; Xấu: ΔT > 15°C (so môi trường > 40°C)",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Xử lý tiếp xúc đầu bushing trung/hạ áp, hệ thống tản nhiệt"
+  },
+  {
+    "id": "STD_082",
+    "type": "cbm",
+    "category": "Máy biến áp lực",
+    "categoryCode": "transformer",
+    "subCategory": "Máy biến áp lực",
+    "item": "Đo tổn thất không tải và dòng không tải",
+    "testCode": "MBA_P_0",
+    "voltageLevel": "<=35kV",
+    "symbol": "ΔIo",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 5,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 5,
+        "max": 15,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 15,
+        "max": 30,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "≥",
+        "value": 30,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 5 %",
+    "fair": "5 ~ 15 %",
+    "average": "15 ~ 30 %",
+    "poor": "≥ 30 %",
+    "note": "Tốt: ΔIo ≤ 5%; Khá: 5% < ΔIo ≤ 15%; TB: 15% < ΔIo < 30%; Xấu: ΔIo ≥ 30%",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Tách máy kiểm tra chập vòng dây, mạch từ"
+  },
+  {
+    "id": "STD_083",
+    "type": "cbm",
+    "category": "Tủ đóng cắt RMU",
+    "categoryCode": "circuit_breaker",
+    "subCategory": "Tủ đóng cắt RMU",
+    "item": "Đo điện trở cách điện",
+    "testCode": "MC_R_cd",
+    "voltageLevel": "<=35kV",
+    "symbol": "Rcđ",
+    "unit": "MΩ",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 1000,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 1000,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 1000 MΩ",
+    "fair": "Theo NSX",
+    "average": "Theo NSX",
+    "poor": "< 1000 MΩ",
+    "note": "Tốt: Rcđ ≥ 1000 MΩ; Xấu: Rcđ < 1000 MΩ",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Thực hiện thử Cấp 3, xử lý cách điện đầu búa cáp/bushing RMU"
+  },
+  {
+    "id": "STD_084",
+    "type": "cbm",
+    "category": "Tủ đóng cắt RMU",
+    "categoryCode": "circuit_breaker",
+    "subCategory": "Tủ đóng cắt RMU",
+    "item": "Đo điện trở tiếp xúc các tiếp điểm",
+    "testCode": "MC_R_tx",
+    "voltageLevel": "<=35kV",
+    "symbol": "ΔRtx",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 10,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 10,
+        "max": 30,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 30,
+        "max": 50,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 50,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 10 %",
+    "fair": "10 ~ 30 %",
+    "average": "30 ~ 50 %",
+    "poor": "> 50 %",
+    "note": "Điện trở mạch dẫn dòng chính (% ΔR): Tốt ≤ 10%; Khá: 10% ÷ 30%; TB: 30% ÷ 50%; Xấu: > 50%",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Vệ sinh, siết chặt tiếp điểm hoặc thay ngàm RMU"
+  },
+  {
+    "id": "STD_085",
+    "type": "cbm",
+    "category": "Recloser",
+    "categoryCode": "circuit_breaker",
+    "subCategory": "Recloser",
+    "item": "Đo điện trở cách điện",
+    "testCode": "MC_R_cd",
+    "voltageLevel": "<=35kV",
+    "symbol": "Rcđ",
+    "unit": "MΩ",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 1000,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 1000,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 1000 MΩ",
+    "fair": "Theo NSX",
+    "average": "Theo NSX",
+    "poor": "< 1000 MΩ",
+    "note": "Tốt: Rcđ ≥ 1000 MΩ; Xấu: Rcđ < 1000 MΩ",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Kiểm tra buồng chân không/SF6, bảo dưỡng tiếp điểm"
+  },
+  {
+    "id": "STD_086",
+    "type": "cbm",
+    "category": "Recloser",
+    "categoryCode": "circuit_breaker",
+    "subCategory": "Recloser",
+    "item": "Đo điện trở tiếp xúc các tiếp điểm",
+    "testCode": "MC_R_tx",
+    "voltageLevel": "<=35kV",
+    "symbol": "ΔRtx",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 10,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 10,
+        "max": 30,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 30,
+        "max": 50,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 50,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 10 %",
+    "fair": "10 ~ 30 %",
+    "average": "30 ~ 50 %",
+    "poor": "> 50 %",
+    "note": "Tốt: ΔRtx ≤ 10%; Khá: 10% < ΔRtx ≤ 30%; TB: 30% < ΔRtx ≤ 50%; Xấu: ΔRtx > 50%",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Kiểm tra buồng chân không/SF6, bảo dưỡng tiếp điểm"
+  },
+  {
+    "id": "STD_087",
+    "type": "cbm",
+    "category": "LBS",
+    "categoryCode": "circuit_breaker",
+    "subCategory": "LBS",
+    "item": "Đo điện trở cách điện",
+    "testCode": "MC_R_cd",
+    "voltageLevel": "<=35kV",
+    "symbol": "Rcđ",
+    "unit": "MΩ",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 1000,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 1000,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 1000 MΩ",
+    "fair": "Theo NSX",
+    "average": "Theo NSX",
+    "poor": "< 1000 MΩ",
+    "note": "Tốt: Rcđ ≥ 1000 MΩ; Xấu: Rcđ < 1000 MΩ",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Kiểm tra buồng chân không/SF6, bảo dưỡng tiếp điểm"
+  },
+  {
+    "id": "STD_088",
+    "type": "cbm",
+    "category": "LBS",
+    "categoryCode": "circuit_breaker",
+    "subCategory": "LBS",
+    "item": "Đo điện trở tiếp xúc các tiếp điểm",
+    "testCode": "MC_R_tx",
+    "voltageLevel": "<=35kV",
+    "symbol": "ΔRtx",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 10,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 10,
+        "max": 30,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 30,
+        "max": 50,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 50,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 10 %",
+    "fair": "10 ~ 30 %",
+    "average": "30 ~ 50 %",
+    "poor": "> 50 %",
+    "note": "Tốt: ΔRtx ≤ 10%; Khá: 10% < ΔRtx ≤ 30%; TB: 30% < ΔRtx ≤ 50%; Xấu: ΔRtx > 50%",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Kiểm tra buồng chân không/SF6, bảo dưỡng tiếp điểm"
+  },
+  {
+    "id": "STD_089",
+    "type": "cbm",
+    "category": "Chống sét van",
+    "categoryCode": "surge_arrester",
+    "subCategory": "Chống sét van",
+    "item": "Kiểm tra nhiệt độ phát nóng (ΔT)",
+    "testCode": "LA_Temp_Diff",
+    "voltageLevel": "<=35kV",
+    "symbol": "ΔT",
+    "unit": "°C",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 3,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 3,
+        "max": 5,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 5,
+        "max": 8,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 8,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 3 °C",
+    "fair": "3 ~ 5 °C",
+    "average": "5 ~ 8 °C",
+    "poor": "> 8 °C",
+    "note": "Nhiệt độ thân vỏ (ΔT so với môi trường): Tốt ≤ 3°C; Khá: 3 ÷ 5°C; TB: 5 ÷ 8°C; Xấu: > 8°C",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Cắt điện thay mới chống sét van ngay (tránh nổ sứ)"
+  },
+  {
+    "id": "STD_090",
+    "type": "cbm",
+    "category": "Chống sét van",
+    "categoryCode": "surge_arrester",
+    "subCategory": "Chống sét van",
+    "item": "Thử nghiệm đặc tính V-A (Điện áp Uref)",
+    "testCode": "LA_U_ref",
+    "voltageLevel": "<=35kV",
+    "symbol": "ΔUref",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 5,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 5,
+        "max": 10,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 10,
+        "max": 15,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 15,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 5 %",
+    "fair": "5 ~ 10 %",
+    "average": "10 ~ 15 %",
+    "poor": "> 15 %",
+    "note": "Độ lệch điện áp tham chiếu Uref: Tốt ≤ ±5%; Khá: 5% < ΔUref ≤ 10%; TB: 10% < ΔUref ≤ 15%; Xấu: ΔUref > 15%",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Loại bỏ, thay mới chống sét van"
+  },
+  {
+    "id": "STD_091",
+    "type": "cbm",
+    "category": "Chống sét van",
+    "categoryCode": "surge_arrester",
+    "subCategory": "Chống sét van",
+    "item": "Đo điện trở cách điện",
+    "testCode": "LA_R_cd",
+    "voltageLevel": "<=35kV",
+    "symbol": "Rcđ",
+    "unit": "Rcđ/Rcđmin",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 3,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 2,
+        "max": 3,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 1,
+        "max": 2,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 1,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 3 Rcđ/Rcđmin",
+    "fair": "2 ~ 3 Rcđ/Rcđmin",
+    "average": "1 ~ 2 Rcđ/Rcđmin",
+    "poor": "< 1 Rcđ/Rcđmin",
+    "note": "Tốt: Rcđ ≥ 3 Rcđmin; Khá: 2 Rcđmin ≤ Rcđ < 3 Rcđmin; TB: Rcđmin ≤ Rcđ < 2 Rcđmin; Xấu: Rcđ < Rcđmin",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Loại bỏ, thay mới chống sét van"
+  },
+  {
+    "id": "STD_092",
+    "type": "cbm",
+    "category": "DCL / FCO / LBFCO",
+    "categoryCode": "disconnector",
+    "subCategory": "DCL / FCO / LBFCO",
+    "item": "Kiểm tra nhiệt độ phát nóng (ΔT)",
+    "testCode": "DCL_Temp_Diff",
+    "voltageLevel": "<=35kV",
+    "symbol": "ΔT",
+    "unit": "°C",
+    "levels": {
+      "level1": {
+        "compare": "between",
+        "value": null,
+        "min": 1,
+        "max": 3,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 4,
+        "max": 10,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 11,
+        "max": 15,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 15,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "1 ~ 3 °C",
+    "fair": "4 ~ 10 °C",
+    "average": "11 ~ 15 °C",
+    "poor": "> 15 °C",
+    "note": "Nhiệt độ tiếp xúc ngàm/đầu nối (ΔT): Tốt 1-3°C; Khá 4-10°C; TB 11-15°C; Xấu > 15°C",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Sửa chữa ngay ngàm tiếp xúc, thay ống chì/sứ nứt mẻ"
+  },
+  {
+    "id": "STD_093",
+    "type": "cbm",
+    "category": "TU",
+    "categoryCode": "instrument_transformer",
+    "subCategory": "TU",
+    "item": "Đo tỷ số biến đổi",
+    "testCode": "TITU_Ratio",
+    "voltageLevel": "<=35kV",
+    "symbol": "Δku",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 0.5,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 0.5,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 0.5 %",
+    "fair": "Theo NSX",
+    "average": "Theo NSX",
+    "poor": "> 0.5 %",
+    "note": "Tốt: |% Δk| ≤ 0.5%; Xấu: |% Δk| > 0.5%",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Đo dòng từ hóa, R1c, kiểm định lại sai số / thay mới"
+  },
+  {
+    "id": "STD_094",
+    "type": "cbm",
+    "category": "Cáp điện",
+    "categoryCode": "cable",
+    "subCategory": "Cáp điện",
+    "item": "Phóng điện cục bộ PD Online (UHF)",
+    "testCode": "CABLE_PD",
+    "voltageLevel": "<=35kV",
+    "symbol": "UHF",
+    "unit": "pC",
+    "levels": {
+      "level1": {
+        "compare": "between",
+        "value": null,
+        "min": 0,
+        "max": 500,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 500,
+        "max": 1000,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 1000,
+        "max": 2500,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 2500,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "0 ~ 500 pC",
+    "fair": "500 ~ 1000 pC",
+    "average": "1000 ~ 2500 pC",
+    "poor": "> 2500 pC",
+    "note": "Tốt: PD 0 - 500 pC; Khá: PD 500 - 1000 pC; TB: PD 1000 - 2500 pC; Xấu: PD > 2500 pC",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Thực hiện Cấp 2 sớm nhất, thử VLF PD định vị vị trí phóng điện"
+  },
+  {
+    "id": "STD_095",
+    "type": "cbm",
+    "category": "Cáp điện",
+    "categoryCode": "cable",
+    "subCategory": "Cáp điện",
+    "item": "Đo điện trở cách điện (Kht)",
+    "testCode": "CABLE_R_cd",
+    "voltageLevel": "<=35kV",
+    "symbol": "Kht",
+    "unit": "",
+    "levels": {
+      "level1": {
+        "compare": "≥",
+        "value": 1.7,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "≥",
+        "value": 1.7,
+        "min": null,
+        "max": null,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 1.1,
+        "max": 1.7,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": "<",
+        "value": 1.1,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≥ 1.7",
+    "fair": "≥ 1.7",
+    "average": "1.1 ~ 1.7",
+    "poor": "< 1.1",
+    "note": "Đánh giá kết hợp Rcđ ruột cáp: Tốt (Rcđ ≥ 1000MΩ); Khá (Rcđ < 1000MΩ nhưng Kht ≥ 1.7); TB (Rcđ < 1000MΩ và 1.1 ≤ Kht < 1.7); Xấu (Rcđ < 1000MΩ và Kht < 1.1)",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Thử tangδ VLF & cao áp VLF, lên kế hoạch xử lý/thay mới cáp"
+  },
+  {
+    "id": "STD_096",
+    "type": "cbm",
+    "category": "TI",
+    "categoryCode": "instrument_transformer",
+    "subCategory": "TI",
+    "item": "Đo tỷ số biến đổi",
+    "testCode": "TITU_Ratio",
+    "voltageLevel": "<=35kV",
+    "symbol": "Δki",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 0.5,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": null,
+        "value": null,
+        "min": null,
+        "max": null,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 0.5,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 0.5 %",
+    "fair": "Theo NSX",
+    "average": "Theo NSX",
+    "poor": "> 0.5 %",
+    "note": "Tốt: |% Δk| ≤ 0.5%; Xấu: |% Δk| > 0.5%",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Đo dòng từ hóa, R1c, kiểm định lại sai số / thay mới"
   }
 ]
