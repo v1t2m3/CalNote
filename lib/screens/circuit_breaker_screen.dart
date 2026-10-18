@@ -6,6 +6,7 @@ import '../services/calibration_service.dart';
 import '../widgets/uncertainty_widget.dart';
 import '../widgets/standard_evaluation_widget.dart';
 import '../core/theme/app_theme.dart';
+import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
 
 
@@ -52,10 +53,8 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
     }
   }
 
-  double parseInput(String val) {
-    if (val.isEmpty) return 0;
-    return double.tryParse(val.replaceAll(',', '.')) ?? 0;
-  }
+  double parseInput(String val) => AppFormatters.parseInput(val);
+
 
   void _tinhCachDien() {
     double rA = parseInput(rCdACtrl.text);
@@ -344,11 +343,11 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('Pha A', rCdACtrl),
+                        _buildTextField('Pha A', rCdACtrl, hint: 'VD: 5000'),
                         const SizedBox(width: 8),
-                        _buildTextField('Pha B', rCdBCtrl),
+                        _buildTextField('Pha B', rCdBCtrl, hint: 'VD: 5000'),
                         const SizedBox(width: 8),
-                        _buildTextField('Pha C', rCdCCtrl),
+                        _buildTextField('Pha C', rCdCCtrl, hint: 'VD: 5000'),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -360,7 +359,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 12),
                         child: Text(
-                          'Rcd thấp nhất: ${minRcd!.toStringAsFixed(0)} MΩ',
+                          'Rcd thấp nhất: ${AppFormatters.formatInsulation(minRcd)}',
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.greenAccent),
                           textAlign: TextAlign.center,
                         ),
@@ -394,11 +393,11 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('Pha A', rTxACtrl),
+                        _buildTextField('Pha A', rTxACtrl, hint: 'VD: 35.4'),
                         const SizedBox(width: 8),
-                        _buildTextField('Pha B', rTxBCtrl),
+                        _buildTextField('Pha B', rTxBCtrl, hint: 'VD: 35.4'),
                         const SizedBox(width: 8),
-                        _buildTextField('Pha C', rTxCCtrl),
+                        _buildTextField('Pha C', rTxCCtrl, hint: 'VD: 35.4'),
                       ],
                     ),
                     _buildTextField('Độ phân giải thiết bị đo', resolutionCtrl, hint: 'VD: 0.1', isExpanded: false),
@@ -411,7 +410,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                        Padding(
                         padding: const EdgeInsets.only(top: 12),
                         child: Text(
-                          'Rtx cao nhất: ${maxRtx!.toStringAsFixed(1)} μΩ',
+                          'Rtx cao nhất: ${AppFormatters.formatRtx(maxRtx)}',
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orangeAccent),
                           textAlign: TextAlign.center,
                         ),
@@ -484,11 +483,11 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('Pha A (ms)', tACtrl),
+                        _buildTextField('Pha A (ms)', tACtrl, hint: 'VD: 58.2'),
                         const SizedBox(width: 8),
-                        _buildTextField('Pha B (ms)', tBCtrl),
+                        _buildTextField('Pha B (ms)', tBCtrl, hint: 'VD: 58.2'),
                         const SizedBox(width: 8),
-                        _buildTextField('Pha C (ms)', tCCtrl),
+                        _buildTextField('Pha C (ms)', tCCtrl, hint: 'VD: 58.2'),
                       ],
                     ),
                     Wrap(
@@ -533,11 +532,11 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 alignment: Alignment.centerRight,
-                                child: Text('${timeResult!.toStringAsFixed(3)} ms',
+                                child: Text('${timeResult!.toStringAsFixed(1)} ms',
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayMedium?.copyWith(
-                                          color: hasTimeWarning ? Colors.redAccent : Colors.lightGreenAccent
+                                           color: hasTimeWarning ? Colors.redAccent : Colors.lightGreenAccent
                                         )),
                               ),
                             ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mte_calculator_pro/models/test_record.dart';
 import '../services/formula_service.dart';
 import '../core/theme/app_theme.dart';
+import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
 
 class InsulationCalculatorScreen extends StatefulWidget {
@@ -34,10 +35,8 @@ class _InsulationCalculatorScreenState
   String? piEvaluation;
   Color piColor = Colors.grey;
 
-  double parseInput(String val) {
-    if (val.isEmpty) return 0;
-    return double.tryParse(val.replaceAll(',', '.')) ?? 0;
-  }
+  double parseInput(String val) => AppFormatters.parseInput(val);
+
 
   void _calculateAll() {
     double r15s = parseInput(r15sCtrl.text);
@@ -255,16 +254,16 @@ class _InsulationCalculatorScreenState
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('R_15s (MΩ)', r15sCtrl, hint: '15 giây'),
+                        _buildTextField('R_15s (MΩ)', r15sCtrl, hint: 'VD: 1500'),
                         const SizedBox(width: 8),
-                        _buildTextField('R_60s (MΩ)', r60sCtrl, hint: '1 phút'),
+                        _buildTextField('R_60s (MΩ)', r60sCtrl, hint: 'VD: 2200'),
                         const SizedBox(width: 8),
-                        _buildTextField('R_10m (MΩ)', r10mCtrl, hint: '10 phút'),
+                        _buildTextField('R_10m (MΩ)', r10mCtrl, hint: 'VD: 4500'),
                       ],
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      '2. NHIỆT ĐỘ THỬ NGHIỆM (°C)',
+                       '2. NHIỆT ĐỘ THỬ NGHIỆM (°C)',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -273,9 +272,9 @@ class _InsulationCalculatorScreenState
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('T_đo (°C)', tDoCtrl),
+                        _buildTextField('T_đo (°C)', tDoCtrl, hint: 'VD: 30'),
                         const SizedBox(width: 8),
-                        _buildTextField('T_tc (°C)', tTcCtrl, hint: 'Mặc định 20°C'),
+                        _buildTextField('T_tc (°C)', tTcCtrl, hint: 'VD: 20'),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -302,17 +301,25 @@ class _InsulationCalculatorScreenState
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'DAR (R_60s / R_15s):',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                          const Flexible(
+                            child: Text(
+                              'DAR (R60/R15):',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
                           ),
-                          Text(
-                            darResult!.toStringAsFixed(3),
-                            style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                                color: darColor),
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                AppFormatters.formatDarPi(darResult),
+                                style: TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    color: darColor),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -354,17 +361,25 @@ class _InsulationCalculatorScreenState
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'PI (R_10m / R_1m):',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                          const Flexible(
+                            child: Text(
+                              'PI (R10m/R1m):',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
                           ),
-                          Text(
-                            piResult!.toStringAsFixed(3),
-                            style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold,
-                                color: piColor),
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                AppFormatters.formatDarPi(piResult),
+                                style: TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    color: piColor),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -403,17 +418,25 @@ class _InsulationCalculatorScreenState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'R_cd Quy đổi (${tTcCtrl.text}°C):',
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                      Flexible(
+                        child: Text(
+                          'R_cd(qđ) (${tTcCtrl.text}°C):',
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
                       ),
-                      Text(
-                        '${r60sConverted!.toStringAsFixed(1)} MΩ',
-                        style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.cyanAccent),
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            '${r60sConverted!.toStringAsFixed(1)} MΩ',
+                            style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.cyanAccent),
+                          ),
+                        ),
                       ),
                     ],
                   ),

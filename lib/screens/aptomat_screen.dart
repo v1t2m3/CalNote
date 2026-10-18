@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../core/theme/app_theme.dart';
 import '../models/breaker_curve.dart';
 import '../services/breaker_curve_manager.dart';
+import '../core/utils/app_formatters.dart';
 import 'curve_digitizer_screen.dart';
 import 'note_detail_screen.dart';
 import '../models/test_record.dart';
@@ -43,10 +44,8 @@ class _AptomatScreenState extends State<AptomatScreen> {
     });
   }
 
-  double parseInput(String val) {
-    if (val.isEmpty) return 0;
-    return double.tryParse(val.replaceAll(',', '.')) ?? 0;
-  }
+  double parseInput(String val) => AppFormatters.parseInput(val);
+
 
   void _tinhToanBaoVe() {
     if (_selectedCurve == null) {
@@ -217,7 +216,7 @@ class _AptomatScreenState extends State<AptomatScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        Expanded(child: TextField(controller: idmCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Định mức (In)'))),
+                        Expanded(child: TextField(controller: idmCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Định mức (In)', hintText: 'VD: 16'))),
                         const SizedBox(width: 8),
                         Expanded(child: TextField(controller: tEnvCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Nhiệt độ MTI (°C)', hintText: 'Mặc định 30'))),
                       ],
@@ -225,9 +224,9 @@ class _AptomatScreenState extends State<AptomatScreen> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Expanded(child: TextField(controller: ibomCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Dòng test (I bơm)'))),
+                        Expanded(child: TextField(controller: ibomCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Dòng test (I bơm)', hintText: 'VD: 40.8'))),
                         const SizedBox(width: 8),
-                        Expanded(child: TextField(controller: tCutCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Thời gian cắt (s)'))),
+                        Expanded(child: TextField(controller: tCutCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Thời gian cắt (s)', hintText: 'VD: 0.045'))),
                       ],
                     ),
                     const SizedBox(height: 16),

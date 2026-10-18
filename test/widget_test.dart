@@ -1,7 +1,38 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mte_calculator_pro/services/reference_standard_service.dart';
+import 'package:mte_calculator_pro/core/utils/app_formatters.dart';
 
 void main() {
+  group('AppFormatters Unit Tests', () {
+    test('parseInput handles comma and dot seamlessly', () {
+      expect(AppFormatters.parseInput('12,345'), 12.345);
+      expect(AppFormatters.parseInput('12.345'), 12.345);
+      expect(AppFormatters.parseInput('  0,05  '), 0.05);
+      expect(AppFormatters.parseInput(''), 0.0);
+      expect(AppFormatters.parseInput('abc'), 0.0);
+    });
+
+    test('format decimal precisions adhere strictly to technical standards', () {
+      // Rdc: 3 decimals
+      expect(AppFormatters.formatRdc(0.1256), '0.126 Ω');
+      // Grounding: 2 decimals
+      expect(AppFormatters.formatGrounding(3.456), '3.46 Ω');
+      // Ratio K: 4 decimals
+      expect(AppFormatters.formatRatio(51.02543), '51.0254');
+      // DAR & PI: 2 decimals
+      expect(AppFormatters.formatDarPi(1.456), '1.46');
+      expect(AppFormatters.formatDarPi(2.304), '2.30');
+      // Rtx: 1 decimal
+      expect(AppFormatters.formatRtx(35.42), '35.4 μΩ');
+      // Percent: 2 decimals
+      expect(AppFormatters.formatPercent(2.046), '2.05 %');
+      // Format Smart by testId
+      expect(AppFormatters.formatSmart(0.1254, testId: 'MBA_R_dc'), '0.125');
+      expect(AppFormatters.formatSmart(3.456, testId: 'TD_TIEP_DIA'), '3.46');
+      expect(AppFormatters.formatSmart(51.0254, testId: 'TITU_RATIO'), '51.0254');
+    });
+  });
+
   group('ReferenceStandardService Unit Tests', () {
     test('matchVoltage tests', () {
       expect(ReferenceStandardService.matchVoltage('<=35kV', 'ALL'), isTrue);

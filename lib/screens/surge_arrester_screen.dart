@@ -4,6 +4,7 @@ import 'package:mte_calculator_pro/models/test_record.dart';
 import '../services/formula_service.dart';
 import '../widgets/standard_evaluation_widget.dart';
 import '../core/theme/app_theme.dart';
+import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
 
 class SurgeArresterScreen extends StatefulWidget {
@@ -38,10 +39,8 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
   final TextEditingController rCdBaseCtrl = TextEditingController();
   double? minRcdLa;
 
-  double parseInput(String val) {
-    if (val.isEmpty) return 0;
-    return double.tryParse(val.replaceAll(',', '.')) ?? 0;
-  }
+  double parseInput(String val) => AppFormatters.parseInput(val);
+
 
   void _tinhDongRo() {
     double iDo = parseInput(iDoCtrl.text);
@@ -337,21 +336,21 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('I_đo (mA)', iDoCtrl),
+                        _buildTextField('I_đo (mA)', iDoCtrl, hint: 'VD: 0.450'),
                         const SizedBox(width: 8),
-                        _buildTextField('T_đo (°C)', tDoCtrl),
+                        _buildTextField('T_đo (°C)', tDoCtrl, hint: 'VD: 30'),
                         const SizedBox(width: 8),
-                        _buildTextField('T_tc (°C)', tTcCtrl),
+                        _buildTextField('T_tc (°C)', tTcCtrl, hint: 'VD: 20'),
                       ],
                     ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
                         _buildTextField('Dòng điện trở Ir (µA)', iRCtrl,
-                            hint: 'Ir (µA)'),
+                            hint: 'VD: 25.4'),
                         const SizedBox(width: 8),
                         _buildTextField('Dòng điện dung Ic (mA)', iCCtrl,
-                            hint: 'Ic (mA)'),
+                            hint: 'VD: 0.450'),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -367,7 +366,7 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
-                          'I_tc quy đổi: ${iResult!.toStringAsFixed(3)} mA',
+                          'I_tc quy đổi: ${AppFormatters.formatCurrentMa(iResult)}',
                           style: const TextStyle(
                               color: Colors.greenAccent,
                               fontSize: 16,
@@ -379,7 +378,7 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
-                          'Dòng rò tổng I_total: ${iTotalCalc!.toStringAsFixed(3)} mA',
+                          'Dòng rò tổng I_total: ${AppFormatters.formatCurrentMa(iTotalCalc)}',
                           style: const TextStyle(
                               color: Colors.cyanAccent,
                               fontSize: 15,
@@ -391,7 +390,7 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
-                          'Ir20 quy đổi 20°C: ${iR20Calc!.toStringAsFixed(1)} µA',
+                          'Ir20 quy đổi 20°C: ${AppFormatters.formatCurrentUa(iR20Calc)}',
                           style: const TextStyle(
                               color: Colors.lightGreenAccent,
                               fontSize: 15,
@@ -429,9 +428,9 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('U_1mA đo (kV)', uDo1mACtrl),
+                        _buildTextField('U_1mA đo (kV)', uDo1mACtrl, hint: 'VD: 145.20'),
                         const SizedBox(width: 8),
-                        _buildTextField('U_1mA định mức (kV)', uDm1mACtrl),
+                        _buildTextField('U_1mA định mức (kV)', uDm1mACtrl, hint: 'VD: 147.00'),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -442,7 +441,7 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                     if (u1mAError != null) ...[
                       const SizedBox(height: 8),
                       Text(
-                        'Sai số ΔU_1mA: ${u1mAError! >= 0 ? "+" : ""}${u1mAError!.toStringAsFixed(2)}%',
+                        'Sai số ΔU_1mA: ${AppFormatters.formatPercent(u1mAError, showSign: true)}',
                         style: TextStyle(
                           color: u1mAError!.abs() <= 5.0
                               ? Colors.greenAccent
@@ -494,9 +493,9 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('R_cd Quả LA (MΩ)', rCdLaCtrl),
+                        _buildTextField('R_cd Quả LA (MΩ)', rCdLaCtrl, hint: 'VD: 10000'),
                         const SizedBox(width: 8),
-                        _buildTextField('R_cd Đế chống sét (MΩ)', rCdBaseCtrl),
+                        _buildTextField('R_cd Đế chống sét (MΩ)', rCdBaseCtrl, hint: 'VD: 2000'),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -508,7 +507,7 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(
-                          'R_cd Min: ${minRcdLa!.toStringAsFixed(0)} MΩ',
+                          'R_cd Min: ${AppFormatters.formatInsulation(minRcdLa)}',
                           style: const TextStyle(
                               color: Colors.greenAccent,
                               fontSize: 16,

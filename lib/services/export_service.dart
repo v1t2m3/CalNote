@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/test_record.dart';
+import '../core/utils/app_formatters.dart';
 
 class ExportService {
   /// Hàm dựng (build) chuỗi Text bám sát nguyên bản form tĩnh được yêu cầu
@@ -27,7 +28,7 @@ class ExportService {
       });
       sb.writeln('Thông số đo: [${inputStrs.join(', ')}]');
       
-      sb.writeln('Kết quả tính toán: ${calc.result.toStringAsFixed(3)} ${calc.unit}');
+      sb.writeln('Kết quả tính toán: ${AppFormatters.formatSmart(calc.result, unit: calc.unit)} ${calc.unit}'.trim());
       
       // Đường dẫn hình ảnh nếu có
       if (record.imagePaths.isNotEmpty) {

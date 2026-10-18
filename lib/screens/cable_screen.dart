@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mte_calculator_pro/models/test_record.dart';
 import '../services/formula_service.dart';
 import '../core/theme/app_theme.dart';
+import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
 
 class CableScreen extends StatefulWidget {
@@ -46,8 +47,7 @@ class _CableScreenState extends State<CableScreen> {
   double? unbalanceLeakage;
 
   double parseInput(String val) {
-    if (val.isEmpty) return 0;
-    return double.tryParse(val.replaceAll(',', '.')) ?? 0;
+    return AppFormatters.parseInput(val);
   }
 
   void _tinhCachDienCap() {
@@ -359,18 +359,18 @@ class _CableScreenState extends State<CableScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('R_15s (MΩ)', r15sCtrl),
+                        _buildTextField('R_15s (MΩ)', r15sCtrl, hint: 'VD: 1500'),
                         const SizedBox(width: 8),
-                        _buildTextField('R_60s (MΩ)', r60sCtrl),
+                        _buildTextField('R_60s (MΩ)', r60sCtrl, hint: 'VD: 2500'),
                         const SizedBox(width: 8),
-                        _buildTextField('R_10m (MΩ)', r10mCtrl),
+                        _buildTextField('R_10m (MΩ)', r10mCtrl, hint: 'VD: 6000'),
                       ],
                     ),
                     Row(
                       children: [
-                        _buildTextField('T_đo (°C)', tDoInsCtrl),
+                        _buildTextField('T_đo (°C)', tDoInsCtrl, hint: 'VD: 30'),
                         const SizedBox(width: 8),
-                        _buildTextField('T_tc (°C)', tTcInsCtrl),
+                        _buildTextField('T_tc (°C)', tTcInsCtrl, hint: 'VD: 20'),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -381,34 +381,43 @@ class _CableScreenState extends State<CableScreen> {
                     if (darResult != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          'DAR (R60/R15): ${darResult!.toStringAsFixed(3)} - $darEval',
-                          style: TextStyle(
-                              color: darColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'DAR: ${AppFormatters.formatDarPi(darResult!)} - $darEval',
+                            style: TextStyle(
+                                color: darColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
                         ),
                       ),
                     if (piResult != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          'PI (R10m/R1m): ${piResult!.toStringAsFixed(3)} - $piEval',
-                          style: TextStyle(
-                              color: piColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'PI: ${AppFormatters.formatDarPi(piResult!)} - $piEval',
+                            style: TextStyle(
+                                color: piColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
                         ),
                       ),
                     if (r60sConverted != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          'R60s Quy đổi 20°C: ${r60sConverted!.toStringAsFixed(1)} MΩ',
-                          style: const TextStyle(
-                              color: Colors.cyanAccent,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'R60s (20°C): ${AppFormatters.formatInsulation(r60sConverted!)} MΩ',
+                            style: const TextStyle(
+                                color: Colors.cyanAccent,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
                         ),
                       ),
                   ],
@@ -453,15 +462,15 @@ class _CableScreenState extends State<CableScreen> {
                     ),
                     Row(
                       children: [
-                        _buildTextField('Ra (mΩ)', rACtrl),
+                        _buildTextField('Ra (mΩ)', rACtrl, hint: 'VD: 12.345'),
                         const SizedBox(width: 8),
-                        _buildTextField('Rb (mΩ)', rBCtrl),
+                        _buildTextField('Rb (mΩ)', rBCtrl, hint: 'VD: 12.360'),
                         const SizedBox(width: 8),
-                        _buildTextField('Rc (mΩ)', rCCtrl),
+                        _buildTextField('Rc (mΩ)', rCCtrl, hint: 'VD: 12.352'),
                       ],
                     ),
                     _buildTextField('T_đo (°C)', tDoRdcCtrl,
-                        isExpanded: false),
+                        hint: 'VD: 30', isExpanded: false),
                     const SizedBox(height: 12),
                     ElevatedButton(
                       onPressed: _tinhRdcRuotDan,
@@ -472,34 +481,67 @@ class _CableScreenState extends State<CableScreen> {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Column(
                           children: [
-                            if (rResultA != null)
-                              Text(
-                                  'Ra_20 = ${rResultA!.toStringAsFixed(3)} mΩ',
-                                  style: const TextStyle(
-                                      color: Colors.greenAccent,
-                                      fontWeight: FontWeight.bold)),
-                            if (rResultB != null)
-                              Text(
-                                  'Rb_20 = ${rResultB!.toStringAsFixed(3)} mΩ',
-                                  style: const TextStyle(
-                                      color: Colors.greenAccent,
-                                      fontWeight: FontWeight.bold)),
-                            if (rResultC != null)
-                              Text(
-                                  'Rc_20 = ${rResultC!.toStringAsFixed(3)} mΩ',
-                                  style: const TextStyle(
-                                      color: Colors.greenAccent,
-                                      fontWeight: FontWeight.bold)),
-                            if (deltaRdc != null)
-                              Text(
-                                'Độ lệch các pha ΔR = ${deltaRdc!.toStringAsFixed(2)}% ${deltaRdc! <= 2.0 ? "(✓ Đạt ≤2%)" : "(⚠️ Cảnh báo >2%)"}',
-                                style: TextStyle(
-                                    color: deltaRdc! <= 2.0
-                                        ? Colors.lightGreenAccent
-                                        : Colors.redAccent,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                if (rResultA != null)
+                                  Flexible(
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        'Ra: ${rResultA!.toStringAsFixed(3)} mΩ',
+                                        style: const TextStyle(
+                                            color: Colors.greenAccent,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                const SizedBox(width: 6),
+                                if (rResultB != null)
+                                  Flexible(
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        'Rb: ${rResultB!.toStringAsFixed(3)} mΩ',
+                                        style: const TextStyle(
+                                            color: Colors.greenAccent,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                const SizedBox(width: 6),
+                                if (rResultC != null)
+                                  Flexible(
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        'Rc: ${rResultC!.toStringAsFixed(3)} mΩ',
+                                        style: const TextStyle(
+                                            color: Colors.greenAccent,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            if (deltaRdc != null) ...[
+                              const SizedBox(height: 6),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'ΔR = ${deltaRdc!.toStringAsFixed(2)}% ${deltaRdc! <= 2.0 ? "(✓ Đạt ≤2%)" : "(⚠️ Cảnh báo >2%)"}',
+                                  style: TextStyle(
+                                      color: deltaRdc! <= 2.0
+                                          ? Colors.lightGreenAccent
+                                          : Colors.redAccent,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
                               ),
+                            ],
                           ],
                         ),
                       ),
@@ -526,14 +568,14 @@ class _CableScreenState extends State<CableScreen> {
                     ),
                     const Divider(),
                     _buildTextField('Điện áp thử U_test (kV)', uTestCtrl,
-                        isExpanded: false),
+                        hint: 'VD: 25.0', isExpanded: false),
                     Row(
                       children: [
-                        _buildTextField('I_rò Pha A (µA)', iLeakACtrl),
+                        _buildTextField('I_rò Pha A (µA)', iLeakACtrl, hint: 'VD: 2.5'),
                         const SizedBox(width: 8),
-                        _buildTextField('I_rò Pha B (µA)', iLeakBCtrl),
+                        _buildTextField('I_rò Pha B (µA)', iLeakBCtrl, hint: 'VD: 2.8'),
                         const SizedBox(width: 8),
-                        _buildTextField('I_rò Pha C (µA)', iLeakCCtrl),
+                        _buildTextField('I_rò Pha C (µA)', iLeakCCtrl, hint: 'VD: 2.6'),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -544,13 +586,16 @@ class _CableScreenState extends State<CableScreen> {
                     if (unbalanceLeakage != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          'Độ bất cân bằng dòng rò: ${unbalanceLeakage!.toStringAsFixed(2)}%',
-                          style: const TextStyle(
-                              color: Colors.cyanAccent,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'Bất cân bằng dòng rò ΔI: ${unbalanceLeakage!.toStringAsFixed(2)}%',
+                            style: const TextStyle(
+                                color: Colors.cyanAccent,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                   ],

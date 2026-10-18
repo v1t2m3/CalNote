@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mte_calculator_pro/models/test_record.dart';
 import '../services/formula_service.dart';
 import '../core/theme/app_theme.dart';
+import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
 
 
@@ -22,10 +23,8 @@ class _GroundingScreenState extends State<GroundingScreen> {
   double? rResult;
   bool isFailed = false;
 
-  double parseInput(String val) {
-    if (val.isEmpty) return 0;
-    return double.tryParse(val.replaceAll(',', '.')) ?? 0;
-  }
+  double parseInput(String val) => AppFormatters.parseInput(val);
+
 
   void _tinhDienTro() {
     double rDo = parseInput(rDoCtrl.text);
@@ -146,9 +145,9 @@ class _GroundingScreenState extends State<GroundingScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        Expanded(child: _buildTextField('R đo (Ω)', rDoCtrl)),
+                        Expanded(child: _buildTextField('R đo (Ω)', rDoCtrl, hint: 'VD: 3.45')),
                         const SizedBox(width: 8),
-                        Expanded(child: _buildTextField('HS mùa K', kMuaCtrl)),
+                        Expanded(child: _buildTextField('HS mùa K', kMuaCtrl, hint: 'VD: 1.40')),
                       ],
                     ),
                     const SizedBox(height: 8),

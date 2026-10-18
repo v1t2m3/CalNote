@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mte_calculator_pro/models/test_record.dart';
 import '../services/formula_service.dart';
 import '../core/theme/app_theme.dart';
+import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
 
 class DigitalRelayScreen extends StatefulWidget {
@@ -56,8 +57,7 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
   double? lineDiffCompResult;
 
   double parseInput(String val) {
-    if (val.isEmpty) return 0;
-    return double.tryParse(val.replaceAll(',', '.')) ?? 0;
+    return AppFormatters.parseInput(val);
   }
 
   // 1. TÍNH F50 / F51
@@ -420,16 +420,16 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        _buildTextField('I_set (A)', iSetCtrl),
+                        _buildTextField('I_set (A)', iSetCtrl, hint: 'VD: 1.000'),
                         const SizedBox(width: 8),
-                        _buildTextField('I_sự cố (A)', iFCtrl),
+                        _buildTextField('I_sự cố (A)', iFCtrl, hint: 'VD: 3.500'),
                       ],
                     ),
                     Row(
                       children: [
-                        _buildTextField('Bội số TMS', tmsCtrl),
+                        _buildTextField('Bội số TMS', tmsCtrl, hint: 'VD: 0.100'),
                         const SizedBox(width: 8),
-                        _buildTextField('t_đo thực tế (s)', tMeasuredCtrl),
+                        _buildTextField('t_đo thực tế (s)', tMeasuredCtrl, hint: 'VD: 0.125'),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -440,27 +440,33 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                     if (tTheoryResult != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          't_lý thuyết = ${tTheoryResult!.toStringAsFixed(3)} s',
-                          style: const TextStyle(
-                              color: Colors.greenAccent,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            't_lt = ${tTheoryResult!.toStringAsFixed(3)} s',
+                            style: const TextStyle(
+                                color: Colors.greenAccent,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     if (tTimeErrorPercent != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          'Sai số thời gian Δt = ${tTimeErrorPercent! >= 0 ? "+" : ""}${tTimeErrorPercent!.toStringAsFixed(2)}%',
-                          style: TextStyle(
-                              color: tTimeErrorPercent!.abs() <= 5.0
-                                  ? Colors.lightGreenAccent
-                                  : Colors.redAccent,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
-                          textAlign: TextAlign.center,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'Δt = ${tTimeErrorPercent! >= 0 ? "+" : ""}${tTimeErrorPercent!.toStringAsFixed(2)}%',
+                            style: TextStyle(
+                                color: tTimeErrorPercent!.abs() <= 5.0
+                                    ? Colors.lightGreenAccent
+                                    : Colors.redAccent,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                   ],
@@ -485,13 +491,13 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                           color: AppTheme.myOrangeAccent),
                     ),
                     const Divider(),
-                    _buildTextField('Góc nhạy cực đại MTA (°)', mtaCtrl,
-                        isExpanded: false),
+                    _buildTextField('Góc nhạy MTA (°)', mtaCtrl,
+                        hint: 'VD: 45', isExpanded: false),
                     Row(
                       children: [
-                        _buildTextField('Góc Điện áp ∠U (°)', angleUCtrl),
+                        _buildTextField('Góc ∠U (°)', angleUCtrl, hint: 'VD: 0'),
                         const SizedBox(width: 8),
-                        _buildTextField('Góc Dòng điện ∠I (°)', angleICtrl),
+                        _buildTextField('Góc ∠I (°)', angleICtrl, hint: 'VD: 45'),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -542,16 +548,16 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('Z_1 (Ω)', z1Ctrl, hint: 'Thứ tự thuận'),
+                        _buildTextField('Z₁ (Ω)', z1Ctrl, hint: 'VD: 1.250 (Thuận)'),
                         const SizedBox(width: 8),
-                        _buildTextField('Z_0 (Ω)', z0Ctrl, hint: 'Thứ tự không'),
+                        _buildTextField('Z₀ (Ω)', z0Ctrl, hint: 'VD: 3.750 (Không)'),
                       ],
                     ),
                     Row(
                       children: [
-                        _buildTextField('Z_đo (Ω)', zDoCtrl),
+                        _buildTextField('Z_đo (Ω)', zDoCtrl, hint: 'VD: 1.280'),
                         const SizedBox(width: 8),
-                        _buildTextField('Z_cài đặt (Ω)', zSetCtrl),
+                        _buildTextField('Z_cài đặt (Ω)', zSetCtrl, hint: 'VD: 1.250'),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -562,27 +568,33 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                     if (k0Result != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          'Hệ số bù đất K0 = ${k0Result!.toStringAsFixed(3)}',
-                          style: const TextStyle(
-                              color: Colors.greenAccent,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'K₀ = ${k0Result!.toStringAsFixed(3)}',
+                            style: const TextStyle(
+                                color: Colors.greenAccent,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     if (zErrorPercent != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          'Sai số tổng trở ΔZ = ${zErrorPercent! >= 0 ? "+" : ""}${zErrorPercent!.toStringAsFixed(2)}%',
-                          style: TextStyle(
-                              color: zErrorPercent!.abs() <= 5.0
-                                  ? Colors.lightGreenAccent
-                                  : Colors.redAccent,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
-                          textAlign: TextAlign.center,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'ΔZ = ${zErrorPercent! >= 0 ? "+" : ""}${zErrorPercent!.toStringAsFixed(2)}%',
+                            style: TextStyle(
+                                color: zErrorPercent!.abs() <= 5.0
+                                    ? Colors.lightGreenAccent
+                                    : Colors.redAccent,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                   ],
@@ -609,16 +621,16 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('I_Cao quy đổi (A)', iHCtrl),
+                        _buildTextField('I_Cao quy đổi (A)', iHCtrl, hint: 'VD: 2.500'),
                         const SizedBox(width: 8),
-                        _buildTextField('I_Hạ quy đổi (A)', iLCtrl),
+                        _buildTextField('I_Hạ quy đổi (A)', iLCtrl, hint: 'VD: 2.450'),
                       ],
                     ),
                     Row(
                       children: [
-                        _buildTextField('Sóng hài 1 (100%)', i1hCtrl, hint: 'I_50Hz'),
+                        _buildTextField('Sóng hài 1 (A)', i1hCtrl, hint: 'VD: 5.000 (50Hz)'),
                         const SizedBox(width: 8),
-                        _buildTextField('Sóng hài 2 (A)', i2hCtrl, hint: 'I_100Hz'),
+                        _buildTextField('Sóng hài 2 (A)', i2hCtrl, hint: 'VD: 0.850 (100Hz)'),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -629,39 +641,48 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                     if (iDiffResult != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          'Dòng so lệch I_diff = ${iDiffResult!.toStringAsFixed(3)} A',
-                          style: const TextStyle(
-                              color: Colors.cyanAccent,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'I_diff = ${iDiffResult!.toStringAsFixed(3)} A',
+                            style: const TextStyle(
+                                color: Colors.cyanAccent,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     if (iBiasResult != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          'Dòng hãm I_bias = ${iBiasResult!.toStringAsFixed(3)} A (Slope: ${slopeResult?.toStringAsFixed(1) ?? 0}%)',
-                          style: const TextStyle(
-                              color: Colors.greenAccent,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'I_bias = ${iBiasResult!.toStringAsFixed(3)} A (Slope: ${slopeResult?.toStringAsFixed(1) ?? 0}%)',
+                            style: const TextStyle(
+                                color: Colors.greenAccent,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                     if (harmonic2Result != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          'Hàm lượng Sóng hài 2: ${harmonic2Result!.toStringAsFixed(1)}% ${harmonic2Result! >= 15.0 ? "(✓ Khóa đóng điện)" : "(Không khóa)"}',
-                          style: TextStyle(
-                              color: harmonic2Result! >= 15.0
-                                  ? Colors.orangeAccent
-                                  : Colors.white70,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
-                          textAlign: TextAlign.center,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'Hàm lượng Sóng hài 2: ${harmonic2Result!.toStringAsFixed(1)}% ${harmonic2Result! >= 15.0 ? "(✓ Khóa đóng điện)" : "(Không khóa)"}',
+                            style: TextStyle(
+                                color: harmonic2Result! >= 15.0
+                                    ? Colors.orangeAccent
+                                    : Colors.white70,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                   ],
@@ -688,13 +709,13 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('Dòng đầu A / Nút 1 (A)', iACtrl),
+                        _buildTextField('I đầu A (A)', iACtrl, hint: 'VD: 1.200'),
                         const SizedBox(width: 8),
-                        _buildTextField('Dòng đầu B / Nút 2 (A)', iBCtrl),
+                        _buildTextField('I đầu B (A)', iBCtrl, hint: 'VD: 1.180'),
                       ],
                     ),
-                    _buildTextField('Dòng dung nạp bù I_dung (A)', iCCapCtrl,
-                        hint: 'Chỉ áp dụng F87L', isExpanded: false),
+                    _buildTextField('I_dung bù (A)', iCCapCtrl,
+                        hint: 'VD: 0.050 (F87L)', isExpanded: false),
                     const SizedBox(height: 12),
                     ElevatedButton(
                       onPressed: _tinhF87L,
@@ -703,13 +724,16 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                     if (lineDiffCompResult != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
-                        child: Text(
-                          'Dòng so lệch F87L (Đã bù): ${lineDiffCompResult!.toStringAsFixed(3)} A',
-                          style: const TextStyle(
-                              color: Colors.greenAccent,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'I_diff (bù I_c) = ${lineDiffCompResult!.toStringAsFixed(3)} A',
+                            style: const TextStyle(
+                                color: Colors.greenAccent,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                   ],

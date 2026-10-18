@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/theme/app_theme.dart';
+import '../core/utils/app_formatters.dart';
 import '../services/reference_standard_service.dart';
 
 /// Widget Hiển thị khối Đối Chiếu 3 Tầng Tiêu Chuẩn:
@@ -524,7 +525,7 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
               border: Border.all(color: pColor.withValues(alpha: 0.4)),
             ),
             child: Text(
-              "${entry.key}: ${val.toStringAsFixed(2)}${widget.unit} (${pass == null ? 'N/A' : (pass ? 'Đạt' : 'Lỗi')})",
+              "${entry.key}: ${AppFormatters.formatSmart(val, testId: widget.testCode, unit: widget.unit)} (${pass == null ? 'N/A' : (pass ? 'Đạt' : 'Lỗi')})",
               style: TextStyle(color: pColor, fontSize: 11, fontWeight: FontWeight.bold),
             ),
           );

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../models/test_record.dart';
+import '../core/utils/app_formatters.dart';
 
 
 class NoteViewScreen extends StatelessWidget {
@@ -74,7 +75,7 @@ class NoteViewScreen extends StatelessWidget {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             alignment: Alignment.centerRight,
-                            child: Text('${calc.result.toStringAsFixed(3)} ${calc.unit}', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.orangeAccent)),
+                            child: Text(AppFormatters.formatSmart(calc.result, unit: calc.unit), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.orangeAccent)),
                           ),
                         ),
                       ],

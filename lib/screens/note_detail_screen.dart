@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import '../models/test_record.dart';
 import '../services/export_service.dart';
+import '../core/utils/app_formatters.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
@@ -176,7 +177,17 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('=> Kết quả tính:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-                        Text('${calc.result.toStringAsFixed(3)} ${calc.unit}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orangeAccent)),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              AppFormatters.formatSmart(calc.result, unit: calc.unit),
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orangeAccent),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ],

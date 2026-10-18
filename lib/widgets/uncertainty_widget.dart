@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/calibration_service.dart';
 import '../core/theme/app_theme.dart';
+import '../core/utils/app_formatters.dart';
 
 /// Widget chọn phương tiện đo hiệu chuẩn và hiển thị kết quả ĐKĐBĐ (ISO 17025)
 /// Hỗ trợ cả tính toán 2 bước (Đo lường sơ cấp & Chỉ số quy chuẩn đối chiếu)
@@ -326,8 +327,8 @@ class UncertaintyEquipmentSection extends StatelessWidget {
     }
 
     String corrSign = res.correction >= 0 ? "+" : "";
-    String corrStr =
-        "C: $corrSign${res.correction.toStringAsFixed(4)} ${res.unit}";
+    String corrValStr = AppFormatters.formatSmart(res.correction, testId: testId, unit: res.unit);
+    String corrStr = "C: $corrSign$corrValStr ${res.unit}";
 
     final effectiveLimit = res.standardLimit ?? standardLimit;
     final effectiveIsUpper =
@@ -368,12 +369,18 @@ class UncertaintyEquipmentSection extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                corrStr,
-                style: const TextStyle(
-                  color: Colors.amberAccent,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    corrStr,
+                    style: const TextStyle(
+                      color: Colors.amberAccent,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -384,28 +391,43 @@ class UncertaintyEquipmentSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  const Text(
-                    "X_hc: ",
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
-                  ),
-                  Text(
-                    "${res.correctedValue.toStringAsFixed(4)} ${res.unit}",
+              Flexible(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "X_hc: ",
+                      style: TextStyle(color: Colors.white70, fontSize: 14),
+                    ),
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "${AppFormatters.formatSmart(res.correctedValue, testId: testId, unit: res.unit)} ${res.unit}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    "±U: ±${AppFormatters.formatSmart(res.expandedUncertainty, testId: testId, unit: res.unit)} ${res.unit}",
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: Colors.cyanAccent,
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: 14,
                     ),
                   ),
-                ],
-              ),
-              Text(
-                "±U: ±${res.expandedUncertainty.toStringAsFixed(4)} ${res.unit}",
-                style: const TextStyle(
-                  color: Colors.cyanAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
                 ),
               ),
             ],
@@ -423,15 +445,22 @@ class UncertaintyEquipmentSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Dải thực đo [X-U ÷ X+U]:",
+                  "Dải thực [X±U]:",
                   style: TextStyle(color: Colors.white60, fontSize: 12),
                 ),
-                Text(
-                  "[ ${res.minBound.toStringAsFixed(4)} ÷ ${res.maxBound.toStringAsFixed(4)} ] ${res.unit}",
-                  style: const TextStyle(
-                    color: Colors.greenAccent,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
+                const SizedBox(width: 6),
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      "[ ${AppFormatters.formatSmart(res.minBound, testId: testId, unit: res.unit)} ÷ ${AppFormatters.formatSmart(res.maxBound, testId: testId, unit: res.unit)} ] ${res.unit}",
+                      style: const TextStyle(
+                        color: Colors.greenAccent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -461,16 +490,20 @@ class UncertaintyEquipmentSection extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "${res.derivedName}:",
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
+                      Flexible(
+                        child: Text(
+                          "${res.derivedName}:",
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      const SizedBox(width: 8),
                       Text(
-                        "${(res.derivedUnit == '%' && res.derivedCorrected! > 0) ? '+' : ''}${res.derivedCorrected!.toStringAsFixed(3)} ${res.derivedUnit ?? ''}",
+                        "${(res.derivedUnit == '%' && res.derivedCorrected! > 0) ? '+' : ''}${AppFormatters.formatSmart(res.derivedCorrected, unit: res.derivedUnit, defaultDecimals: 2)} ${res.derivedUnit ?? ''}",
                         style: TextStyle(
                           color: (verdict == UncertaintyVerdict.fail)
                               ? Colors.redAccent
@@ -490,15 +523,22 @@ class UncertaintyEquipmentSection extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          "Dải quy chuẩn thực:",
+                          "Dải chuẩn [X±U]:",
                           style: TextStyle(color: Colors.white60, fontSize: 12),
                         ),
-                        Text(
-                          "[ ${(res.derivedUnit == '%' && res.derivedMinBound! > 0) ? '+' : ''}${res.derivedMinBound!.toStringAsFixed(3)} ÷ ${(res.derivedUnit == '%' && res.derivedMaxBound! > 0) ? '+' : ''}${res.derivedMaxBound!.toStringAsFixed(3)} ] ${res.derivedUnit ?? ''}",
-                          style: const TextStyle(
-                            color: Colors.lightGreenAccent,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "[ ${(res.derivedUnit == '%' && res.derivedMinBound! > 0) ? '+' : ''}${AppFormatters.formatSmart(res.derivedMinBound, unit: res.derivedUnit, defaultDecimals: 2)} ÷ ${(res.derivedUnit == '%' && res.derivedMaxBound! > 0) ? '+' : ''}${AppFormatters.formatSmart(res.derivedMaxBound, unit: res.derivedUnit, defaultDecimals: 2)} ] ${res.derivedUnit ?? ''}",
+                              style: const TextStyle(
+                                color: Colors.lightGreenAccent,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -587,8 +627,8 @@ class UncertaintyEquipmentSection extends StatelessWidget {
   /// Hiển thị kết quả ĐKĐBĐ cho phép thử 1 giá trị đơn lẻ
   Widget _buildSingleResultDetails(UncertaintyResult res) {
     String corrSign = res.correction >= 0 ? "+" : "";
-    String corrStr =
-        "$corrSign${res.correction.toStringAsFixed(4)} ${res.unit}";
+    String corrValStr = AppFormatters.formatSmart(res.correction, testId: testId, unit: res.unit);
+    String corrStr = "$corrSign$corrValStr ${res.unit}";
 
     final effectiveLimit = res.standardLimit ?? standardLimit;
     final effectiveIsUpper =
@@ -608,12 +648,18 @@ class UncertaintyEquipmentSection extends StatelessWidget {
               "Hiệu chính C:",
               style: TextStyle(color: Colors.white70, fontSize: 14),
             ),
-            Text(
-              corrStr,
-              style: const TextStyle(
-                color: Colors.amberAccent,
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerRight,
+                child: Text(
+                  corrStr,
+                  style: const TextStyle(
+                    color: Colors.amberAccent,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
               ),
             ),
           ],
@@ -626,12 +672,18 @@ class UncertaintyEquipmentSection extends StatelessWidget {
               "Giá trị X_hc:",
               style: TextStyle(color: Colors.white70, fontSize: 14),
             ),
-            Text(
-              "${res.correctedValue.toStringAsFixed(4)} ${res.unit}",
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "${AppFormatters.formatSmart(res.correctedValue, testId: testId, unit: res.unit)} ${res.unit}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
               ),
             ),
           ],
@@ -640,16 +692,26 @@ class UncertaintyEquipmentSection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "ĐKĐBĐ mở rộng ±U (u%=${res.uPercent}%):",
-              style: const TextStyle(color: Colors.white70, fontSize: 14),
+            Flexible(
+              child: Text(
+                "ĐKĐBĐ ±U (u%=${res.uPercent.toStringAsFixed(2)}%):",
+                style: const TextStyle(color: Colors.white70, fontSize: 13),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            Text(
-              "±${res.expandedUncertainty.toStringAsFixed(4)} ${res.unit}",
-              style: const TextStyle(
-                color: Colors.cyanAccent,
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
+            const SizedBox(width: 8),
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "±${AppFormatters.formatSmart(res.expandedUncertainty, testId: testId, unit: res.unit)} ${res.unit}",
+                  style: const TextStyle(
+                    color: Colors.cyanAccent,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
               ),
             ),
           ],
@@ -665,15 +727,22 @@ class UncertaintyEquipmentSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                "Dải thực đo [X-U ÷ X+U]:",
+                "Dải thực [X±U]:",
                 style: TextStyle(color: Colors.white60, fontSize: 13),
               ),
-              Text(
-                "[ ${res.minBound.toStringAsFixed(4)} ÷ ${res.maxBound.toStringAsFixed(4)} ] ${res.unit}",
-                style: const TextStyle(
-                  color: Colors.greenAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
+              const SizedBox(width: 6),
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    "[ ${AppFormatters.formatSmart(res.minBound, testId: testId, unit: res.unit)} ÷ ${AppFormatters.formatSmart(res.maxBound, testId: testId, unit: res.unit)} ] ${res.unit}",
+                    style: const TextStyle(
+                      color: Colors.greenAccent,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -703,16 +772,20 @@ class UncertaintyEquipmentSection extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "${res.derivedName}:",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                    Flexible(
+                      child: Text(
+                        "${res.derivedName}:",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    const SizedBox(width: 8),
                     Text(
-                      "${(res.derivedUnit == '%' && res.derivedCorrected! > 0) ? '+' : ''}${res.derivedCorrected!.toStringAsFixed(4)} ${res.derivedUnit ?? ''}",
+                      "${(res.derivedUnit == '%' && res.derivedCorrected! > 0) ? '+' : ''}${AppFormatters.formatSmart(res.derivedCorrected, unit: res.derivedUnit, defaultDecimals: 2)} ${res.derivedUnit ?? ''}",
                       style: TextStyle(
                         color: (verdict == UncertaintyVerdict.fail)
                             ? Colors.redAccent
@@ -732,15 +805,22 @@ class UncertaintyEquipmentSection extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        "Dải quy chuẩn thực:",
-                        style: TextStyle(color: Colors.white60, fontSize: 13),
+                        "Dải chuẩn [X±U]:",
+                        style: TextStyle(color: Colors.white60, fontSize: 12),
                       ),
-                      Text(
-                        "[ ${(res.derivedUnit == '%' && res.derivedMinBound! > 0) ? '+' : ''}${res.derivedMinBound!.toStringAsFixed(4)} ÷ ${(res.derivedUnit == '%' && res.derivedMaxBound! > 0) ? '+' : ''}${res.derivedMaxBound!.toStringAsFixed(4)} ] ${res.derivedUnit ?? ''}",
-                        style: const TextStyle(
-                          color: Colors.lightGreenAccent,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "[ ${(res.derivedUnit == '%' && res.derivedMinBound! > 0) ? '+' : ''}${AppFormatters.formatSmart(res.derivedMinBound, unit: res.derivedUnit, defaultDecimals: 2)} ÷ ${(res.derivedUnit == '%' && res.derivedMaxBound! > 0) ? '+' : ''}${AppFormatters.formatSmart(res.derivedMaxBound, unit: res.derivedUnit, defaultDecimals: 2)} ] ${res.derivedUnit ?? ''}",
+                            style: const TextStyle(
+                              color: Colors.lightGreenAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
                         ),
                       ),
                     ],

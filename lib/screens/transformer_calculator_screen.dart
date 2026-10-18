@@ -6,6 +6,7 @@ import '../services/calibration_service.dart';
 import '../widgets/uncertainty_widget.dart';
 import '../widgets/standard_evaluation_widget.dart';
 import '../core/theme/app_theme.dart';
+import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
 
 
@@ -81,10 +82,8 @@ class _TransformerCalculatorScreenState
   final TextEditingController pkCCtrl = TextEditingController();
   double? ukPercent, pkTotal;
 
-  double parseInput(String val) {
-    if (val.isEmpty) return 0;
-    return double.tryParse(val.replaceAll(',', '.')) ?? 0;
-  }
+  double parseInput(String val) => AppFormatters.parseInput(val);
+
 
   void _tinhCachDien() {
     double rCH = parseInput(rcCHCtrl.text);
@@ -540,7 +539,7 @@ class _TransformerCalculatorScreenState
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController ctrl, {bool isExpanded = true}) {
+  Widget _buildTextField(String label, TextEditingController ctrl, {bool isExpanded = true, String? hintText}) {
     final field = Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: TextField(
@@ -549,6 +548,7 @@ class _TransformerCalculatorScreenState
         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
         decoration: InputDecoration(
           labelText: label,
+          hintText: hintText,
           contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
         ),
       ),
@@ -642,11 +642,11 @@ class _TransformerCalculatorScreenState
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('C-H', rcCHCtrl),
+                        _buildTextField('C-H', rcCHCtrl, hintText: 'VD: 2500'),
                         const SizedBox(width: 8),
-                        _buildTextField('C-V', rcCVCtrl),
+                        _buildTextField('C-V', rcCVCtrl, hintText: 'VD: 2500'),
                         const SizedBox(width: 8),
-                        _buildTextField('H-V', rcHVCtrl),
+                        _buildTextField('H-V', rcHVCtrl, hintText: 'VD: 3000'),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -658,7 +658,7 @@ class _TransformerCalculatorScreenState
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(
-                          'R_cd Min: ${minRcd!.toStringAsFixed(0)} MΩ',
+                          'R_cd Min: ${AppFormatters.formatInsulation(minRcd)}',
                           style: const TextStyle(color: Colors.greenAccent, fontSize: 16, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
@@ -689,18 +689,18 @@ class _TransformerCalculatorScreenState
                     const Divider(),
                     Row(
                       children: [
-                        _buildTextField('Ra', rDoACtrl),
+                        _buildTextField('Ra', rDoACtrl, hintText: 'VD: 0.125'),
                         const SizedBox(width: 8),
-                        _buildTextField('Rb', rDoBCtrl),
+                        _buildTextField('Rb', rDoBCtrl, hintText: 'VD: 0.125'),
                         const SizedBox(width: 8),
-                        _buildTextField('Rc', rDoCCtrl),
+                        _buildTextField('Rc', rDoCCtrl, hintText: 'VD: 0.125'),
                       ],
                     ),
                     Row(
                       children: [
-                        _buildTextField('T_đo (°C)', tDoCtrl),
+                        _buildTextField('T_đo (°C)', tDoCtrl, hintText: 'VD: 30'),
                         const SizedBox(width: 8),
-                        _buildTextField('T_tc (°C)', tTcCtrl),
+                        _buildTextField('T_tc (°C)', tTcCtrl, hintText: 'VD: 75'),
                       ],
                     ),
                     Wrap(
@@ -719,9 +719,47 @@ class _TransformerCalculatorScreenState
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text('A: ${rResultA?.toStringAsFixed(2) ?? '-'}', style: const TextStyle(color: Colors.white70)),
-                          Text('B: ${rResultB?.toStringAsFixed(2) ?? '-'}', style: const TextStyle(color: Colors.white70)),
-                          Text('C: ${rResultC?.toStringAsFixed(2) ?? '-'}', style: const TextStyle(color: Colors.white70)),
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                'Ra: ${rResultA != null ? rResultA!.toStringAsFixed(3) : "-"}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                'Rb: ${rResultB != null ? rResultB!.toStringAsFixed(3) : "-"}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                'Rc: ${rResultC != null ? rResultC!.toStringAsFixed(3) : "-"}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       if (deltaR != null) ...[
@@ -730,7 +768,7 @@ class _TransformerCalculatorScreenState
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(color: AppTheme.myMedNavy, borderRadius: BorderRadius.circular(8)),
                           child: Text(
-                            'ΔR: ${deltaR!.toStringAsFixed(2)} %',
+                            'ΔR: ${AppFormatters.formatPercent(deltaR)}',
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: deltaR! > 2.0 ? Colors.redAccent : Colors.lightGreenAccent),
                           ),
@@ -756,7 +794,7 @@ class _TransformerCalculatorScreenState
                       phaseResults: _rdcPhaseUncertainty.isNotEmpty ? _rdcPhaseUncertainty : null,
                       summaryTitle: 'ΔR_hc:',
                       summaryValueText: deltaRHc != null
-                          ? '${deltaRHc!.toStringAsFixed(2)} % ${deltaRHc! <= 2.0 ? "(ĐẠT ≤ 2%)" : "(CẢNH BÁO: > 2%)"}'
+                          ? '${AppFormatters.formatPercent(deltaRHc)} ${deltaRHc! <= 2.0 ? "(ĐẠT ≤ 2%)" : "(CẢNH BÁO: > 2%)"}'
                           : null,
                       summaryPass: deltaRHc != null ? (deltaRHc! <= 2.0) : null,
                     ),
@@ -789,14 +827,14 @@ class _TransformerCalculatorScreenState
                     const Text('3. SAI LỆCH TỶ SỐ BIẾN (%)',
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
                     const Divider(),
-                    _buildTextField('K Định mức (K_dm)', kDmCtrl, isExpanded: false),
+                    _buildTextField('K Định mức (K_dm)', kDmCtrl, isExpanded: false, hintText: 'VD: 50.0000'),
                     Row(
                       children: [
-                        _buildTextField('Ka đo', kTtACtrl),
+                        _buildTextField('Ka đo', kTtACtrl, hintText: 'VD: 50.1234'),
                         const SizedBox(width: 8),
-                        _buildTextField('Kb đo', kTtBCtrl),
+                        _buildTextField('Kb đo', kTtBCtrl, hintText: 'VD: 50.1234'),
                         const SizedBox(width: 8),
-                        _buildTextField('Kc đo', kTtCCtrl),
+                        _buildTextField('Kc đo', kTtCCtrl, hintText: 'VD: 50.1234'),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -806,9 +844,52 @@ class _TransformerCalculatorScreenState
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          if (errA != null) Text('A: ${errA!.toStringAsFixed(2)}%', style: TextStyle(color: errA!.abs() > 0.5 ? Colors.redAccent : Colors.lightGreenAccent, fontWeight: FontWeight.bold)),
-                          if (errB != null) Text('B: ${errB!.toStringAsFixed(2)}%', style: TextStyle(color: errB!.abs() > 0.5 ? Colors.redAccent : Colors.lightGreenAccent, fontWeight: FontWeight.bold)),
-                          if (errC != null) Text('C: ${errC!.toStringAsFixed(2)}%', style: TextStyle(color: errC!.abs() > 0.5 ? Colors.redAccent : Colors.lightGreenAccent, fontWeight: FontWeight.bold)),
+                          if (errA != null)
+                            Flexible(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'Ka: ${errA! >= 0 ? "+" : ""}${errA!.toStringAsFixed(2)}%',
+                                  style: TextStyle(
+                                    color: errA!.abs() > 0.5 ? Colors.redAccent : Colors.lightGreenAccent,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (errB != null) ...[
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'Kb: ${errB! >= 0 ? "+" : ""}${errB!.toStringAsFixed(2)}%',
+                                  style: TextStyle(
+                                    color: errB!.abs() > 0.5 ? Colors.redAccent : Colors.lightGreenAccent,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                          if (errC != null) ...[
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  'Kc: ${errC! >= 0 ? "+" : ""}${errC!.toStringAsFixed(2)}%',
+                                  style: TextStyle(
+                                    color: errC!.abs() > 0.5 ? Colors.redAccent : Colors.lightGreenAccent,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ],
@@ -858,21 +939,21 @@ class _TransformerCalculatorScreenState
                     const Divider(),
                     Row(
                        children: [
-                         _buildTextField('Ioa', i0ACtrl),
+                         _buildTextField('Ioa', i0ACtrl, hintText: 'VD: 0.18'),
                          const SizedBox(width: 8),
-                         _buildTextField('Iob', i0BCtrl),
+                         _buildTextField('Iob', i0BCtrl, hintText: 'VD: 0.18'),
                          const SizedBox(width: 8),
-                         _buildTextField('Ioc', i0CCtrl),
+                         _buildTextField('Ioc', i0CCtrl, hintText: 'VD: 0.18'),
                        ],
                     ),
-                    _buildTextField('I định mức (Để tính I0%)', i0DmCtrl, isExpanded: false),
+                    _buildTextField('I định mức (Để tính I0%)', i0DmCtrl, isExpanded: false, hintText: 'VD: 10.0'),
                     Row(
                        children: [
-                         _buildTextField('Poa', p0ACtrl),
+                         _buildTextField('Poa', p0ACtrl, hintText: 'VD: 1.25'),
                          const SizedBox(width: 8),
-                         _buildTextField('Pob', p0BCtrl),
+                         _buildTextField('Pob', p0BCtrl, hintText: 'VD: 1.25'),
                          const SizedBox(width: 8),
-                         _buildTextField('Poc', p0CCtrl),
+                         _buildTextField('Poc', p0CCtrl, hintText: 'VD: 1.25'),
                        ],
                     ),
                     const SizedBox(height: 8),
@@ -904,21 +985,21 @@ class _TransformerCalculatorScreenState
                     const Divider(),
                     Row(
                        children: [
-                         _buildTextField('Uka', ukACtrl),
+                         _buildTextField('Uka', ukACtrl, hintText: 'VD: 10.45'),
                          const SizedBox(width: 8),
-                         _buildTextField('Ukb', ukBCtrl),
+                         _buildTextField('Ukb', ukBCtrl, hintText: 'VD: 10.45'),
                          const SizedBox(width: 8),
-                         _buildTextField('Ukc', ukCCtrl),
+                         _buildTextField('Ukc', ukCCtrl, hintText: 'VD: 10.45'),
                        ],
                     ),
-                    _buildTextField('U pha định mức (Tính Uk%)', ukDmCtrl, isExpanded: false),
+                    _buildTextField('U pha định mức (Tính Uk%)', ukDmCtrl, isExpanded: false, hintText: 'VD: 22.0'),
                     Row(
                        children: [
-                         _buildTextField('Pka', pkACtrl),
+                         _buildTextField('Pka', pkACtrl, hintText: 'VD: 14.5'),
                          const SizedBox(width: 8),
-                         _buildTextField('Pkb', pkBCtrl),
+                         _buildTextField('Pkb', pkBCtrl, hintText: 'VD: 14.5'),
                          const SizedBox(width: 8),
-                         _buildTextField('Pkc', pkCCtrl),
+                         _buildTextField('Pkc', pkCCtrl, hintText: 'VD: 14.5'),
                        ],
                     ),
                     const SizedBox(height: 8),

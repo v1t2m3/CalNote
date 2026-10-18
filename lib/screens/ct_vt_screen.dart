@@ -5,6 +5,7 @@ import '../services/formula_service.dart';
 import '../services/calibration_service.dart';
 import '../widgets/uncertainty_widget.dart';
 import '../core/theme/app_theme.dart';
+import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
 
 
@@ -36,10 +37,8 @@ class _CtVtScreenState extends State<CtVtScreen> {
     }
   }
 
-  double parseInput(String val) {
-    if (val.isEmpty) return 0;
-    return double.tryParse(val.replaceAll(',', '.')) ?? 0;
-  }
+  double parseInput(String val) => AppFormatters.parseInput(val);
+
 
   void _tinhSaiSo() {
     double kdm = parseInput(kDmCtrl.text);
@@ -202,13 +201,13 @@ class _CtVtScreenState extends State<CtVtScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        Expanded(child: _buildTextField('K Định Mức', kDmCtrl)),
+                        Expanded(child: _buildTextField('K Định Mức', kDmCtrl, hint: 'VD: 100.0000')),
                         const SizedBox(width: 8),
-                        Expanded(child: _buildTextField('K Thực Tế', kTtCtrl)),
+                        Expanded(child: _buildTextField('K Thực Tế', kTtCtrl, hint: 'VD: 100.0452')),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    _buildTextField('Độ phân giải (tuỳ chọn)', resolutionCtrl, hint: 'VD: 0.01'),
+                    _buildTextField('Độ phân giải (tuỳ chọn)', resolutionCtrl, hint: 'VD: 0.0001'),
                     const SizedBox(height: 8),
                     Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -268,11 +267,11 @@ class _CtVtScreenState extends State<CtVtScreen> {
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 alignment: Alignment.centerRight,
-                                child: Text('${errorResult!.toStringAsFixed(4)} %',
+                                child: Text('${errorResult! >= 0 ? "+" : ""}${errorResult!.toStringAsFixed(4)} %',
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayMedium?.copyWith(
-                                          color: isFailed ? Colors.redAccent : Colors.lightGreenAccent
+                                           color: isFailed ? Colors.redAccent : Colors.lightGreenAccent
                                         )),
                               ),
                             ),
