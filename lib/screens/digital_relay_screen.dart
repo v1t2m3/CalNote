@@ -5,6 +5,7 @@ import '../services/formula_service.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
+import '../widgets/equipment_icon_widget.dart';
 
 class DigitalRelayScreen extends StatefulWidget {
   const DigitalRelayScreen({super.key});
@@ -374,7 +375,13 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('RƠ LE SỐ CHUYÊN SÂU'),
+        title: const Row(
+          children: [
+            EquipmentIconWidget(categoryCode: 'relay_protection', size: 26),
+            SizedBox(width: 10),
+            Text('RƠ LE SỐ CHUYÊN SÂU', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveAllNotes,

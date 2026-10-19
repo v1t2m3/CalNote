@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mte_calculator_pro/services/reference_standard_service.dart';
 import 'package:mte_calculator_pro/core/utils/app_formatters.dart';
+import 'package:mte_calculator_pro/widgets/equipment_icon_widget.dart';
+import 'package:mte_calculator_pro/screens/reference_standard_screen.dart';
 
 void main() {
   group('AppFormatters Unit Tests', () {
@@ -149,4 +151,97 @@ void main() {
       expect(passC, isFalse);
     });
   });
+
+  group('EquipmentIconWidget Unit Tests', () {
+    test('getAssetForCode returns correct SVG path for standardized categories', () {
+      expect(EquipmentIconWidget.getAssetForCode('transformer'), 'assets/icons/high_voltage/may_bien_ap.svg');
+      expect(EquipmentIconWidget.getAssetForCode('circuit_breaker'), 'assets/icons/high_voltage/may_cat.svg');
+      expect(EquipmentIconWidget.getAssetForCode('disconnector'), 'assets/icons/high_voltage/dao_cach_ly.svg');
+      expect(EquipmentIconWidget.getAssetForCode('recloser_lbs'), 'assets/icons/high_voltage/recloser_lbs.svg');
+      expect(EquipmentIconWidget.getAssetForCode('aptomat'), 'assets/icons/high_voltage/aptomat.svg');
+      expect(EquipmentIconWidget.getAssetForCode('mcb_mccb'), 'assets/icons/high_voltage/aptomat.svg');
+      expect(EquipmentIconWidget.getAssetForCode('instrument_transformer'), 'assets/icons/high_voltage/TU_TI.svg');
+      expect(EquipmentIconWidget.getAssetForCode('surge_arrester'), 'assets/icons/high_voltage/chong_set_van.svg');
+      expect(EquipmentIconWidget.getAssetForCode('grounding'), 'assets/icons/high_voltage/tiep_dia.svg');
+      expect(EquipmentIconWidget.getAssetForCode('cable'), 'assets/icons/high_voltage/cap_ngam.svg');
+      expect(EquipmentIconWidget.getAssetForCode('rotating_machine'), 'assets/icons/high_voltage/may_dien_quay.svg');
+      expect(EquipmentIconWidget.getAssetForCode('power_quality'), 'assets/icons/high_voltage/chat_luong_dien_nang.svg');
+      expect(EquipmentIconWidget.getAssetForCode('capacitor'), 'assets/icons/high_voltage/tu_bu_xoay_chieu.svg');
+      expect(EquipmentIconWidget.getAssetForCode('relay_protection'), 'assets/icons/high_voltage/relay_bao_ve.svg');
+      expect(EquipmentIconWidget.getAssetForCode('safety_equipment'), 'assets/icons/high_voltage/gang_tay.svg');
+    });
+
+    test('getAssetForCode resolves Vietnamese device and test names', () {
+      expect(EquipmentIconWidget.getAssetForCode('Máy Biến Áp'), 'assets/icons/high_voltage/may_bien_ap.svg');
+      expect(EquipmentIconWidget.getAssetForCode('Máy Cắt'), 'assets/icons/high_voltage/may_cat.svg');
+      expect(EquipmentIconWidget.getAssetForCode('Dao Cách Ly'), 'assets/icons/high_voltage/dao_cach_ly.svg');
+      expect(EquipmentIconWidget.getAssetForCode('Recloser / LBS / RMU'), 'assets/icons/high_voltage/recloser_lbs.svg');
+      expect(EquipmentIconWidget.getAssetForCode('Aptomat (MCB/MCCB)'), 'assets/icons/high_voltage/aptomat.svg');
+      expect(EquipmentIconWidget.getAssetForCode('TI & TU'), 'assets/icons/high_voltage/TU_TI.svg');
+      expect(EquipmentIconWidget.getAssetForCode('Chống Sét Van'), 'assets/icons/high_voltage/chong_set_van.svg');
+      expect(EquipmentIconWidget.getAssetForCode('Hệ Thống Tiếp Địa'), 'assets/icons/high_voltage/tiep_dia.svg');
+      expect(EquipmentIconWidget.getAssetForCode('Cáp Lực'), 'assets/icons/high_voltage/cap_ngam.svg');
+    });
+  });
+
+  group('ReferenceStandardScreen Category Filtering Tests', () {
+    test('matchCategory cleanly separates Recloser from Circuit Breakers', () {
+      final recloserItem = ReferenceItemModel.fromJson({
+        'id': 'STD_043',
+        'category': 'Máy cắt & Tủ đóng cắt',
+        'categoryCode': 'circuit_breaker',
+        'subCategory': 'Recloser',
+        'item': 'Thời gian đóng/cắt',
+        'limit': '< 100 ms',
+        'standard': 'IEC',
+        'voltageLevel': '<=35kV',
+      });
+      final breakerItem = ReferenceItemModel.fromJson({
+        'id': 'STD_040',
+        'category': 'Máy cắt & Tủ đóng cắt',
+        'categoryCode': 'circuit_breaker',
+        'subCategory': 'Máy cắt chân không',
+        'item': 'Điện trở tiếp xúc',
+        'limit': '< 50 μΩ',
+        'standard': 'IEC',
+        'voltageLevel': '<=35kV',
+      });
+
+      expect(ReferenceStandardScreen.matchCategory(recloserItem, 'recloser_lbs'), isTrue);
+      expect(ReferenceStandardScreen.matchCategory(recloserItem, 'circuit_breaker'), isFalse);
+
+      expect(ReferenceStandardScreen.matchCategory(breakerItem, 'circuit_breaker'), isTrue);
+      expect(ReferenceStandardScreen.matchCategory(breakerItem, 'recloser_lbs'), isFalse);
+    });
+
+    test('matchCategory cleanly separates Safety Equipment from Relays', () {
+      final relayItem = ReferenceItemModel.fromJson({
+        'id': 'STD_090',
+        'category': 'Rơ le & Dụng cụ an toàn',
+        'categoryCode': 'relay_protection',
+        'subCategory': 'Rơ le so lệch',
+        'item': 'Thời gian tác động',
+        'limit': '< 30 ms',
+        'standard': 'TCVN',
+        'voltageLevel': 'ALL',
+      });
+      final safetyItem = ReferenceItemModel.fromJson({
+        'id': 'STD_095',
+        'category': 'Dụng cụ an toàn',
+        'categoryCode': 'safety_equipment',
+        'subCategory': 'Găng tay cách điện',
+        'item': 'Điện áp thử nghiệm',
+        'limit': '≥ 10 kV',
+        'standard': 'TCVN',
+        'voltageLevel': '<=35kV',
+      });
+
+      expect(ReferenceStandardScreen.matchCategory(relayItem, 'relay_protection'), isTrue);
+      expect(ReferenceStandardScreen.matchCategory(relayItem, 'safety_equipment'), isFalse);
+
+      expect(ReferenceStandardScreen.matchCategory(safetyItem, 'safety_equipment'), isTrue);
+      expect(ReferenceStandardScreen.matchCategory(safetyItem, 'relay_protection'), isFalse);
+    });
+  });
 }
+

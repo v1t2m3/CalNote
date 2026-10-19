@@ -5,6 +5,7 @@ import '../services/formula_service.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
+import '../widgets/equipment_icon_widget.dart';
 
 class CableScreen extends StatefulWidget {
   const CableScreen({super.key});
@@ -330,7 +331,13 @@ class _CableScreenState extends State<CableScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('THỬ NGHIỆM CÁP LỰC'),
+        title: const Row(
+          children: [
+            EquipmentIconWidget(categoryCode: 'cable', size: 26),
+            SizedBox(width: 10),
+            Text('THỬ NGHIỆM CÁP LỰC', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveAllNotes,

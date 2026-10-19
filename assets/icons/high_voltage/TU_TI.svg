@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor">
+  <!-- Lõi thép phân cách (Magnetic Core) -->
+  <rect x="30" y="16" width="2" height="32" rx="1" />
+  <rect x="34" y="16" width="2" height="32" rx="1" />
+
+  <!-- Cuộn sơ cấp bên trái (Primary Winding Coils) -->
+  <circle cx="16" cy="18" r="2.5" />
+  <path d="M18.5 18 h5 c3.5 0 3.5 6 0 6 c3.5 0 3.5 6 0 6 c3.5 0 3.5 6 0 6 c3.5 0 3.5 6 0 6 h-5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
+  <circle cx="16" cy="42" r="2.5" />
+
+  <!-- Cuộn thứ cấp bên phải (Secondary Winding Coils) -->
+  <circle cx="48" cy="18" r="2.5" />
+  <path d="M45.5 18 h-5 c-3.5 0 -3.5 6 0 6 c-3.5 0 -3.5 6 0 6 c-3.5 0 -3.5 6 0 6 c-3.5 0 -3.5 6 0 6 h5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" />
+  <circle cx="48" cy="42" r="2.5" />
+</svg>

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import '../core/theme/app_theme.dart';
 import '../services/reference_standard_service.dart';
+import '../widgets/equipment_icon_widget.dart';
 
 class ReferenceStandardScreen extends StatefulWidget {
   const ReferenceStandardScreen({super.key});
+
+  static bool matchCategory(dynamic e, String catCode) =>
+      _ReferenceStandardScreenState.matchCategory(e, catCode);
 
   @override
   State<ReferenceStandardScreen> createState() =>
@@ -26,68 +30,80 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
     {
       'code': 'transformer',
       'name': 'Máy Biến Áp',
+      'svg': 'assets/icons/high_voltage/may_bien_ap.svg',
       'icon': Icons.electrical_services,
-      'color': Colors.amberAccent
     },
     {
       'code': 'circuit_breaker',
       'name': 'Máy Cắt & Tủ Đóng Cắt',
+      'svg': 'assets/icons/high_voltage/may_cat.svg',
       'icon': Icons.power_settings_new,
-      'color': Colors.lightBlueAccent
     },
     {
       'code': 'disconnector',
       'name': 'Dao Cách Ly & Cầu Chì',
+      'svg': 'assets/icons/high_voltage/dao_cach_ly.svg',
       'icon': Icons.power_off,
-      'color': Colors.orangeAccent
+    },
+    {
+      'code': 'recloser_lbs',
+      'name': 'Recloser, LBS, RMU',
+      'svg': 'assets/icons/high_voltage/recloser_lbs.svg',
+      'icon': Icons.tune,
     },
     {
       'code': 'surge_arrester',
       'name': 'Chống Sét Van',
+      'svg': 'assets/icons/high_voltage/chong_set_van.svg',
       'icon': Icons.flash_on,
-      'color': Colors.yellowAccent
     },
     {
       'code': 'instrument_transformer',
       'name': 'Biến Dòng & Biến Áp (TI/TU)',
+      'svg': 'assets/icons/high_voltage/TU_TI.svg',
       'icon': Icons.donut_large,
-      'color': Colors.cyanAccent
     },
     {
       'code': 'cable',
-      'name': 'Cáp Điện Lực',
+      'name': 'Cáp Điện Lực & Cáp Ngầm',
+      'svg': 'assets/icons/high_voltage/cap_ngam.svg',
       'icon': Icons.cable,
-      'color': Colors.greenAccent
     },
     {
       'code': 'grounding',
       'name': 'Hệ Thống Nối Đất',
+      'svg': 'assets/icons/high_voltage/tiep_dia.svg',
       'icon': Icons.format_line_spacing,
-      'color': Colors.tealAccent
     },
     {
       'code': 'rotating_machine',
       'name': 'Máy Điện Quay',
+      'svg': 'assets/icons/high_voltage/may_dien_quay.svg',
       'icon': Icons.rotate_right,
-      'color': Colors.deepOrangeAccent
     },
     {
       'code': 'power_quality',
       'name': 'Chất Lượng Điện Năng',
+      'svg': 'assets/icons/high_voltage/chat_luong_dien_nang.svg',
       'icon': Icons.waves,
-      'color': Colors.limeAccent
     },
     {
       'code': 'capacitor',
       'name': 'Tụ Điện / Tụ Bù',
+      'svg': 'assets/icons/high_voltage/tu_bu_xoay_chieu.svg',
       'icon': Icons.pause,
-      'color': Colors.pinkAccent
     },
     {
-      'code': 'relay_safety',
-      'name': 'Rơ Le & Dụng Cụ An Toàn',
+      'code': 'relay_protection',
+      'name': 'Rơ Le Bảo Vệ',
+      'svg': 'assets/icons/high_voltage/relay_bao_ve.svg',
       'icon': Icons.shield,
-      'color': Colors.purpleAccent
+    },
+    {
+      'code': 'safety_equipment',
+      'name': 'Dụng Cụ An Toàn Cao Áp',
+      'svg': 'assets/icons/high_voltage/gang_tay.svg',
+      'icon': Icons.pan_tool,
     },
   ];
 
@@ -113,23 +129,94 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
     });
   }
 
+  static bool matchCategory(dynamic e, String catCode) {
+    final code = e.categoryCode?.toString() ?? '';
+    final cat = e.category?.toString().toLowerCase() ?? '';
+    final sub = (e is ReferenceItemModel
+            ? e.subCategory
+            : (e is TT02ItemModel
+                ? e.subCategory
+                : (e is CbmItemModel ? e.subCategory : '')))
+        .toLowerCase();
+    final item = (e is ReferenceItemModel
+            ? e.item
+            : (e is TT02ItemModel
+                ? e.item
+                : (e is CbmItemModel ? e.item : '')))
+        .toLowerCase();
+
+    if (catCode == 'recloser_lbs') {
+      return code == 'recloser_lbs' ||
+          cat.contains('recloser') ||
+          sub.contains('recloser') ||
+          item.contains('recloser') ||
+          sub.contains('lbs') ||
+          sub.contains('rmu');
+    }
+    if (catCode == 'circuit_breaker') {
+      return code == 'circuit_breaker' &&
+          !cat.contains('recloser') &&
+          !sub.contains('recloser') &&
+          !item.contains('recloser') &&
+          !sub.contains('lbs') &&
+          !sub.contains('rmu');
+    }
+    if (catCode == 'safety_equipment') {
+      if (code == 'safety_equipment') return true;
+      final isSafetyKw = sub.contains('an toàn') ||
+          sub.contains('găng') ||
+          sub.contains('ủng') ||
+          sub.contains('sào') ||
+          sub.contains('bút thử') ||
+          sub.contains('thảm') ||
+          item.contains('an toàn') ||
+          item.contains('găng') ||
+          item.contains('ủng') ||
+          item.contains('sào') ||
+          item.contains('bút thử');
+      if (code == 'relay_safety' || cat.contains('dụng cụ an toàn')) {
+        return isSafetyKw || (cat == 'dụng cụ an toàn');
+      }
+      return false;
+    }
+    if (catCode == 'relay_protection') {
+      if (code == 'relay_protection') return true;
+      final isSafetyKw = sub.contains('an toàn') ||
+          sub.contains('găng') ||
+          sub.contains('ủng') ||
+          sub.contains('sào') ||
+          sub.contains('bút thử') ||
+          sub.contains('thảm') ||
+          item.contains('an toàn') ||
+          item.contains('găng') ||
+          item.contains('ủng') ||
+          item.contains('sào') ||
+          item.contains('bút thử');
+      if (code == 'relay_safety') {
+        return !isSafetyKw;
+      }
+      return cat.contains('rơ le') && !cat.contains('an toàn');
+    }
+    return code == catCode;
+  }
+
   int _getItemCountForCategory(String catCode, int tabIndex) {
     if (tabIndex == 0) {
       return _standardsList
           .where((e) =>
-              e.categoryCode == catCode &&
+              matchCategory(e, catCode) &&
               ReferenceStandardService.matchVoltage(e.voltageLevel, _selectedVoltage))
           .length;
     } else if (tabIndex == 1) {
       return _tt02List
           .where((e) =>
-              e.categoryCode == catCode &&
+              matchCategory(e, catCode) &&
               ReferenceStandardService.matchVoltage(e.voltageLevel, _selectedVoltage))
           .length;
     } else {
       return _cbmList
           .where((e) =>
-              e.categoryCode == catCode &&
+              matchCategory(e, catCode) &&
               ReferenceStandardService.matchVoltage(e.voltageLevel, _selectedVoltage))
           .length;
     }
@@ -294,8 +381,6 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
               itemBuilder: (context, index) {
                 final dev = _deviceCategories[index];
                 final count = _getItemCountForCategory(dev['code'], tabIndex);
-                final IconData iconData = dev['icon'];
-                final Color iconColor = dev['color'];
 
                 return InkWell(
                   onTap: () {
@@ -320,7 +405,7 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
                       borderRadius: BorderRadius.circular(14),
                       side: BorderSide(
                         color: count > 0
-                            ? iconColor.withValues(alpha: 0.5)
+                            ? AppTheme.myOrangeAccent.withValues(alpha: 0.5)
                             : Colors.white10,
                         width: 1.2,
                       ),
@@ -330,7 +415,13 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(iconData, size: 40, color: iconColor),
+                          EquipmentIconWidget(
+                            categoryCode: dev['code'],
+                            customAsset: dev['svg'],
+                            fallbackIcon: dev['icon'],
+                            size: 42,
+                            color: AppTheme.myOrangeAccent,
+                          ),
                           const SizedBox(height: 8),
                           Text(
                             dev['name'],
@@ -695,13 +786,26 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.categoryName,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
+        title: Row(
+          children: [
+            EquipmentIconWidget(
+              categoryCode: widget.categoryCode,
+              size: 26,
+              color: AppTheme.myOrangeAccent,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                widget.categoryName,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ),
         bottom: TabBar(
           controller: _tabController,
@@ -778,7 +882,8 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
     final allItems = ReferenceStandardService.getAllStandards();
     final filtered = allItems
         .where((e) =>
-            e.categoryCode == widget.categoryCode && _matchesVoltage(e.voltageLevel))
+            ReferenceStandardScreen.matchCategory(e, widget.categoryCode) &&
+            _matchesVoltage(e.voltageLevel))
         .toList();
 
     if (filtered.isEmpty) {
@@ -849,7 +954,8 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
     final allItems = ReferenceStandardService.getAllTT02();
     final filtered = allItems
         .where((e) =>
-            e.categoryCode == widget.categoryCode && _matchesVoltage(e.voltageLevel))
+            ReferenceStandardScreen.matchCategory(e, widget.categoryCode) &&
+            _matchesVoltage(e.voltageLevel))
         .toList();
 
     if (filtered.isEmpty) {
@@ -919,7 +1025,8 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
     final allItems = ReferenceStandardService.getAllCBM();
     final filtered = allItems
         .where((e) =>
-            e.categoryCode == widget.categoryCode && _matchesVoltage(e.voltageLevel))
+            ReferenceStandardScreen.matchCategory(e, widget.categoryCode) &&
+            _matchesVoltage(e.voltageLevel))
         .toList();
 
     if (filtered.isEmpty) {

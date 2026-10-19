@@ -6,6 +6,7 @@ import '../core/utils/app_formatters.dart';
 import 'curve_digitizer_screen.dart';
 import 'note_detail_screen.dart';
 import '../models/test_record.dart';
+import '../widgets/equipment_icon_widget.dart';
 
 class AptomatScreen extends StatefulWidget {
   const AptomatScreen({super.key});
@@ -134,7 +135,13 @@ class _AptomatScreenState extends State<AptomatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PHÂN TÍCH APTOMAT'),
+        title: const Row(
+          children: [
+            EquipmentIconWidget(categoryCode: 'aptomat', size: 26),
+            SizedBox(width: 10),
+            Text('PHÂN TÍCH APTOMAT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.file_upload),

@@ -4,6 +4,7 @@ import '../models/test_record.dart';
 import '../core/theme/app_theme.dart';
 import 'note_view_screen.dart';
 import '../services/export_service.dart';
+import '../widgets/equipment_icon_widget.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -78,9 +79,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       ),
                       child: ListTile(
                         contentPadding: const EdgeInsets.all(16),
-                        leading: const CircleAvatar(
-                          backgroundColor: AppTheme.myBrightBlue,
-                          child: Icon(Icons.description, color: Colors.white),
+                        leading: CircleAvatar(
+                          backgroundColor: AppTheme.myDarkNavy,
+                          radius: 24,
+                          child: EquipmentIconWidget(
+                            categoryCode: record.title,
+                            size: 28,
+                            color: AppTheme.myOrangeAccent,
+                            fallbackIcon: Icons.description,
+                          ),
                         ),
                         title: Text(record.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white)),
                         subtitle: Text(

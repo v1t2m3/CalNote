@@ -30,6 +30,7 @@ dependencies:
   intl: ^0.20.2
   share_plus: ^10.0.0
   build_runner: ^2.4.9
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +47,7 @@ flutter:
     - assets/standardTT02.json
     - assets/standardCBM.json
     - assets/calibrated_equipment.json
+    - assets/icons/high_voltage/
 
   
 flutter_launcher_icons:

@@ -5,6 +5,7 @@ import '../services/formula_service.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
+import '../widgets/equipment_icon_widget.dart';
 
 class InsulationCalculatorScreen extends StatefulWidget {
   const InsulationCalculatorScreen({super.key});
@@ -223,7 +224,13 @@ class _InsulationCalculatorScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ĐO CÁCH ĐIỆN (DAR & PI)'),
+        title: const Row(
+          children: [
+            EquipmentIconWidget.ir(size: 26),
+            SizedBox(width: 10),
+            Text('ĐO CÁCH ĐIỆN (DAR & PI)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveNotes,

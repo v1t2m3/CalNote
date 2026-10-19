@@ -14,6 +14,9 @@ import 'aptomat_screen.dart'; // THÊM IMPORT APTOMAT
 import 'insulation_screen.dart'; // THÊM IMPORT ĐO CÁCH ĐIỆN (DAR & PI)
 import 'cable_screen.dart'; // THÊM IMPORT CÁP LỰC
 import 'reference_standard_screen.dart'; // THÊM IMPORT TRA CỨU TIÊU CHUẨN
+import 'disconnector_calculator_screen.dart'; // THÊM IMPORT DAO CÁCH LY
+import 'recloser_calculator_screen.dart'; // THÊM IMPORT RECLOSER / LBS / RMU
+import '../widgets/equipment_icon_widget.dart'; // THÊM COMPONENT ICON SVG CAO THẾ
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -24,15 +27,72 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final List<Map<String, dynamic>> _devices = const [
-    {'name': 'Máy Biến Áp', 'icon': Icons.electrical_services},
-    {'name': 'Máy Cắt', 'icon': Icons.power_settings_new},
-    {'name': 'Đo Cách Điện (DAR/PI)', 'icon': Icons.speed},
-    {'name': 'TI / TU', 'icon': Icons.donut_large},
-    {'name': 'Chống Sét Van', 'icon': Icons.flash_on},
-    {'name': 'Tiếp Địa', 'icon': Icons.format_line_spacing},
-    {'name': 'Aptomat (MCB/MCCB)', 'icon': Icons.toggle_on},
-    {'name': 'Rơ Le Số', 'icon': Icons.shield},
-    {'name': 'Cáp Lực', 'icon': Icons.cable},
+    {
+      'code': 'transformer',
+      'name': 'Máy Biến Áp',
+      'svg': 'assets/icons/high_voltage/may_bien_ap.svg',
+      'icon': Icons.electrical_services,
+    },
+    {
+      'code': 'circuit_breaker',
+      'name': 'Máy Cắt',
+      'svg': 'assets/icons/high_voltage/may_cat.svg',
+      'icon': Icons.power_settings_new,
+    },
+    {
+      'code': 'disconnector',
+      'name': 'Dao Cách Ly',
+      'svg': 'assets/icons/high_voltage/dao_cach_ly.svg',
+      'icon': Icons.power_off,
+    },
+    {
+      'code': 'recloser_lbs',
+      'name': 'Recloser / LBS / RMU',
+      'svg': 'assets/icons/high_voltage/recloser_lbs.svg',
+      'icon': Icons.tune,
+    },
+    {
+      'code': 'insulation_ir',
+      'name': 'Đo Cách Điện (DAR/PI)',
+      'isIR': true,
+      'icon': Icons.speed,
+    },
+    {
+      'code': 'instrument_transformer',
+      'name': 'TI / TU',
+      'svg': 'assets/icons/high_voltage/TU_TI.svg',
+      'icon': Icons.donut_large,
+    },
+    {
+      'code': 'surge_arrester',
+      'name': 'Chống Sét Van',
+      'svg': 'assets/icons/high_voltage/chong_set_van.svg',
+      'icon': Icons.flash_on,
+    },
+    {
+      'code': 'grounding',
+      'name': 'Tiếp Địa',
+      'svg': 'assets/icons/high_voltage/tiep_dia.svg',
+      'icon': Icons.format_line_spacing,
+    },
+    {
+      'code': 'aptomat',
+      'name': 'Aptomat (MCB/MCCB)',
+      'svg': 'assets/icons/high_voltage/aptomat.svg',
+      'icon': Icons.toggle_on,
+    },
+    {
+      'code': 'digital_relay',
+      'name': 'Rơ Le Số',
+      'svg': 'assets/icons/high_voltage/relay_bao_ve.svg',
+      'icon': Icons.shield,
+    },
+    {
+      'code': 'cable',
+      'name': 'Cáp Lực',
+      'svg': 'assets/icons/high_voltage/cap_ngam.svg',
+      'icon': Icons.cable,
+    },
   ];
 
   void _showImportDialog(BuildContext context) {
@@ -428,35 +488,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
             return InkWell(
               onTap: () {
                 Widget targetScreen;
-                switch (index) {
-                  case 0:
+                switch (item['code']) {
+                  case 'transformer':
                     targetScreen = const TransformerCalculatorScreen();
                     break;
-                  case 1:
+                  case 'circuit_breaker':
                     targetScreen = const CircuitBreakerScreen();
                     break;
-                  case 2:
-                    targetScreen =
-                        const InsulationCalculatorScreen(); // ĐO CÁCH ĐIỆN DAR & PI
+                  case 'disconnector':
+                    targetScreen = const DisconnectorCalculatorScreen();
                     break;
-                  case 3:
+                  case 'recloser_lbs':
+                    targetScreen = const RecloserCalculatorScreen();
+                    break;
+                  case 'insulation_ir':
+                    targetScreen = const InsulationCalculatorScreen();
+                    break;
+                  case 'instrument_transformer':
                     targetScreen = const CtVtScreen();
                     break;
-                  case 4:
+                  case 'surge_arrester':
                     targetScreen = const SurgeArresterScreen();
                     break;
-                  case 5:
+                  case 'grounding':
                     targetScreen = const GroundingScreen();
                     break;
-                  case 6:
-                    targetScreen = const AptomatScreen(); // APTOMAT
+                  case 'aptomat':
+                    targetScreen = const AptomatScreen();
                     break;
-                  case 7:
+                  case 'digital_relay':
                     targetScreen = const DigitalRelayScreen();
                     break;
-                  case 8:
+                  case 'cable':
                   default:
-                    targetScreen = const CableScreen(); // CÁP LỰC
+                    targetScreen = const CableScreen();
                     break;
                 }
 
@@ -473,25 +538,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   borderRadius: BorderRadius.circular(16),
                   side: const BorderSide(color: AppTheme.myMedNavy, width: 2),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      item['icon'],
-                      size: 64,
-                      color: AppTheme.myOrangeAccent,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      item['name'],
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      EquipmentIconWidget(
+                        categoryCode: item['code'],
+                        customAsset: item['svg'],
+                        isIR: item['isIR'] == true,
+                        fallbackIcon: item['icon'],
+                        size: 58,
+                        color: AppTheme.myOrangeAccent,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                      const SizedBox(height: 12),
+                      Text(
+                        item['name'],
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

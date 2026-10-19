@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor">
+  <!-- Dây dẫn cực âm/dương -->
+  <rect x="8" y="29.5" width="17" height="5" rx="1" />
+  <!-- Bản cực thứ nhất -->
+  <rect x="25" y="14" width="7" height="36" rx="1.5" />
+  <!-- Khoảng cách điện ly (Dielectric barrier) -->
+  <!-- Bản cực thứ hai -->
+  <rect x="38" y="14" width="7" height="36" rx="1.5" />
+  <!-- Dây dẫn cực còn lại -->
+  <rect x="45" y="29.5" width="17" height="5" rx="1" />
+</svg>

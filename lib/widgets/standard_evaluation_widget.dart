@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_formatters.dart';
 import '../services/reference_standard_service.dart';
+import 'equipment_icon_widget.dart';
 
 /// Widget Hiển thị khối Đối Chiếu 3 Tầng Tiêu Chuẩn:
 /// 1. Tiêu chuẩn Quốc tế / TCVN (Thử nghiệm)
@@ -86,8 +87,12 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
               },
               child: Row(
                 children: [
-                  const Icon(Icons.fact_check,
-                      color: AppTheme.myOrangeAccent, size: 22),
+                  EquipmentIconWidget(
+                    testCode: widget.testCode,
+                    size: 22,
+                    color: AppTheme.myOrangeAccent,
+                    fallbackIcon: Icons.fact_check,
+                  ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Column(

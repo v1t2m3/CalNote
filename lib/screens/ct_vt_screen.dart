@@ -7,6 +7,7 @@ import '../widgets/uncertainty_widget.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
+import '../widgets/equipment_icon_widget.dart';
 
 
 class CtVtScreen extends StatefulWidget {
@@ -174,7 +175,13 @@ class _CtVtScreenState extends State<CtVtScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TÍNH TOÁN TI / TU'),
+        title: const Row(
+          children: [
+            EquipmentIconWidget(categoryCode: 'instrument_transformer', size: 26),
+            SizedBox(width: 10),
+            Text('TÍNH TOÁN TI / TU', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveAllNotes,

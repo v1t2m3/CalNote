@@ -8,6 +8,7 @@ import '../widgets/standard_evaluation_widget.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
+import '../widgets/equipment_icon_widget.dart';
 
 
 class CircuitBreakerScreen extends StatefulWidget {
@@ -264,7 +265,13 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TÍNH TOÁN MÁY CẮT'),
+        title: const Row(
+          children: [
+            EquipmentIconWidget(categoryCode: 'circuit_breaker', size: 26),
+            SizedBox(width: 10),
+            Text('TÍNH TOÁN MÁY CẮT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveAllNotes,
