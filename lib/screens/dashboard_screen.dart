@@ -480,7 +480,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             crossAxisCount: 2,
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            childAspectRatio: 0.9,
+            childAspectRatio: 0.88,
           ),
           itemCount: _devices.length,
           itemBuilder: (context, index) {
@@ -548,7 +548,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         customAsset: item['svg'],
                         isIR: item['isIR'] == true,
                         fallbackIcon: item['icon'],
-                        size: 58,
+                        size: 64,
+                        isCard: true,
                         color: AppTheme.myOrangeAccent,
                       ),
                       const SizedBox(height: 12),

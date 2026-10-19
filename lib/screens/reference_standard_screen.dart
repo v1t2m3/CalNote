@@ -226,7 +226,14 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("TRA CỨU TIÊU CHUẨN THIẾT BỊ"),
+        title: const FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "TRA CỨU TIÊU CHUẨN THIẾT BỊ",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -266,7 +273,7 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
                   controller: _searchController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    hintText: "Tìm kiếm hạng mục, tiêu chuẩn, thiết bị...",
+                    hintText: "Tìm kiếm tiêu chuẩn, hạng mục...",
                     prefixIcon:
                         const Icon(Icons.search, color: AppTheme.myOrangeAccent),
                     suffixIcon: _searchQuery.isNotEmpty
@@ -291,21 +298,25 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
                 ),
                 const SizedBox(height: 8),
 
-                // Bộ lọc Cấp Điện Áp
-                Row(
-                  children: [
-                    const Text(
-                      "Cấp điện áp: ",
-                      style: TextStyle(
-                          color: Colors.white70, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(width: 8),
-                    _buildVoltageChip("Tất cả", "ALL"),
-                    const SizedBox(width: 6),
-                    _buildVoltageChip("≤ 35kV (Trung thế)", "<=35kV"),
-                    const SizedBox(width: 6),
-                    _buildVoltageChip("> 35kV (Cao thế)", ">35kV"),
-                  ],
+                // Bộ lọc Cấp Điện Áp (Cuộn ngang mượt mà, không bao giờ bị che/cắt trên điện thoại)
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  child: Row(
+                    children: [
+                      const Text(
+                        "Cấp điện áp: ",
+                        style: TextStyle(
+                            color: Colors.white70, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(width: 8),
+                      _buildVoltageChip("Tất cả", "ALL"),
+                      const SizedBox(width: 6),
+                      _buildVoltageChip("≤ 35kV (Trung thế)", "<=35kV"),
+                      const SizedBox(width: 6),
+                      _buildVoltageChip("> 35kV (Cao thế)", ">35kV"),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -371,11 +382,12 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
           const SizedBox(height: 10),
           Expanded(
             child: GridView.builder(
+              padding: const EdgeInsets.only(bottom: 24, left: 2, right: 2, top: 4),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
-                childAspectRatio: 1.15,
+                childAspectRatio: 0.98,
               ),
               itemCount: _deviceCategories.length,
               itemBuilder: (context, index) {
@@ -411,7 +423,7 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
                       ),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -419,7 +431,8 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
                             categoryCode: dev['code'],
                             customAsset: dev['svg'],
                             fallbackIcon: dev['icon'],
-                            size: 42,
+                            size: 48,
+                            isCard: true,
                             color: AppTheme.myOrangeAccent,
                           ),
                           const SizedBox(height: 8),

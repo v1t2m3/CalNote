@@ -11,7 +11,35 @@ class EquipmentIconWidget extends StatelessWidget {
   final double size;
   final Color? color;
   final bool isIR;
+  final bool isCard;
   final IconData? fallbackIcon;
+
+  static const Set<String> _doubleSizeAssets = {
+    'may_bien_ap.svg',
+    'may_cat.svg',
+    'recloser_lbs.svg',
+    'chong_set_van.svg',
+    'may_dien_quay.svg',
+    'chat_luong_dien_nang.svg',
+    'gang_tay.svg',
+  };
+
+  static const Set<String> _doubleSizeCategoryCodes = {
+    'transformer',
+    'may_bien_ap',
+    'circuit_breaker',
+    'may_cat',
+    'recloser_lbs',
+    'recloser',
+    'surge_arrester',
+    'chong_set_van',
+    'rotating_machine',
+    'may_dien_quay',
+    'power_quality',
+    'chat_luong_dien_nang',
+    'safety_equipment',
+    'gang_tay',
+  };
 
   const EquipmentIconWidget({
     super.key,
@@ -22,6 +50,7 @@ class EquipmentIconWidget extends StatelessWidget {
     this.color,
     this.isIR = false,
     this.fallbackIcon,
+    this.isCard = false,
   });
 
   /// Factory riêng để hiển thị ký hiệu cách điện "IR" (Insulation Resistance)
@@ -33,7 +62,8 @@ class EquipmentIconWidget extends StatelessWidget {
         testCode = null,
         customAsset = null,
         isIR = true,
-        fallbackIcon = Icons.speed;
+        fallbackIcon = Icons.speed,
+        isCard = false;
 
   /// Ánh xạ từ mã thiết bị hoặc mã phép đo sang đường dẫn file SVG
   static String? getAssetForCode(String? code) {
@@ -162,11 +192,17 @@ class EquipmentIconWidget extends StatelessWidget {
     // Xác định asset path
     final path = customAsset ?? getAssetForCode(categoryCode) ?? getAssetForCode(testCode);
 
+    // Tính toán kích thước hiển thị: nếu ở thẻ Card và thuộc 7 loại icon cần phóng to
+    final cCode = categoryCode?.toLowerCase().trim() ?? '';
+    final isDouble = _doubleSizeCategoryCodes.contains(cCode) ||
+        (path != null && _doubleSizeAssets.any((a) => path.contains(a)));
+    final effectiveSize = (isCard && isDouble) ? size * 1.25 : size;
+
     if (path != null) {
       return SvgPicture.asset(
         path,
-        width: size,
-        height: size,
+        width: effectiveSize,
+        height: effectiveSize,
         colorFilter: ColorFilter.mode(effectiveColor, BlendMode.srcIn),
       );
     }
@@ -174,7 +210,7 @@ class EquipmentIconWidget extends StatelessWidget {
     // Fallback nếu không có asset
     return Icon(
       fallbackIcon ?? Icons.electrical_services,
-      size: size,
+      size: effectiveSize,
       color: effectiveColor,
     );
   }
