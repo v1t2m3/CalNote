@@ -611,7 +611,8 @@ class ReferenceStandardService {
   }
 
   /// Hàm so sánh giá trị số với ngưỡng tiêu chuẩn
-  static bool? compareValue(double val, String? compare, dynamic threshold, dynamic minVal, dynamic maxVal) {
+  /// Hỗ trợ kiểm tra độ lớn sai số (|val| <= threshold) đối với các phép đo sai số phần trăm
+  static bool? compareValue(double val, String? compare, dynamic threshold, dynamic minVal, dynamic maxVal, {bool isBilateral = false}) {
     if (compare == null) return null;
     final comp = compare.trim();
     if (comp == 'between' && minVal != null && maxVal != null) {
@@ -624,34 +625,37 @@ class ReferenceStandardService {
     if (threshold != null) {
       final thN = (threshold is num) ? threshold.toDouble() : double.tryParse(threshold.toString());
       if (thN != null) {
-        if (comp == '≤' || comp == '<=') return val <= thN;
-        if (comp == '≥' || comp == '>=') return val >= thN;
-        if (comp == '<') return val < thN;
-        if (comp == '>') return val > thN;
+        // Đối với sai số có thể âm hoặc dương (hoặc kiểm tra trị tuyệt đối khi ngưỡng > 0 và giá trị âm)
+        final effectiveVal = (isBilateral || (val < 0 && thN > 0)) ? val.abs() : val;
+        if (comp == '≤' || comp == '<=') return effectiveVal <= thN;
+        if (comp == '≥' || comp == '>=') return effectiveVal >= thN;
+        if (comp == '<') return effectiveVal < thN;
+        if (comp == '>') return effectiveVal > thN;
         if (comp == '=') return (val - thN).abs() < 1e-6;
       }
     }
     return null;
   }
 
-  /// 1️⃣ ĐÁNH GIÁ TIÊU CHUẨN QUỐC TẾ / TCVN (THỬ NGHIỆM)
+  /// 1️⃣ ĐÁNH GIÁ THEO TIÊU CHUẨN (TCVN / IEC)
   static StandardEvalResult evaluateStandard(String testCode, double measuredValue, {String voltageLevel = 'ALL'}) {
     final item = getStandardByTestCode(testCode, voltageLevel: voltageLevel);
     if (item == null) {
       return const StandardEvalResult(
         isPass: true,
-        statusText: "CHƯA CÓ TIÊU CHUẨN",
+        statusText: "Chưa có quy định",
         limitText: "Chưa cấu hình tiêu chuẩn cho phép đo này",
         standardText: "",
         recommendation: "",
       );
     }
 
-    final pass = compareValue(measuredValue, item.compare, item.value, item.min, item.max);
+    final isErrorTest = testCode.toLowerCase().contains('error') || testCode.toLowerCase().contains('ratio');
+    final pass = compareValue(measuredValue, item.compare, item.value, item.min, item.max, isBilateral: isErrorTest);
     if (pass == null) {
       return StandardEvalResult(
         isPass: true,
-        statusText: "THAM CHIẾU",
+        statusText: "Tham chiếu",
         limitText: item.limit.isNotEmpty ? item.limit : (item.note ?? ''),
         standardText: item.standard,
         recommendation: item.recommendation,
@@ -661,7 +665,7 @@ class ReferenceStandardService {
 
     return StandardEvalResult(
       isPass: pass,
-      statusText: pass ? "ĐẠT TIÊU CHUẨN" : "KHÔNG ĐẠT",
+      statusText: pass ? "Đạt" : "Không đạt",
       limitText: item.limit.isNotEmpty ? item.limit : "${item.symbol ?? ''} ${item.compare ?? ''} ${item.value ?? ''} ${item.unit ?? ''}".trim(),
       standardText: item.standard,
       recommendation: item.recommendation,
@@ -675,7 +679,7 @@ class ReferenceStandardService {
     if (item == null) {
       return const CbmEvalResult(
         level: 1,
-        levelName: "Chưa có quy định CBM",
+        levelName: "Chưa có quy định",
         conclusion: "N/A",
         rangeText: "",
         recommendation: "",
@@ -717,7 +721,7 @@ class ReferenceStandardService {
 
     return CbmEvalResult(
       level: 1,
-      levelName: "Tham chiếu CBM",
+      levelName: "Tham chiếu",
       conclusion: "Tham chiếu",
       rangeText: item.good,
       recommendation: item.recommendation,
@@ -725,13 +729,13 @@ class ReferenceStandardService {
     );
   }
 
-  /// 3️⃣ ĐÁNH GIÁ TIÊU CHUẨN KIỂM ĐỊNH TT02
+  /// 3️⃣ ĐÁNH GIÁ KIỂM ĐỊNH TT02
   static TT02EvalResult evaluateTT02(String testCode, double measuredValue, {String voltageLevel = 'ALL'}) {
     final item = getTT02ByTestCode(testCode, voltageLevel: voltageLevel);
     if (item == null) {
       return const TT02EvalResult(
         isPass: true,
-        statusText: "CHƯA CÓ TIÊU CHUẨN KIỂM ĐỊNH",
+        statusText: "Chưa có quy định",
         limitText: "Chưa cấu hình kiểm định TT02 cho phép đo này",
         periodText: "",
         standardText: "",
@@ -739,11 +743,12 @@ class ReferenceStandardService {
       );
     }
 
-    final pass = compareValue(measuredValue, item.compare, item.value, null, null);
+    final isErrorTest = testCode.toLowerCase().contains('error') || testCode.toLowerCase().contains('ratio');
+    final pass = compareValue(measuredValue, item.compare, item.value, null, null, isBilateral: isErrorTest);
     if (pass == null) {
       return TT02EvalResult(
         isPass: true,
-        statusText: "THAM CHIẾU KIỂM ĐỊNH",
+        statusText: "Tham chiếu",
         limitText: item.limit,
         periodText: item.period,
         standardText: item.standard,
@@ -754,7 +759,7 @@ class ReferenceStandardService {
 
     return TT02EvalResult(
       isPass: pass,
-      statusText: pass ? "ĐẠT KIỂM ĐỊNH TT02" : "KHÔNG ĐẠT KIỂM ĐỊNH",
+      statusText: pass ? "Đạt" : "Không đạt",
       limitText: item.limit.isNotEmpty ? item.limit : "${item.symbol ?? ''} ${item.compare ?? ''} ${item.value ?? ''} ${item.unit ?? ''}".trim(),
       periodText: item.period,
       standardText: item.standard,

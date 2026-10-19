@@ -556,11 +556,6 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                         testCode: _actionType == 'Close' ? 'MC_Time_Close' : 'MC_Time_Open',
                         voltageLevel: _cbVoltageLevel,
                         primaryValue: timeResult,
-                        phaseValues: {
-                          if (tACtrl.text.isNotEmpty) 'Pha A': parseInput(tACtrl.text),
-                          if (tBCtrl.text.isNotEmpty) 'Pha B': parseInput(tBCtrl.text),
-                          if (tCCtrl.text.isNotEmpty) 'Pha C': parseInput(tCCtrl.text),
-                        },
                         unit: 'ms',
                         customTitle: "ĐỐI CHIẾU TIÊU CHUẨN THỜI GIAN THAO TÁC",
                       ),

@@ -142,9 +142,12 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
   // 1️⃣ Thẻ Tiêu chuẩn Thử nghiệm (TCVN/IEC)
   Widget _buildStandardCard(StandardEvalResult res, double effectiveVal) {
     final bool isFailed = !res.isPass;
-    final Color statusColor = res.statusText == "THAM CHIẾU"
-        ? Colors.cyanAccent
-        : (res.isPass ? Colors.greenAccent : Colors.redAccent);
+    final Color statusColor;
+    if (res.statusText.contains("Chưa") || res.statusText.toLowerCase().contains("tham chiếu")) {
+      statusColor = Colors.cyanAccent;
+    } else {
+      statusColor = res.isPass ? Colors.greenAccent : Colors.redAccent;
+    }
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -159,35 +162,45 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Row(
-                children: [
-                  Icon(Icons.science, color: AppTheme.myOrangeAccent, size: 16),
-                  SizedBox(width: 6),
-                  Text(
-                    "1. TIÊU CHUẨN QUỐC TẾ / TCVN",
-                    style: TextStyle(
-                      color: AppTheme.myOrangeAccent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+              const Expanded(
+                child: Row(
+                  children: [
+                    Icon(Icons.science, color: AppTheme.myOrangeAccent, size: 16),
+                    SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        "1. THEO TIÊU CHUẨN",
+                        style: TextStyle(
+                          color: AppTheme.myOrangeAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: statusColor.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: statusColor),
+                  ],
                 ),
-                child: Text(
-                  res.statusText,
-                  style: TextStyle(
-                    color: statusColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 11,
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: statusColor),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      res.statusText,
+                      style: TextStyle(
+                        color: statusColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -237,20 +250,24 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
   // 2️⃣ Thẻ Tiêu chuẩn Đánh giá CBM (4 mức)
   Widget _buildCbmCard(CbmEvalResult res, double effectiveVal) {
     Color levelColor;
-    switch (res.level) {
-      case 1:
-        levelColor = Colors.greenAccent;
-        break;
-      case 2:
-        levelColor = Colors.yellowAccent;
-        break;
-      case 3:
-        levelColor = Colors.orangeAccent;
-        break;
-      case 4:
-      default:
-        levelColor = Colors.redAccent;
-        break;
+    if (res.levelName.contains("Chưa") || res.levelName.toLowerCase().contains("tham chiếu")) {
+      levelColor = Colors.cyanAccent;
+    } else {
+      switch (res.level) {
+        case 1:
+          levelColor = Colors.greenAccent;
+          break;
+        case 2:
+          levelColor = Colors.yellowAccent;
+          break;
+        case 3:
+          levelColor = Colors.orangeAccent;
+          break;
+        case 4:
+        default:
+          levelColor = Colors.redAccent;
+          break;
+      }
     }
 
     final bool isBad = res.level >= 3;
@@ -268,35 +285,45 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Row(
-                children: [
-                  Icon(Icons.analytics, color: Colors.purpleAccent, size: 16),
-                  SizedBox(width: 6),
-                  Text(
-                    "2. TIÊU CHUẨN ĐÁNH GIÁ CBM",
-                    style: TextStyle(
-                      color: Colors.purpleAccent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+              const Expanded(
+                child: Row(
+                  children: [
+                    Icon(Icons.analytics, color: Colors.purpleAccent, size: 16),
+                    SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        "2. ĐÁNH GIÁ THEO CBM",
+                        style: TextStyle(
+                          color: Colors.purpleAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: levelColor.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: levelColor),
+                  ],
                 ),
-                child: Text(
-                  res.levelName,
-                  style: TextStyle(
-                    color: levelColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 11,
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: levelColor.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: levelColor),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      res.levelName,
+                      style: TextStyle(
+                        color: levelColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -355,9 +382,12 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
   // 3️⃣ Thẻ Tiêu chuẩn Kiểm định TT02
   Widget _buildTT02Card(TT02EvalResult res, double effectiveVal) {
     final bool isFailed = !res.isPass;
-    final Color statusColor = res.statusText == "THAM CHIẾU KIỂM ĐỊNH"
-        ? Colors.cyanAccent
-        : (res.isPass ? Colors.lightBlueAccent : Colors.redAccent);
+    final Color statusColor;
+    if (res.statusText.contains("Chưa") || res.statusText.toLowerCase().contains("tham chiếu")) {
+      statusColor = Colors.cyanAccent;
+    } else {
+      statusColor = res.isPass ? Colors.greenAccent : Colors.redAccent;
+    }
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -372,35 +402,45 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Row(
-                children: [
-                  Icon(Icons.verified_user, color: Colors.blueAccent, size: 16),
-                  SizedBox(width: 6),
-                  Text(
-                    "3. TIÊU CHUẨN KIỂM ĐỊNH TT02",
-                    style: TextStyle(
-                      color: Colors.blueAccent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+              const Expanded(
+                child: Row(
+                  children: [
+                    Icon(Icons.verified_user, color: Colors.blueAccent, size: 16),
+                    SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        "3. KIỂM ĐỊNH TT02",
+                        style: TextStyle(
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: statusColor.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: statusColor),
+                  ],
                 ),
-                child: Text(
-                  res.statusText,
-                  style: TextStyle(
-                    color: statusColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 11,
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: statusColor),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      res.statusText,
+                      style: TextStyle(
+                        color: statusColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -525,7 +565,7 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
               border: Border.all(color: pColor.withValues(alpha: 0.4)),
             ),
             child: Text(
-              "${entry.key}: ${AppFormatters.formatSmart(val, testId: widget.testCode, unit: widget.unit)} (${pass == null ? 'N/A' : (pass ? 'Đạt' : 'Lỗi')})",
+              "${entry.key}: ${AppFormatters.formatSmart(val, testId: widget.testCode, unit: widget.unit)} (${pass == null ? 'N/A' : (pass ? 'Đạt' : 'Không đạt')})",
               style: TextStyle(color: pColor, fontSize: 11, fontWeight: FontWeight.bold),
             ),
           );

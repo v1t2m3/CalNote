@@ -108,5 +108,45 @@ void main() {
       });
       expect(cbmRaw.displayItem, 'Đo điện trở cách điện gông từ (IR)');
     });
+
+    test('compareValue evaluates bilateral error and thresholds accurately', () {
+      // Ratio error test (threshold <= 0.5%)
+      // Positive in limit:
+      expect(ReferenceStandardService.compareValue(0.02, '≤', 0.5, null, null), isTrue);
+      // Negative in limit (val.abs() <= 0.5):
+      expect(ReferenceStandardService.compareValue(-0.02, '≤', 0.5, null, null), isTrue);
+      expect(ReferenceStandardService.compareValue(-0.02, '≤', 0.5, null, null, isBilateral: true), isTrue);
+      // Out of limit:
+      expect(ReferenceStandardService.compareValue(0.66, '≤', 0.5, null, null), isFalse);
+      expect(ReferenceStandardService.compareValue(-0.66, '≤', 0.5, null, null), isFalse);
+      expect(ReferenceStandardService.compareValue(-0.66, '≤', 0.5, null, null, isBilateral: true), isFalse);
+
+      // Between comparison:
+      expect(ReferenceStandardService.compareValue(1.3, 'between', null, 1.0, 1.5), isTrue);
+      expect(ReferenceStandardService.compareValue(0.9, 'between', null, 1.0, 1.5), isFalse);
+      expect(ReferenceStandardService.compareValue(1.6, 'between', null, 1.0, 1.5), isFalse);
+    });
+
+    test('ReferenceStandardService results use strictly standardized "Đạt" / "Không đạt"', () {
+      const stdItem = ReferenceItemModel(
+        id: 'STD_042',
+        category: 'Máy biến áp lực',
+        categoryCode: 'transformer',
+        subCategory: 'Máy biến áp',
+        item: 'Đo tỷ số biến và sai lệch tỷ số biến',
+        testCode: 'MBA_K_error',
+        limit: 'Δku ≤ 0.5 %',
+        standard: 'TCVN 6306-1:2015',
+        voltageLevel: '<=35kV',
+        compare: '≤',
+        value: 0.5,
+        unit: '%',
+        recommendation: 'Kiểm tra tỷ số biến',
+      );
+      final passA = ReferenceStandardService.compareValue(0.02, stdItem.compare, stdItem.value, stdItem.min, stdItem.max, isBilateral: true);
+      expect(passA, isTrue);
+      final passC = ReferenceStandardService.compareValue(0.66, stdItem.compare, stdItem.value, stdItem.min, stdItem.max, isBilateral: true);
+      expect(passC, isFalse);
+    });
   });
 }

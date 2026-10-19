@@ -301,7 +301,7 @@
     "subCategory": "Máy biến áp lực",
     "item": "Đo tỷ số biến đổi (Δku)",
     "testCode": "MBA_K_error",
-    "voltageLevel": ">35kV",
+    "voltageLevel": "ALL",
     "symbol": "Δku",
     "unit": "%",
     "levels": {

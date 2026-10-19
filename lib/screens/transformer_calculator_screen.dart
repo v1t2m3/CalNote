@@ -798,19 +798,46 @@ class _TransformerCalculatorScreenState
                           : null,
                       summaryPass: deltaRHc != null ? (deltaRHc! <= 2.0) : null,
                     ),
-                    if (deltaR != null || rResultA != null)
-                      StandardEvaluationWidget(
-                        testCode: 'MBA_R_dc',
-                        voltageLevel: _transformerVoltageLevel,
-                        primaryValue: deltaRHc ?? deltaR,
-                        phaseValues: {
-                          if (rResultA != null) 'Pha A': rResultA!,
-                          if (rResultB != null) 'Pha B': rResultB!,
-                          if (rResultC != null) 'Pha C': rResultC!,
-                        },
-                        unit: '%',
-                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐIỆN TRỞ 1 CHIỀU",
-                      ),
+                    Builder(
+                      builder: (context) {
+                        if (deltaR == null && rResultA == null && rResultB == null && rResultC == null) {
+                          return const SizedBox.shrink();
+                        }
+                        final double? rAVal = (_rdcPhaseUncertainty['Pha A']?.correctedValue) ?? rResultA;
+                        final double? rBVal = (_rdcPhaseUncertainty['Pha B']?.correctedValue) ?? rResultB;
+                        final double? rCVal = (_rdcPhaseUncertainty['Pha C']?.correctedValue) ?? rResultC;
+
+                        Map<String, double> rPhaseDeviations = {};
+                        final validRs = [
+                          if (rAVal != null) rAVal,
+                          if (rBVal != null) rBVal,
+                          if (rCVal != null) rCVal,
+                        ];
+                        if (validRs.length > 1) {
+                          final avgR = validRs.reduce((a, b) => a + b) / validRs.length;
+                          if (avgR > 0) {
+                            if (rAVal != null) {
+                              rPhaseDeviations['Pha A'] = ((rAVal - avgR).abs() / avgR) * 100.0;
+                            }
+                            if (rBVal != null) {
+                              rPhaseDeviations['Pha B'] = ((rBVal - avgR).abs() / avgR) * 100.0;
+                            }
+                            if (rCVal != null) {
+                              rPhaseDeviations['Pha C'] = ((rCVal - avgR).abs() / avgR) * 100.0;
+                            }
+                          }
+                        }
+
+                        return StandardEvaluationWidget(
+                          testCode: 'MBA_R_dc',
+                          voltageLevel: _transformerVoltageLevel,
+                          primaryValue: deltaRHc ?? deltaR,
+                          phaseValues: rPhaseDeviations.isNotEmpty ? rPhaseDeviations : null,
+                          unit: '%',
+                          customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐIỆN TRỞ 1 CHIỀU",
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
