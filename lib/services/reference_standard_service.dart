@@ -116,7 +116,7 @@ class ReferenceItemModel {
       standard: json['standard'] ?? '',
       voltageLevel: json['voltageLevel'] ?? json['voltage_level'] ?? 'ALL',
       recommendation: json['recommendation'] ??
-          'Xử lý cách điện, đo đạc lại hoặc thực hiện theo quy định nhà sản xuất.',
+          'Xử lý, đo đạc lại hoặc thực hiện theo quy định nhà sản xuất.',
       symbol: json['symbol'],
       compare: json['compare'],
       value: json['value'],
@@ -677,8 +677,8 @@ class ReferenceStandardService {
     if (item == null) {
       return const StandardEvalResult(
         isPass: true,
-        statusText: "Chưa có quy định",
-        limitText: "Chưa cấu hình tiêu chuẩn cho phép đo này",
+        statusText: "-/-",
+        limitText: "Chưa cấu hình",
         standardText: "",
         recommendation: "",
       );
@@ -713,7 +713,7 @@ class ReferenceStandardService {
     if (item == null) {
       return const CbmEvalResult(
         level: 1,
-        levelName: "Chưa có quy định",
+        levelName: "-/-",
         conclusion: "N/A",
         rangeText: "",
         recommendation: "",
@@ -772,8 +772,8 @@ class ReferenceStandardService {
     if (item == null) {
       return const TT02EvalResult(
         isPass: true,
-        statusText: "Chưa có quy định",
-        limitText: "Chưa cấu hình kiểm định TT02 cho phép đo này",
+        statusText: "-/-",
+        limitText: "Chưa cấu hình",
         periodText: "",
         standardText: "",
         recommendation: "",

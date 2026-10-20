@@ -159,6 +159,7 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
     }
 
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: AppTheme.cardDark,
@@ -168,9 +169,10 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Expanded(
                 child: Row(
@@ -192,24 +194,19 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
                 ),
               ),
               const SizedBox(width: 8),
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: statusColor),
-                  ),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      res.statusText,
-                      style: TextStyle(
-                        color: statusColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: AppTheme.fontSizeCaption,
-                      ),
-                    ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: statusColor),
+                ),
+                child: Text(
+                  res.statusText,
+                  style: TextStyle(
+                    color: statusColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppTheme.fontSizeCaption,
                   ),
                 ),
               ),
@@ -268,6 +265,7 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
     final bool isBad = res.level >= 3;
 
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: AppTheme.cardDark,
@@ -280,9 +278,10 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Expanded(
                 child: Row(
@@ -304,24 +303,19 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
                 ),
               ),
               const SizedBox(width: 8),
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: levelColor.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: levelColor),
-                  ),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      res.levelName,
-                      style: TextStyle(
-                        color: levelColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: AppTheme.fontSizeCaption,
-                      ),
-                    ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: levelColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: levelColor),
+                ),
+                child: Text(
+                  res.levelName,
+                  style: TextStyle(
+                    color: levelColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppTheme.fontSizeCaption,
                   ),
                 ),
               ),
@@ -392,6 +386,7 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
     }
 
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: AppTheme.cardDark,
@@ -401,9 +396,10 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Expanded(
                 child: Row(
@@ -425,24 +421,19 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
                 ),
               ),
               const SizedBox(width: 8),
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: statusColor),
-                  ),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      res.statusText,
-                      style: TextStyle(
-                        color: statusColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: AppTheme.fontSizeCaption,
-                      ),
-                    ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: statusColor),
+                ),
+                child: Text(
+                  res.statusText,
+                  style: TextStyle(
+                    color: statusColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: AppTheme.fontSizeCaption,
                   ),
                 ),
               ),
