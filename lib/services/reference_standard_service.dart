@@ -800,4 +800,23 @@ class ReferenceStandardService {
       item: item,
     );
   }
+
+  /// Xác định cấp độ CBM (1, 2, 3, 4) cho một giá trị đo
+  static int evaluateCbmLevel(CbmItemModel? item, double measuredValue) {
+    if (item?.levels == null) return 1;
+    final levels = item!.levels!;
+    for (int i = 1; i <= 4; i++) {
+      final lData = levels['level$i'];
+      if (lData is Map) {
+        final comp = lData['compare'];
+        final val = lData['value'];
+        final mn = lData['min'];
+        final mx = lData['max'];
+        if (compareValue(measuredValue, comp, val, mn, mx) == true) {
+          return i;
+        }
+      }
+    }
+    return 1;
+  }
 }

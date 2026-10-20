@@ -107,5 +107,77 @@ void main() {
       expect(backJson['group_code'], equals('MC_R_tx'));
       expect(backJson['method'], equals('So với R_nsx'));
     });
+
+    test('FormulaService calculatePhaseDeviations evaluates contact resistance accurately', () {
+      // Test data matching user screenshot: rA=55.7, rB=55.9, rC=57.4
+      final phaseValues = {'Pha A': 55.7, 'Pha B': 55.9, 'Pha C': 57.4};
+
+      // 1. Method Min (fallback when no R_nsx entered)
+      final devsMin = FormulaService.calculatePhaseDeviations(
+        phaseValues: phaseValues,
+        formulaId: 'MC_Rtx_Delta_Min',
+      );
+      expect(devsMin['Pha A'], closeTo(0.0, 1e-4));
+      expect(devsMin['Pha B'], closeTo(0.359, 1e-3));
+      expect(devsMin['Pha C'], closeTo(3.052, 1e-3));
+
+      // Each phase deviation must be <= 10% (IEC Standard) -> all PASS
+      for (var val in devsMin.values) {
+        expect(ReferenceStandardService.compareValue(val, '≤', 10, null, null), isTrue);
+      }
+
+      // 2. Method NSX with R_nsx = 55.0
+      final devsNsx = FormulaService.calculatePhaseDeviations(
+        phaseValues: phaseValues,
+        formulaId: 'MC_Rtx_Delta_Nsx',
+        rNsx: 55.0,
+      );
+      expect(devsNsx['Pha A'], closeTo(1.272, 1e-3));
+      expect(devsNsx['Pha B'], closeTo(1.636, 1e-3));
+      expect(devsNsx['Pha C'], closeTo(4.363, 1e-3));
+      for (var val in devsNsx.values) {
+        expect(ReferenceStandardService.compareValue(val, '≤', 10, null, null), isTrue);
+      }
+
+      // 3. Out-of-spec phase: Phase C degrades to 70 uOhm with R_min=50
+      final degradedValues = {'Pha A': 50.0, 'Pha B': 52.0, 'Pha C': 70.0};
+      final devsDegraded = FormulaService.calculatePhaseDeviations(
+        phaseValues: degradedValues,
+        formulaId: 'MC_Rtx_Delta_Min',
+      );
+      expect(ReferenceStandardService.compareValue(devsDegraded['Pha A']!, '≤', 10, null, null), isTrue);
+      expect(ReferenceStandardService.compareValue(devsDegraded['Pha B']!, '≤', 10, null, null), isTrue);
+      expect(ReferenceStandardService.compareValue(devsDegraded['Pha C']!, '≤', 10, null, null), isFalse); // 40% > 10%
+    });
+
+    test('ReferenceStandardService evaluateCbmLevel classifies values properly', () {
+      const cbmItem = CbmItemModel(
+        id: 'CBM_001',
+        category: 'Máy cắt',
+        categoryCode: 'circuit_breaker',
+        subCategory: 'Máy cắt',
+        item: 'Rtx',
+        testCode: 'MC_R_tx',
+        voltageLevel: '>35kV',
+        good: '<=10%',
+        fair: '10-20%',
+        average: '20-50%',
+        poor: '>50%',
+        standard: 'Quy trình EVN',
+        recommendation: '',
+        levels: {
+          'level1': {'compare': '≤', 'value': 10},
+          'level2': {'compare': 'between', 'min': 10, 'max': 20},
+          'level3': {'compare': 'between', 'min': 20, 'max': 50},
+          'level4': {'compare': '>', 'value': 50},
+        },
+      );
+
+      expect(ReferenceStandardService.evaluateCbmLevel(cbmItem, 4.5), equals(1));
+      expect(ReferenceStandardService.evaluateCbmLevel(cbmItem, 15.0), equals(2));
+      expect(ReferenceStandardService.evaluateCbmLevel(cbmItem, 35.0), equals(3));
+      expect(ReferenceStandardService.evaluateCbmLevel(cbmItem, 60.0), equals(4));
+    });
   });
 }
+

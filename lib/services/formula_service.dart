@@ -173,4 +173,61 @@ class FormulaService {
       throw Exception("Hông tính được zồi Đại ca: ${e.toString()}");
     }
   }
+
+  /// Tính toán độ lệch % cho từng pha theo phương pháp công thức được chọn
+  /// Hỗ trợ cả 3 phương pháp:
+  /// - So với R_nsx (hoặc so với R_min nếu chưa nhập R_nsx)
+  /// - So với R_min
+  /// - So với R_avg
+  static Map<String, double> calculatePhaseDeviations({
+    required Map<String, double> phaseValues,
+    String? formulaId,
+    double? rNsx,
+  }) {
+    if (phaseValues.isEmpty) return {};
+    final validEntries = phaseValues.entries.where((e) => e.value > 0).toList();
+    if (validEntries.isEmpty) return {};
+
+    final vals = validEntries.map((e) => e.value).toList();
+    final minR = vals.reduce((a, b) => a < b ? a : b);
+    final avgR = vals.reduce((a, b) => a + b) / vals.length;
+
+    final Map<String, double> devs = {};
+    final fId = (formulaId ?? '').toLowerCase();
+
+    if (fId.contains('min')) {
+      if (minR > 0) {
+        for (var e in validEntries) {
+          devs[e.key] = ((e.value - minR) / minR) * 100.0;
+        }
+      }
+    } else if (fId.contains('avg') ||
+        (!fId.contains('nsx') &&
+            !fId.contains('min') &&
+            (rNsx == null || rNsx <= 0) &&
+            fId.contains('unbalance'))) {
+      if (avgR > 0) {
+        for (var e in validEntries) {
+          devs[e.key] = ((e.value - avgR).abs() / avgR) * 100.0;
+        }
+      }
+    } else {
+      // Mặc định hoặc so với R_nsx
+      if (rNsx != null && rNsx > 0) {
+        for (var e in validEntries) {
+          final diff = e.value - rNsx;
+          // Đối với điện trở tiếp xúc, nếu nhỏ hơn hoặc bằng R_nsx thì đạt hoàn toàn (0.0%)
+          // Nếu lớn hơn R_nsx thì tính phần trăm vượt
+          devs[e.key] = diff > 0 ? (diff / rNsx) * 100.0 : 0.0;
+        }
+      } else if (minR > 0) {
+        // Fallback khi chưa nhập R_nsx: tính so với giá trị nhỏ nhất giữa các pha
+        for (var e in validEntries) {
+          devs[e.key] = ((e.value - minR) / minR) * 100.0;
+        }
+      }
+    }
+    return devs;
+  }
 }
+

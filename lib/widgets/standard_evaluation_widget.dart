@@ -377,6 +377,10 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
               ),
             ),
 
+          // Hiển thị từng pha theo CBM nếu có
+          if (widget.phaseValues != null && widget.phaseValues!.isNotEmpty)
+            _buildCbmPhaseBreakdown(res.item),
+
           // KHUYẾN NGHỊ XỬ LÝ CBM KHI TRUNG BÌNH HOẶC XẤU
           if (res.recommendation.isNotEmpty && isBad)
             _buildRecommendationBox(
@@ -489,6 +493,10 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
               ),
             ),
 
+          // Hiển thị từng pha nếu có
+          if (widget.phaseValues != null && widget.phaseValues!.isNotEmpty)
+            _buildPhaseBreakdown(res.item?.compare, res.item?.value, res.item?.min, res.item?.max),
+
           // KHUYẾN NGHỊ XỬ LÝ KIỂM ĐỊNH KHI KHÔNG ĐẠT
           if (res.recommendation.isNotEmpty && isFailed)
             _buildRecommendationBox(
@@ -549,7 +557,7 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
     );
   }
 
-  // Chi tiết từng pha A, B, C
+  // Chi tiết từng pha A, B, C (Tiêu chuẩn / TT02)
   Widget _buildPhaseBreakdown(String? comp, dynamic threshold, dynamic mn, dynamic mx) {
     if (widget.phaseValues == null || widget.phaseValues!.isEmpty) {
       return const SizedBox.shrink();
@@ -567,6 +575,9 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
               ? Colors.white70
               : (pass ? Colors.greenAccent : Colors.redAccent);
 
+          final formattedVal = AppFormatters.formatSmart(val, testId: widget.testCode, unit: widget.unit);
+          final unitSuffix = widget.unit.isNotEmpty ? ' ${widget.unit}' : '';
+
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
@@ -575,8 +586,59 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
               border: Border.all(color: pColor.withValues(alpha: 0.4)),
             ),
             child: Text(
-              "${entry.key}: ${AppFormatters.formatSmart(val, testId: widget.testCode, unit: widget.unit)} (${pass == null ? 'N/A' : (pass ? 'Đạt' : 'Không đạt')})",
+              "${entry.key}: $formattedVal$unitSuffix (${pass == null ? 'N/A' : (pass ? 'Đạt' : 'Không đạt')})",
               style: TextStyle(color: pColor, fontSize: 11, fontWeight: FontWeight.bold),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  // Chi tiết từng pha A, B, C (Đánh giá CBM)
+  Widget _buildCbmPhaseBreakdown(CbmItemModel? item) {
+    if (widget.phaseValues == null || widget.phaseValues!.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 6, bottom: 2),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 4,
+        children: widget.phaseValues!.entries.map((entry) {
+          final val = entry.value;
+          final level = ReferenceStandardService.evaluateCbmLevel(item, val);
+          Color lColor;
+          switch (level) {
+            case 1:
+              lColor = Colors.greenAccent;
+              break;
+            case 2:
+              lColor = Colors.yellowAccent;
+              break;
+            case 3:
+              lColor = Colors.orangeAccent;
+              break;
+            case 4:
+            default:
+              lColor = Colors.redAccent;
+              break;
+          }
+
+          final formattedVal = AppFormatters.formatSmart(val, testId: widget.testCode, unit: widget.unit);
+          final unitSuffix = widget.unit.isNotEmpty ? ' ${widget.unit}' : '';
+
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: lColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: lColor.withValues(alpha: 0.4)),
+            ),
+            child: Text(
+              "${entry.key}: $formattedVal$unitSuffix (Mức $level)",
+              style: TextStyle(color: lColor, fontSize: 11, fontWeight: FontWeight.bold),
             ),
           );
         }).toList(),

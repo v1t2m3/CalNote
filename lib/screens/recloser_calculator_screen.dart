@@ -40,6 +40,7 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
   CalibratedEquipmentModel? _selectedRtxEquipment;
   UncertaintyResult? _rtxUncertaintyResult;
   Map<String, UncertaintyResult?> _rtxPhaseUncertainty = {};
+  Map<String, double> _rtxPhaseDeviations = {};
 
   // 3. Thời gian thao tác & độ không đồng pha (ms)
   final TextEditingController tACtrl = TextEditingController();
@@ -98,6 +99,7 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
     if (vals.isEmpty) {
       maxRtx = null;
       deltaRtx = null;
+      _rtxPhaseDeviations = {};
       _rtxUncertaintyResult = null;
       _rtxPhaseUncertainty = {};
     } else {
@@ -121,6 +123,17 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
       } else {
         deltaRtx = avg > 0 ? ((maxRtx! - mn) / avg) * 100.0 : 0.0;
       }
+
+      // Tính độ lệch % từng pha để đối chiếu tiêu chuẩn
+      _rtxPhaseDeviations = FormulaService.calculatePhaseDeviations(
+        phaseValues: {
+          if (rTxACtrl.text.isNotEmpty) 'Pha A': rA,
+          if (rTxBCtrl.text.isNotEmpty) 'Pha B': rB,
+          if (rTxCCtrl.text.isNotEmpty) 'Pha C': rC,
+        },
+        formulaId: formula?.id,
+        rNsx: rNsx,
+      );
 
       if (CalibrationService.isUncertaintyEnabled) {
         final eq = _selectedRtxEquipment;
@@ -484,11 +497,7 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
                         testCode: 'MC_R_tx',
                         voltageLevel: _voltageLevel,
                         primaryValue: deltaRtx ?? 0.0,
-                        phaseValues: {
-                          if (rTxACtrl.text.isNotEmpty) 'Pha A': parseInput(rTxACtrl.text),
-                          if (rTxBCtrl.text.isNotEmpty) 'Pha B': parseInput(rTxBCtrl.text),
-                          if (rTxCCtrl.text.isNotEmpty) 'Pha C': parseInput(rTxCCtrl.text),
-                        },
+                        phaseValues: _rtxPhaseDeviations.isNotEmpty ? _rtxPhaseDeviations : null,
                         unit: '%',
                         symbol: 'ΔRtx',
                         customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐỘ LỆCH TIẾP XÚC $_deviceType",

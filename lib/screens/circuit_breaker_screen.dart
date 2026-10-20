@@ -40,6 +40,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
   CalibratedEquipmentModel? _selectedRtxEquipment;
   UncertaintyResult? _rtxUncertaintyResult;
   Map<String, UncertaintyResult?> _rtxPhaseUncertainty = {};
+  Map<String, double> _rtxPhaseDeviations = {};
   
   // 3. Thời gian không đồng thời
   final TextEditingController tACtrl = TextEditingController();
@@ -92,6 +93,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
     if (rTxACtrl.text.isEmpty && rTxBCtrl.text.isEmpty && rTxCCtrl.text.isEmpty) {
        maxRtx = null;
        deltaRtx = null;
+       _rtxPhaseDeviations = {};
        _rtxUncertaintyResult = null;
        _rtxPhaseUncertainty = {};
     } else {
@@ -117,6 +119,17 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
            deltaRtx = null;
          }
        }
+
+       // Tính độ lệch % từng pha để đối chiếu tiêu chuẩn
+       _rtxPhaseDeviations = FormulaService.calculatePhaseDeviations(
+         phaseValues: {
+           if (rTxACtrl.text.isNotEmpty) 'Pha A': rA,
+           if (rTxBCtrl.text.isNotEmpty) 'Pha B': rB,
+           if (rTxCCtrl.text.isNotEmpty) 'Pha C': rC,
+         },
+         formulaId: formula?.id,
+         rNsx: rNsx,
+       );
 
        if (CalibrationService.isUncertaintyEnabled) {
          final eqs = CalibrationService.getEquipmentsForTest('MC_R_tx');
@@ -527,11 +540,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                         testCode: 'MC_R_tx',
                         voltageLevel: _cbVoltageLevel,
                         primaryValue: deltaRtx ?? 0.0,
-                        phaseValues: {
-                          if (rTxACtrl.text.isNotEmpty) 'Pha A': parseInput(rTxACtrl.text),
-                          if (rTxBCtrl.text.isNotEmpty) 'Pha B': parseInput(rTxBCtrl.text),
-                          if (rTxCCtrl.text.isNotEmpty) 'Pha C': parseInput(rTxCCtrl.text),
-                        },
+                        phaseValues: _rtxPhaseDeviations.isNotEmpty ? _rtxPhaseDeviations : null,
                         unit: '%',
                         symbol: 'ΔRtx',
                         customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐỘ LỆCH TIẾP XÚC MÁY CẮT",

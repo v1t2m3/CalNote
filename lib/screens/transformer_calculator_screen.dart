@@ -850,26 +850,16 @@ class _TransformerCalculatorScreenState
                         final double? rBVal = (_rdcPhaseUncertainty['Pha B']?.correctedValue) ?? rResultB;
                         final double? rCVal = (_rdcPhaseUncertainty['Pha C']?.correctedValue) ?? rResultC;
 
-                        Map<String, double> rPhaseDeviations = {};
-                        final validRs = [
-                          if (rAVal != null) rAVal,
-                          if (rBVal != null) rBVal,
-                          if (rCVal != null) rCVal,
-                        ];
-                        if (validRs.length > 1) {
-                          final avgR = validRs.reduce((a, b) => a + b) / validRs.length;
-                          if (avgR > 0) {
-                            if (rAVal != null) {
-                              rPhaseDeviations['Pha A'] = ((rAVal - avgR).abs() / avgR) * 100.0;
-                            }
-                            if (rBVal != null) {
-                              rPhaseDeviations['Pha B'] = ((rBVal - avgR).abs() / avgR) * 100.0;
-                            }
-                            if (rCVal != null) {
-                              rPhaseDeviations['Pha C'] = ((rCVal - avgR).abs() / avgR) * 100.0;
-                            }
-                          }
-                        }
+                        final phaseInputs = <String, double>{
+                          if (rAVal != null) 'Pha A': rAVal,
+                          if (rBVal != null) 'Pha B': rBVal,
+                          if (rCVal != null) 'Pha C': rCVal,
+                        };
+                        final rPhaseDeviations = FormulaService.calculatePhaseDeviations(
+                          phaseValues: phaseInputs,
+                          formulaId: _selectedRdcFormula?.id ?? 'MBA_Unbalance',
+                          rNsx: parseInput(rNsxCtrl.text),
+                        );
 
                         return StandardEvaluationWidget(
                           testCode: 'MBA_R_dc',

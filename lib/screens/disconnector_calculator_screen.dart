@@ -544,13 +544,15 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                       ),
                       Builder(
                         builder: (context) {
-                          double rA = parseInput(rTxACtrl.text);
-                          double rB = parseInput(rTxBCtrl.text);
-                          double rC = parseInput(rTxCCtrl.text);
-                          Map<String, double> phaseDevs = {};
-                          if (rTxACtrl.text.isNotEmpty) phaseDevs['Pha A'] = rA;
-                          if (rTxBCtrl.text.isNotEmpty) phaseDevs['Pha B'] = rB;
-                          if (rTxCCtrl.text.isNotEmpty) phaseDevs['Pha C'] = rC;
+                          final phaseDevs = FormulaService.calculatePhaseDeviations(
+                            phaseValues: {
+                              if (rTxACtrl.text.isNotEmpty) 'Pha A': parseInput(rTxACtrl.text),
+                              if (rTxBCtrl.text.isNotEmpty) 'Pha B': parseInput(rTxBCtrl.text),
+                              if (rTxCCtrl.text.isNotEmpty) 'Pha C': parseInput(rTxCCtrl.text),
+                            },
+                            formulaId: _selectedRtxFormula?.id,
+                            rNsx: parseInput(rTxNsxCtrl.text),
+                          );
 
                           return StandardEvaluationWidget(
                             testCode: 'DCL_R_tx',
@@ -646,13 +648,15 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                       ),
                       Builder(
                         builder: (context) {
-                          double rA = parseInput(rTxDtdACtrl.text);
-                          double rB = parseInput(rTxDtdBCtrl.text);
-                          double rC = parseInput(rTxDtdCCtrl.text);
-                          Map<String, double> dtdDevs = {};
-                          if (rTxDtdACtrl.text.isNotEmpty) dtdDevs['Pha A'] = rA;
-                          if (rTxDtdBCtrl.text.isNotEmpty) dtdDevs['Pha B'] = rB;
-                          if (rTxDtdCCtrl.text.isNotEmpty) dtdDevs['Pha C'] = rC;
+                          final dtdDevs = FormulaService.calculatePhaseDeviations(
+                            phaseValues: {
+                              if (rTxDtdACtrl.text.isNotEmpty) 'Pha A': parseInput(rTxDtdACtrl.text),
+                              if (rTxDtdBCtrl.text.isNotEmpty) 'Pha B': parseInput(rTxDtdBCtrl.text),
+                              if (rTxDtdCCtrl.text.isNotEmpty) 'Pha C': parseInput(rTxDtdCCtrl.text),
+                            },
+                            formulaId: _selectedDtdFormula?.id,
+                            rNsx: parseInput(rTxDtdNsxCtrl.text),
+                          );
 
                           return StandardEvaluationWidget(
                             testCode: 'DCL_R_tx',
