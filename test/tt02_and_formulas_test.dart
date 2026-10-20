@@ -37,17 +37,17 @@ void main() {
 
     test('FormulaService calculations for Contact Resistance methods', () {
       // 1. Method NSX: ((R_max - R_nsx) / R_nsx) * 100
-      final formulaNsx = "((R_max - R_nsx) / R_nsx) * 100";
+      const formulaNsx = "((R_max - R_nsx) / R_nsx) * 100";
       final resNsx = FormulaService.calculate(formulaNsx, {'R_max': 60, 'R_nsx': 50});
       expect(resNsx, closeTo(20.0, 1e-4));
 
       // 2. Method Min: ((R_max - R_min) / R_min) * 100
-      final formulaMin = "((R_max - R_min) / R_min) * 100";
+      const formulaMin = "((R_max - R_min) / R_min) * 100";
       final resMin = FormulaService.calculate(formulaMin, {'R_max': 60, 'R_min': 40});
       expect(resMin, closeTo(50.0, 1e-4));
 
       // 3. Method Avg: ((R_max - R_min) / R_avg) * 100
-      final formulaAvg = "((R_max - R_min) / R_avg) * 100";
+      const formulaAvg = "((R_max - R_min) / R_avg) * 100";
       final resAvg = FormulaService.calculate(formulaAvg, {'R_max': 60, 'R_min': 40, 'R_avg': 50});
       expect(resAvg, closeTo(40.0, 1e-4));
     });
