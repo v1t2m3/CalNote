@@ -1,10 +1,12 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mte_calculator_pro/models/test_record.dart';
+import '../services/formula_service.dart';
 import '../services/calibration_service.dart';
 import '../widgets/uncertainty_widget.dart';
 import '../widgets/standard_evaluation_widget.dart';
 import '../widgets/equipment_icon_widget.dart';
+import '../widgets/formula_selector_widget.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
@@ -30,11 +32,25 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
   final TextEditingController rTxACtrl = TextEditingController();
   final TextEditingController rTxBCtrl = TextEditingController();
   final TextEditingController rTxCCtrl = TextEditingController();
+  final TextEditingController rTxNsxCtrl = TextEditingController();
   double? maxRtx;
   double? deltaRtx; // Độ lệch giữa các pha (%)
+  FormulaModel? _selectedRtxFormula;
   CalibratedEquipmentModel? _selectedRtxEquipment;
   UncertaintyResult? _rtxUncertaintyResult;
   Map<String, UncertaintyResult?> _rtxPhaseUncertainty = {};
+
+  // 3. Điện trở tiếp xúc Dao tiếp địa Rtx DTD (μΩ)
+  final TextEditingController rTxDtdACtrl = TextEditingController();
+  final TextEditingController rTxDtdBCtrl = TextEditingController();
+  final TextEditingController rTxDtdCCtrl = TextEditingController();
+  final TextEditingController rTxDtdNsxCtrl = TextEditingController();
+  double? maxRtxDtd;
+  double? deltaRtxDtd;
+  FormulaModel? _selectedDtdFormula;
+  CalibratedEquipmentModel? _selectedDtdEquipment;
+  UncertaintyResult? _dtdUncertaintyResult;
+  Map<String, UncertaintyResult?> _dtdPhaseUncertainty = {};
 
   @override
   void initState() {
@@ -45,6 +61,23 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
     } else {
       final fallbackEqs = CalibrationService.getEquipmentsForTest('MC_R_tx');
       if (fallbackEqs.isNotEmpty) _selectedRtxEquipment = fallbackEqs.first;
+    }
+
+    final dclFormulas = FormulaService.getFormulasByGroup('DCL_R_tx');
+    if (dclFormulas.isNotEmpty) {
+      _selectedRtxFormula = dclFormulas.first;
+    }
+
+    final dtdEqs = CalibrationService.getEquipmentsForTest('DTD_R_tx');
+    if (dtdEqs.isNotEmpty) {
+      _selectedDtdEquipment = dtdEqs.first;
+    } else if (_selectedRtxEquipment != null) {
+      _selectedDtdEquipment = _selectedRtxEquipment;
+    }
+
+    final dtdFormulas = FormulaService.getFormulasByGroup('DTD_R_tx');
+    if (dtdFormulas.isNotEmpty) {
+      _selectedDtdFormula = dtdFormulas.first;
     }
   }
 
@@ -71,6 +104,7 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
     double rA = parseInput(rTxACtrl.text);
     double rB = parseInput(rTxBCtrl.text);
     double rC = parseInput(rTxCCtrl.text);
+    double rNsx = parseInput(rTxNsxCtrl.text);
 
     List<double> vals = [];
     if (rTxACtrl.text.isNotEmpty) vals.add(rA);
@@ -84,12 +118,24 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
       _rtxPhaseUncertainty = {};
     } else {
       maxRtx = vals.reduce(max);
-      if (vals.length > 1) {
-        double mn = vals.reduce(min);
-        double avg = vals.reduce((a, b) => a + b) / vals.length;
-        deltaRtx = avg > 0 ? ((maxRtx! - mn) / avg) * 100.0 : 0.0;
+      double mn = vals.reduce(min);
+      double avg = vals.reduce((a, b) => a + b) / vals.length;
+
+      final formula = _selectedRtxFormula ?? FormulaService.getFormulaById('DCL_Rtx_Delta_Nsx');
+      if (formula != null) {
+        try {
+          final vars = <String, num>{
+            'R_max': maxRtx!,
+            'R_min': mn,
+            'R_avg': avg,
+            'R_nsx': rNsx > 0 ? rNsx : (mn > 0 ? mn : 1.0),
+          };
+          deltaRtx = FormulaService.calculate(formula.formula, vars);
+        } catch (_) {
+          deltaRtx = null;
+        }
       } else {
-        deltaRtx = 0.0;
+        deltaRtx = avg > 0 ? ((maxRtx! - mn) / avg) * 100.0 : 0.0;
       }
 
       if (CalibrationService.isUncertaintyEnabled) {
@@ -132,6 +178,84 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
     setState(() {});
   }
 
+  void _tinhTiepXucDtd() {
+    double rA = parseInput(rTxDtdACtrl.text);
+    double rB = parseInput(rTxDtdBCtrl.text);
+    double rC = parseInput(rTxDtdCCtrl.text);
+    double rNsx = parseInput(rTxDtdNsxCtrl.text);
+
+    List<double> vals = [];
+    if (rTxDtdACtrl.text.isNotEmpty) vals.add(rA);
+    if (rTxDtdBCtrl.text.isNotEmpty) vals.add(rB);
+    if (rTxDtdCCtrl.text.isNotEmpty) vals.add(rC);
+
+    if (vals.isEmpty) {
+      maxRtxDtd = null;
+      deltaRtxDtd = null;
+      _dtdUncertaintyResult = null;
+      _dtdPhaseUncertainty = {};
+    } else {
+      maxRtxDtd = vals.reduce(max);
+      double mn = vals.reduce(min);
+      double avg = vals.reduce((a, b) => a + b) / vals.length;
+
+      final formula = _selectedDtdFormula ?? FormulaService.getFormulaById('DTD_Rtx_Delta_Nsx');
+      if (formula != null) {
+        try {
+          final vars = <String, num>{
+            'R_max': maxRtxDtd!,
+            'R_min': mn,
+            'R_avg': avg,
+            'R_nsx': rNsx > 0 ? rNsx : (mn > 0 ? mn : 1.0),
+          };
+          deltaRtxDtd = FormulaService.calculate(formula.formula, vars);
+        } catch (_) {
+          deltaRtxDtd = null;
+        }
+      } else {
+        deltaRtxDtd = avg > 0 ? ((maxRtxDtd! - mn) / avg) * 100.0 : 0.0;
+      }
+
+      if (CalibrationService.isUncertaintyEnabled) {
+        final dtdEqs = CalibrationService.getEquipmentsForTest('DTD_R_tx');
+        final eq = _selectedDtdEquipment ?? (dtdEqs.isNotEmpty ? dtdEqs.first : null);
+        if (eq != null) {
+          _dtdPhaseUncertainty = {};
+          if (rTxDtdACtrl.text.isNotEmpty) {
+            _dtdPhaseUncertainty['Pha A'] = CalibrationService.calculateUncertainty(
+              equipment: eq,
+              measuredValue: rA,
+              unit: 'µΩ',
+            );
+          }
+          if (rTxDtdBCtrl.text.isNotEmpty) {
+            _dtdPhaseUncertainty['Pha B'] = CalibrationService.calculateUncertainty(
+              equipment: eq,
+              measuredValue: rB,
+              unit: 'µΩ',
+            );
+          }
+          if (rTxDtdCCtrl.text.isNotEmpty) {
+            _dtdPhaseUncertainty['Pha C'] = CalibrationService.calculateUncertainty(
+              equipment: eq,
+              measuredValue: rC,
+              unit: 'µΩ',
+            );
+          }
+          _dtdUncertaintyResult = CalibrationService.calculateUncertainty(
+            equipment: eq,
+            measuredValue: maxRtxDtd!,
+            unit: 'µΩ',
+          );
+        }
+      } else {
+        _dtdPhaseUncertainty = {};
+        _dtdUncertaintyResult = null;
+      }
+    }
+    setState(() {});
+  }
+
   void _saveAllNotes() {
     List<TestCalculation> cals = [];
 
@@ -150,16 +274,54 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
 
     if (maxRtx != null) {
       cals.add(TestCalculation(
-        name: 'Điện trở tiếp xúc Dao Cách Ly (Rtx)',
+        name: 'Điện trở tiếp xúc Lưỡi dao chính DCL (Rtx)',
         inputs: {
           'Rtx_A': parseInput(rTxACtrl.text),
           'Rtx_B': parseInput(rTxBCtrl.text),
           'Rtx_C': parseInput(rTxCCtrl.text),
-          'Delta_Rtx': deltaRtx ?? 0.0,
+          if (rTxNsxCtrl.text.isNotEmpty) 'R_nsx': parseInput(rTxNsxCtrl.text),
         },
         result: maxRtx!,
         unit: 'μΩ',
       ));
+
+      if (deltaRtx != null) {
+        cals.add(TestCalculation(
+          name: 'Độ lệch tiếp xúc DCL ΔRtx (${_selectedRtxFormula?.method ?? 'Mặc định'})',
+          inputs: {
+            'R_max': maxRtx!,
+            if (rTxNsxCtrl.text.isNotEmpty) 'R_nsx': parseInput(rTxNsxCtrl.text),
+          },
+          result: deltaRtx!,
+          unit: '%',
+        ));
+      }
+    }
+
+    if (maxRtxDtd != null) {
+      cals.add(TestCalculation(
+        name: 'Điện trở tiếp xúc Dao tiếp địa DTD (Rtx)',
+        inputs: {
+          'Rtx_A': parseInput(rTxDtdACtrl.text),
+          'Rtx_B': parseInput(rTxDtdBCtrl.text),
+          'Rtx_C': parseInput(rTxDtdCCtrl.text),
+          if (rTxDtdNsxCtrl.text.isNotEmpty) 'R_nsx': parseInput(rTxDtdNsxCtrl.text),
+        },
+        result: maxRtxDtd!,
+        unit: 'μΩ',
+      ));
+
+      if (deltaRtxDtd != null) {
+        cals.add(TestCalculation(
+          name: 'Độ lệch tiếp xúc DTD ΔRtx (${_selectedDtdFormula?.method ?? 'Mặc định'})',
+          inputs: {
+            'R_max': maxRtxDtd!,
+            if (rTxDtdNsxCtrl.text.isNotEmpty) 'R_nsx': parseInput(rTxDtdNsxCtrl.text),
+          },
+          result: deltaRtxDtd!,
+          unit: '%',
+        ));
+      }
     }
 
     if (cals.isEmpty) {
@@ -201,6 +363,7 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
     int pendingCount = 0;
     if (minRcd != null) pendingCount++;
     if (maxRtx != null) pendingCount++;
+    if (maxRtxDtd != null) pendingCount++;
 
     return Scaffold(
       appBar: AppBar(
@@ -326,6 +489,27 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                         _buildTextField('Pha C', rTxCCtrl, hint: 'VD: 45.8'),
                       ],
                     ),
+                    FormulaSelectorWidget(
+                      groupCode: 'DCL_R_tx',
+                      selectedFormula: _selectedRtxFormula,
+                      onFormulaChanged: (newF) {
+                        setState(() {
+                          _selectedRtxFormula = newF;
+                          if (maxRtx != null) _tinhTiepXuc();
+                        });
+                      },
+                    ),
+                    if (_selectedRtxFormula == null ||
+                        _selectedRtxFormula!.inputs.contains('R_nsx'))
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: _buildTextField(
+                          'Rnsx (nhà sản xuất / xuất xưởng)',
+                          rTxNsxCtrl,
+                          hint: 'VD: 45.0',
+                          isExpanded: false,
+                        ),
+                      ),
                     const SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: _tinhTiepXuc,
@@ -339,7 +523,7 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
-                            color: (deltaRtx != null && deltaRtx! <= 10.0) ? Colors.greenAccent : Colors.redAccent,
+                            color: (deltaRtx != null && deltaRtx! <= 50.0) ? Colors.greenAccent : Colors.redAccent,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -363,27 +547,121 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                           double rA = parseInput(rTxACtrl.text);
                           double rB = parseInput(rTxBCtrl.text);
                           double rC = parseInput(rTxCCtrl.text);
-                          List<double> valid = [
-                            if (rTxACtrl.text.isNotEmpty) rA,
-                            if (rTxBCtrl.text.isNotEmpty) rB,
-                            if (rTxCCtrl.text.isNotEmpty) rC,
-                          ];
                           Map<String, double> phaseDevs = {};
-                          if (valid.length > 1) {
-                            double avg = valid.reduce((a, b) => a + b) / valid.length;
-                            if (avg > 0) {
-                              if (rTxACtrl.text.isNotEmpty) phaseDevs['Pha A'] = ((rA - avg).abs() / avg) * 100.0;
-                              if (rTxBCtrl.text.isNotEmpty) phaseDevs['Pha B'] = ((rB - avg).abs() / avg) * 100.0;
-                              if (rTxCCtrl.text.isNotEmpty) phaseDevs['Pha C'] = ((rC - avg).abs() / avg) * 100.0;
-                            }
-                          }
+                          if (rTxACtrl.text.isNotEmpty) phaseDevs['Pha A'] = rA;
+                          if (rTxBCtrl.text.isNotEmpty) phaseDevs['Pha B'] = rB;
+                          if (rTxCCtrl.text.isNotEmpty) phaseDevs['Pha C'] = rC;
+
                           return StandardEvaluationWidget(
                             testCode: 'DCL_R_tx',
                             voltageLevel: _dclVoltageLevel,
                             primaryValue: deltaRtx ?? 0.0,
                             phaseValues: phaseDevs.isNotEmpty ? phaseDevs : null,
                             unit: '%',
+                            symbol: 'ΔRtx',
                             customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐỘ LỆCH TIẾP XÚC DCL",
+                          );
+                        },
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // MODULE 3: ĐIỆN TRỞ TIẾP XÚC DAO TIẾP ĐỊA (DTD)
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      '3. ĐIỆN TRỞ TIẾP XÚC DAO TIẾP ĐỊA (μΩ)',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent),
+                    ),
+                    const Divider(),
+                    Row(
+                      children: [
+                        _buildTextField('Pha A', rTxDtdACtrl, hint: 'VD: 55.0'),
+                        const SizedBox(width: 8),
+                        _buildTextField('Pha B', rTxDtdBCtrl, hint: 'VD: 56.2'),
+                        const SizedBox(width: 8),
+                        _buildTextField('Pha C', rTxDtdCCtrl, hint: 'VD: 54.8'),
+                      ],
+                    ),
+                    FormulaSelectorWidget(
+                      groupCode: 'DTD_R_tx',
+                      selectedFormula: _selectedDtdFormula,
+                      onFormulaChanged: (newF) {
+                        setState(() {
+                          _selectedDtdFormula = newF;
+                          if (maxRtxDtd != null) _tinhTiepXucDtd();
+                        });
+                      },
+                    ),
+                    if (_selectedDtdFormula == null ||
+                        _selectedDtdFormula!.inputs.contains('R_nsx'))
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: _buildTextField(
+                          'Rnsx dao tiếp địa (nhà sản xuất / xuất xưởng)',
+                          rTxDtdNsxCtrl,
+                          hint: 'VD: 50.0',
+                          isExpanded: false,
+                        ),
+                      ),
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: _tinhTiepXucDtd,
+                      child: const Text('TÍNH Rtx & ĐỘ LỆCH DAO TIẾP ĐỊA'),
+                    ),
+                    if (maxRtxDtd != null) ...[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: Text(
+                          'Rtx DTD Max: ${AppFormatters.formatRtx(maxRtxDtd)} | ΔR: ${AppFormatters.formatPercent(deltaRtxDtd)}',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: (deltaRtxDtd != null && deltaRtxDtd! <= 50.0) ? Colors.greenAccent : Colors.redAccent,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      UncertaintyEquipmentSection(
+                        testId: 'DTD_R_tx',
+                        selectedEquipment: _selectedDtdEquipment,
+                        onEquipmentChanged: (newEq) {
+                          setState(() {
+                            _selectedDtdEquipment = newEq;
+                            if (maxRtxDtd != null) _tinhTiepXucDtd();
+                          });
+                        },
+                        phaseResults: _dtdPhaseUncertainty.isNotEmpty ? _dtdPhaseUncertainty : null,
+                        uncertaintyResult: _dtdUncertaintyResult,
+                        standardLimit: 50.0,
+                        isUpperBound: true,
+                      ),
+                      Builder(
+                        builder: (context) {
+                          double rA = parseInput(rTxDtdACtrl.text);
+                          double rB = parseInput(rTxDtdBCtrl.text);
+                          double rC = parseInput(rTxDtdCCtrl.text);
+                          Map<String, double> dtdDevs = {};
+                          if (rTxDtdACtrl.text.isNotEmpty) dtdDevs['Pha A'] = rA;
+                          if (rTxDtdBCtrl.text.isNotEmpty) dtdDevs['Pha B'] = rB;
+                          if (rTxDtdCCtrl.text.isNotEmpty) dtdDevs['Pha C'] = rC;
+
+                          return StandardEvaluationWidget(
+                            testCode: 'DCL_R_tx',
+                            voltageLevel: _dclVoltageLevel,
+                            primaryValue: deltaRtxDtd ?? 0.0,
+                            phaseValues: dtdDevs.isNotEmpty ? dtdDevs : null,
+                            unit: '%',
+                            symbol: 'ΔRtx',
+                            customTitle: "ĐỐI CHIẾU TIÊU CHUẨN TIẾP XÚC DAO TIẾP ĐỊA",
                           );
                         },
                       ),

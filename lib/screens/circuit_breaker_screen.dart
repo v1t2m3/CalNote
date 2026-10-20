@@ -5,6 +5,7 @@ import '../services/formula_service.dart';
 import '../services/calibration_service.dart';
 import '../widgets/uncertainty_widget.dart';
 import '../widgets/standard_evaluation_widget.dart';
+import '../widgets/formula_selector_widget.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
@@ -31,8 +32,11 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
   final TextEditingController rTxACtrl = TextEditingController();
   final TextEditingController rTxBCtrl = TextEditingController();
   final TextEditingController rTxCCtrl = TextEditingController();
+  final TextEditingController rTxNsxCtrl = TextEditingController();
   final TextEditingController resolutionCtrl = TextEditingController();
   double? maxRtx;
+  double? deltaRtx;
+  FormulaModel? _selectedRtxFormula;
   CalibratedEquipmentModel? _selectedRtxEquipment;
   UncertaintyResult? _rtxUncertaintyResult;
   Map<String, UncertaintyResult?> _rtxPhaseUncertainty = {};
@@ -51,6 +55,10 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
     final eqs = CalibrationService.getEquipmentsForTest('MC_R_tx');
     if (eqs.isNotEmpty) {
       _selectedRtxEquipment = eqs.first;
+    }
+    final rtxFormulas = FormulaService.getFormulasByGroup('MC_R_tx');
+    if (rtxFormulas.isNotEmpty) {
+      _selectedRtxFormula = rtxFormulas.first;
     }
   }
 
@@ -79,16 +87,36 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
     double rA = parseInput(rTxACtrl.text);
     double rB = parseInput(rTxBCtrl.text);
     double rC = parseInput(rTxCCtrl.text);
+    double rNsx = parseInput(rTxNsxCtrl.text);
 
     if (rTxACtrl.text.isEmpty && rTxBCtrl.text.isEmpty && rTxCCtrl.text.isEmpty) {
        maxRtx = null;
+       deltaRtx = null;
        _rtxUncertaintyResult = null;
+       _rtxPhaseUncertainty = {};
     } else {
        List<double> vals = [];
        if (rTxACtrl.text.isNotEmpty) vals.add(rA);
        if (rTxBCtrl.text.isNotEmpty) vals.add(rB);
        if (rTxCCtrl.text.isNotEmpty) vals.add(rC);
        maxRtx = vals.reduce(max);
+       double minR = vals.reduce(min);
+       double avgR = vals.reduce((a, b) => a + b) / vals.length;
+
+       final formula = _selectedRtxFormula ?? FormulaService.getFormulaById('MC_Rtx_Delta_Nsx');
+       if (formula != null) {
+         try {
+           final vars = <String, num>{
+             'R_max': maxRtx!,
+             'R_min': minR,
+             'R_avg': avgR,
+             'R_nsx': rNsx > 0 ? rNsx : (minR > 0 ? minR : 1.0),
+           };
+           deltaRtx = FormulaService.calculate(formula.formula, vars);
+         } catch (_) {
+           deltaRtx = null;
+         }
+       }
 
        if (CalibrationService.isUncertaintyEnabled) {
          final eqs = CalibrationService.getEquipmentsForTest('MC_R_tx');
@@ -201,10 +229,23 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
           'R_txA': parseInput(rTxACtrl.text),
           'R_txB': parseInput(rTxBCtrl.text),
           'R_txC': parseInput(rTxCCtrl.text),
+          if (rTxNsxCtrl.text.isNotEmpty) 'R_nsx': parseInput(rTxNsxCtrl.text),
         },
         result: _rtxUncertaintyResult?.correctedValue ?? maxRtx!,
         unit: 'μΩ', 
       ));
+
+      if (deltaRtx != null) {
+        cals.add(TestCalculation(
+          name: 'Độ lệch tiếp xúc ΔRtx (${_selectedRtxFormula?.method ?? 'Mặc định'})',
+          inputs: {
+            'R_max': maxRtx!,
+            if (rTxNsxCtrl.text.isNotEmpty) 'R_nsx': parseInput(rTxNsxCtrl.text),
+          },
+          result: deltaRtx!,
+          unit: '%',
+        ));
+      }
     }
 
     if (timeResult != null) {
@@ -407,18 +448,43 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                         _buildTextField('Pha C', rTxCCtrl, hint: 'VD: 35.4'),
                       ],
                     ),
+                    FormulaSelectorWidget(
+                      groupCode: 'MC_R_tx',
+                      selectedFormula: _selectedRtxFormula,
+                      onFormulaChanged: (newF) {
+                        setState(() {
+                          _selectedRtxFormula = newF;
+                          if (maxRtx != null) _tinhTiepXuc();
+                        });
+                      },
+                    ),
+                    if (_selectedRtxFormula == null ||
+                        _selectedRtxFormula!.inputs.contains('R_nsx'))
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: _buildTextField(
+                          'Rnsx (nhà sản xuất / xuất xưởng)',
+                          rTxNsxCtrl,
+                          hint: 'VD: 35.0',
+                          isExpanded: false,
+                        ),
+                      ),
                     _buildTextField('Độ phân giải thiết bị đo', resolutionCtrl, hint: 'VD: 0.1', isExpanded: false),
                     const SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: _tinhTiepXuc,
-                      child: const Text('TÍNH Rtx'),
+                      child: const Text('TÍNH Rtx & ĐỘ LỆCH (ΔR)'),
                     ),
                     if (maxRtx != null) ...[
                        Padding(
                         padding: const EdgeInsets.only(top: 12),
                         child: Text(
-                          'Rtx cao nhất: ${AppFormatters.formatRtx(maxRtx)}',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orangeAccent),
+                          'Rtx Max: ${AppFormatters.formatRtx(maxRtx)}${deltaRtx != null ? ' | ΔR: ${AppFormatters.formatPercent(deltaRtx)}' : ''}',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: (deltaRtx != null && deltaRtx! <= 50.0) ? Colors.greenAccent : Colors.redAccent,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -460,14 +526,15 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                       StandardEvaluationWidget(
                         testCode: 'MC_R_tx',
                         voltageLevel: _cbVoltageLevel,
-                        primaryValue: _rtxUncertaintyResult?.correctedValue ?? maxRtx!,
+                        primaryValue: deltaRtx ?? 0.0,
                         phaseValues: {
                           if (rTxACtrl.text.isNotEmpty) 'Pha A': parseInput(rTxACtrl.text),
                           if (rTxBCtrl.text.isNotEmpty) 'Pha B': parseInput(rTxBCtrl.text),
                           if (rTxCCtrl.text.isNotEmpty) 'Pha C': parseInput(rTxCCtrl.text),
                         },
-                        unit: 'μΩ',
-                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐIỆN TRỞ TIẾP XÚC",
+                        unit: '%',
+                        symbol: 'ΔRtx',
+                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐỘ LỆCH TIẾP XÚC MÁY CẮT",
                       ),
                   ],
                 ),

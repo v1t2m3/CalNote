@@ -10,7 +10,9 @@
     "applicableTests": [
       "MC_R_tx",
       "APT_R_tx",
-      "DCL_R_tx"
+      "DCL_R_tx",
+      "DTD_R_tx",
+      "REC_R_tx"
     ],
     "k": 2.0,
     "confidenceLevel": "95%",

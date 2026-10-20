@@ -117,14 +117,16 @@
   },
   {
     "test_id": "MBA_Unbalance",
-    "name": "Độ lệch điện trở 1 chiều",
+    "name": "Độ lệch R một chiều MBA (So với Trung bình)",
     "inputs": [
       "R_max",
       "R_min",
       "R_avg"
     ],
     "formula": "((R_max - R_min) / R_avg) * 100",
-    "unit": "%"
+    "unit": "%",
+    "group_code": "MBA_Unbalance",
+    "method": "So với R_avg"
   },
   {
     "test_id": "MBA_NoLoad",
@@ -317,6 +319,178 @@
       "I_1h"
     ],
     "formula": "(I_2h / I_1h) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "MBA_Unbalance_Min",
+    "group_code": "MBA_Unbalance",
+    "method": "So với R_min",
+    "name": "Độ lệch R một chiều MBA (So với Min)",
+    "inputs": [
+      "R_max",
+      "R_min"
+    ],
+    "formula": "((R_max - R_min) / R_min) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "MBA_Unbalance_Nsx",
+    "group_code": "MBA_Unbalance",
+    "method": "So với R_nsx",
+    "name": "Độ lệch R một chiều MBA (So với NSX)",
+    "inputs": [
+      "R_max",
+      "R_nsx"
+    ],
+    "formula": "((R_max - R_nsx) / R_nsx) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "MC_Rtx_Delta_Nsx",
+    "group_code": "MC_R_tx",
+    "method": "So với R_nsx",
+    "name": "Độ lệch Rtx Máy cắt (So với NSX)",
+    "inputs": [
+      "R_max",
+      "R_nsx"
+    ],
+    "formula": "((R_max - R_nsx) / R_nsx) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "MC_Rtx_Delta_Min",
+    "group_code": "MC_R_tx",
+    "method": "So với R_min",
+    "name": "Độ lệch Rtx Máy cắt (So với Min)",
+    "inputs": [
+      "R_max",
+      "R_min"
+    ],
+    "formula": "((R_max - R_min) / R_min) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "MC_Rtx_Delta_Avg",
+    "group_code": "MC_R_tx",
+    "method": "So với R_avg",
+    "name": "Độ lệch Rtx Máy cắt (So với Trung bình)",
+    "inputs": [
+      "R_max",
+      "R_min",
+      "R_avg"
+    ],
+    "formula": "((R_max - R_min) / R_avg) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "DCL_Rtx_Delta_Nsx",
+    "group_code": "DCL_R_tx",
+    "method": "So với R_nsx",
+    "name": "Độ lệch Rtx Dao cách ly (So với NSX)",
+    "inputs": [
+      "R_max",
+      "R_nsx"
+    ],
+    "formula": "((R_max - R_nsx) / R_nsx) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "DCL_Rtx_Delta_Min",
+    "group_code": "DCL_R_tx",
+    "method": "So với R_min",
+    "name": "Độ lệch Rtx Dao cách ly (So với Min)",
+    "inputs": [
+      "R_max",
+      "R_min"
+    ],
+    "formula": "((R_max - R_min) / R_min) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "DCL_Rtx_Delta_Avg",
+    "group_code": "DCL_R_tx",
+    "method": "So với R_avg",
+    "name": "Độ lệch Rtx Dao cách ly (So với Trung bình)",
+    "inputs": [
+      "R_max",
+      "R_min",
+      "R_avg"
+    ],
+    "formula": "((R_max - R_min) / R_avg) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "DTD_Rtx_Delta_Nsx",
+    "group_code": "DTD_R_tx",
+    "method": "So với R_nsx",
+    "name": "Độ lệch Rtx Dao tiếp địa (So với NSX)",
+    "inputs": [
+      "R_max",
+      "R_nsx"
+    ],
+    "formula": "((R_max - R_nsx) / R_nsx) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "DTD_Rtx_Delta_Min",
+    "group_code": "DTD_R_tx",
+    "method": "So với R_min",
+    "name": "Độ lệch Rtx Dao tiếp địa (So với Min)",
+    "inputs": [
+      "R_max",
+      "R_min"
+    ],
+    "formula": "((R_max - R_min) / R_min) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "DTD_Rtx_Delta_Avg",
+    "group_code": "DTD_R_tx",
+    "method": "So với R_avg",
+    "name": "Độ lệch Rtx Dao tiếp địa (So với Trung bình)",
+    "inputs": [
+      "R_max",
+      "R_min",
+      "R_avg"
+    ],
+    "formula": "((R_max - R_min) / R_avg) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "REC_Rtx_Delta_Nsx",
+    "group_code": "REC_R_tx",
+    "method": "So với R_nsx",
+    "name": "Độ lệch Rtx Recloser (So với NSX)",
+    "inputs": [
+      "R_max",
+      "R_nsx"
+    ],
+    "formula": "((R_max - R_nsx) / R_nsx) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "REC_Rtx_Delta_Min",
+    "group_code": "REC_R_tx",
+    "method": "So với R_min",
+    "name": "Độ lệch Rtx Recloser (So với Min)",
+    "inputs": [
+      "R_max",
+      "R_min"
+    ],
+    "formula": "((R_max - R_min) / R_min) * 100",
+    "unit": "%"
+  },
+  {
+    "test_id": "REC_Rtx_Delta_Avg",
+    "group_code": "REC_R_tx",
+    "method": "So với R_avg",
+    "name": "Độ lệch Rtx Recloser (So với Trung bình)",
+    "inputs": [
+      "R_max",
+      "R_min",
+      "R_avg"
+    ],
+    "formula": "((R_max - R_min) / R_avg) * 100",
     "unit": "%"
   }
 ]

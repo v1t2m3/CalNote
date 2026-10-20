@@ -5,6 +5,7 @@ import '../services/formula_service.dart';
 import '../services/calibration_service.dart';
 import '../widgets/uncertainty_widget.dart';
 import '../widgets/standard_evaluation_widget.dart';
+import '../widgets/formula_selector_widget.dart';
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
@@ -46,6 +47,8 @@ class _TransformerCalculatorScreenState
   final TextEditingController kTtACtrl = TextEditingController();
   final TextEditingController kTtBCtrl = TextEditingController();
   final TextEditingController kTtCCtrl = TextEditingController();
+  final TextEditingController rDcNsxCtrl = TextEditingController();
+  FormulaModel? _selectedRdcUnbalanceFormula;
   double? errA, errB, errC;
   CalibratedEquipmentModel? _selectedRatioEquipment;
   Map<String, UncertaintyResult?> _ratioPhaseUncertainty = {};
@@ -60,6 +63,10 @@ class _TransformerCalculatorScreenState
     final ratioEqs = CalibrationService.getEquipmentsForTest('MBA_K_error');
     if (ratioEqs.isNotEmpty) {
       _selectedRatioEquipment = ratioEqs.first;
+    }
+    final unbalanceFormulas = FormulaService.getFormulasByGroup('MBA_Unbalance');
+    if (unbalanceFormulas.isNotEmpty) {
+      _selectedRdcUnbalanceFormula = unbalanceFormulas.first;
     }
   }
 
@@ -138,10 +145,17 @@ class _TransformerCalculatorScreenState
         double maxR = validRs.reduce(max);
         double minR = validRs.reduce(min);
         double avgR = validRs.reduce((a, b) => a + b) / validRs.length;
+        double rNsx = parseInput(rDcNsxCtrl.text);
 
-        final errModel = FormulaService.getFormulaById('MBA_Unbalance');
+        final errModel = _selectedRdcUnbalanceFormula ?? FormulaService.getFormulaById('MBA_Unbalance');
         if (errModel != null) {
-          deltaR = FormulaService.calculate(errModel.formula, {'R_max': maxR, 'R_min': minR, 'R_avg': avgR});
+          final vars = <String, num>{
+            'R_max': maxR,
+            'R_min': minR,
+            'R_avg': avgR,
+            'R_nsx': rNsx > 0 ? rNsx : (minR > 0 ? minR : 1.0),
+          };
+          deltaR = FormulaService.calculate(errModel.formula, vars);
         } else {
           deltaR = ((maxR - minR) / avgR) * 100;
         }
@@ -720,6 +734,28 @@ class _TransformerCalculatorScreenState
                         const Text('Nhôm', style: TextStyle(color: Colors.white)),
                       ],
                     ),
+                    FormulaSelectorWidget(
+                      groupCode: 'MBA_Unbalance',
+                      selectedFormula: _selectedRdcUnbalanceFormula,
+                      onFormulaChanged: (newF) {
+                        setState(() {
+                          _selectedRdcUnbalanceFormula = newF;
+                          if (rResultA != null || rResultB != null || rResultC != null) {
+                            _tinhDienTroDC();
+                          }
+                        });
+                      },
+                    ),
+                    if (_selectedRdcUnbalanceFormula != null &&
+                        _selectedRdcUnbalanceFormula!.inputs.contains('R_nsx'))
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: _buildTextField(
+                          'Rnsx cuộn dây (mΩ)',
+                          rDcNsxCtrl,
+                          hintText: 'VD: 1.25',
+                        ),
+                      ),
                     ElevatedButton(onPressed: _tinhDienTroDC, child: const Text('TÍNH Rđc - Rqd')),
                     if (rResultA != null || rResultB != null || rResultC != null) ...[
                       const SizedBox(height: 12),
@@ -841,6 +877,7 @@ class _TransformerCalculatorScreenState
                           primaryValue: deltaRHc ?? deltaR,
                           phaseValues: rPhaseDeviations.isNotEmpty ? rPhaseDeviations : null,
                           unit: '%',
+                          symbol: 'ΔR',
                           customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐIỆN TRỞ 1 CHIỀU",
                         );
                       },

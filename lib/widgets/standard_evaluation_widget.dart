@@ -15,6 +15,7 @@ class StandardEvaluationWidget extends StatefulWidget {
   final Map<String, double>? phaseValues; // Ví dụ: {"Pha A": 0.12, "Pha B": 0.15, "Pha C": 0.55}
   final String unit;
   final String? customTitle;
+  final String? symbol;
 
   const StandardEvaluationWidget({
     super.key,
@@ -24,6 +25,7 @@ class StandardEvaluationWidget extends StatefulWidget {
     this.phaseValues,
     this.unit = '',
     this.customTitle,
+    this.symbol,
   });
 
   @override
@@ -46,18 +48,21 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
       widget.testCode,
       effectiveValue,
       voltageLevel: widget.voltageLevel,
+      symbol: widget.symbol,
     );
 
     final cbmResult = ReferenceStandardService.evaluateCbm(
       widget.testCode,
       effectiveValue,
       voltageLevel: widget.voltageLevel,
+      symbol: widget.symbol,
     );
 
     final tt02Result = ReferenceStandardService.evaluateTT02(
       widget.testCode,
       effectiveValue,
       voltageLevel: widget.voltageLevel,
+      symbol: widget.symbol,
     );
 
     return Card(

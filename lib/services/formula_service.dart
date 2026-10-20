@@ -8,6 +8,8 @@ import 'package:flutter/services.dart' show rootBundle;
 
 class FormulaModel {
   final String testId;
+  final String? groupCode;
+  final String? method;
   final String name;
   final List<String> inputs;
   final String formula;
@@ -15,6 +17,8 @@ class FormulaModel {
 
   FormulaModel({
     required this.testId,
+    this.groupCode,
+    this.method,
     required this.name,
     required this.inputs,
     required this.formula,
@@ -23,16 +27,20 @@ class FormulaModel {
 
   factory FormulaModel.fromJson(Map<String, dynamic> json) {
     return FormulaModel(
-      testId: json['test_id'],
-      name: json['name'],
-      inputs: List<String>.from(json['inputs']),
-      formula: json['formula'],
-      unit: json['unit'],
+      testId: json['test_id'] ?? '',
+      groupCode: json['group_code'] ?? json['groupCode'],
+      method: json['method'],
+      name: json['name'] ?? '',
+      inputs: json['inputs'] != null ? List<String>.from(json['inputs']) : [],
+      formula: json['formula'] ?? '',
+      unit: json['unit'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() => {
         'test_id': testId,
+        if (groupCode != null) 'group_code': groupCode,
+        if (method != null) 'method': method,
         'name': name,
         'inputs': inputs,
         'formula': formula,
@@ -43,10 +51,10 @@ class FormulaModel {
 class FormulaService {
   static const String boxName = 'formulasBox';
 
-  /// Khởi tạo Box chứa công thức và nạp mặc định nếu rỗng
+  /// Khởi tạo Box chứa công thức và nạp mặc định nếu rỗng hoặc phiên bản cũ
   static Future<void> init() async {
     final box = await Hive.openBox(boxName);
-    if (box.isEmpty) {
+    if (box.isEmpty || box.length < 35) {
       await loadDefaultFormulas();
     }
   }
@@ -115,12 +123,23 @@ class FormulaService {
     return box.values.map((e) => FormulaModel.fromJson(Map<String, dynamic>.from(e))).toList();
   }
 
-  /// Lấy cấu hình một công thức cụ thể theo ID
+  /// Lấy danh sách các công thức thuộc một nhóm (ví dụ: 'MC_R_tx', 'DCL_R_tx', 'DTD_R_tx', 'REC_R_tx', 'MBA_Unbalance')
+  static List<FormulaModel> getFormulasByGroup(String groupCode) {
+    final all = getAllFormulas();
+    return all.where((f) => f.groupCode == groupCode || f.testId.startsWith('${groupCode}_')).toList();
+  }
+
+  /// Lấy cấu hình một công thức cụ thể theo ID, có fallback theo groupCode nếu testId đại diện cho cả nhóm
   static FormulaModel? getFormulaById(String testId) {
     final box = Hive.box(boxName);
     final data = box.get(testId);
     if (data != null) {
       return FormulaModel.fromJson(Map<String, dynamic>.from(data));
+    }
+    // Fallback: nếu gọi theo groupCode (ví dụ MC_R_tx), trả về công thức đầu tiên (mặc định) của nhóm đó
+    final groupList = getFormulasByGroup(testId);
+    if (groupList.isNotEmpty) {
+      return groupList.first;
     }
     return null;
   }

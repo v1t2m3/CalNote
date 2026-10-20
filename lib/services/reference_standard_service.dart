@@ -163,7 +163,10 @@ class TT02ItemModel {
   final String? symbol;
   final String? compare;
   final dynamic value;
+  final dynamic min;
+  final dynamic max;
   final String? unit;
+  final String? note;
 
   const TT02ItemModel({
     required this.id,
@@ -180,7 +183,10 @@ class TT02ItemModel {
     this.symbol,
     this.compare,
     this.value,
+    this.min,
+    this.max,
     this.unit,
+    this.note,
   });
 
   factory TT02ItemModel.fromJson(Map<String, dynamic> json) {
@@ -200,7 +206,10 @@ class TT02ItemModel {
       symbol: json['symbol'],
       compare: json['compare'],
       value: json['value'],
+      min: json['min'],
+      max: json['max'],
       unit: json['unit'],
+      note: json['note'],
     );
   }
 
@@ -219,7 +228,10 @@ class TT02ItemModel {
         'symbol': symbol,
         'compare': compare,
         'value': value,
+        'min': min,
+        'max': max,
         'unit': unit,
+        'note': note,
       };
 }
 
@@ -321,8 +333,8 @@ class ReferenceStandardService {
   static const String boxStandards = 'standardsBox';
   static const String boxTT02 = 'tt02Box';
   static const String boxCBM = 'cbmBox';
-  static const int currentSchemaVersion = 4;
-  static const String keySchemaVersion = 'standards_schema_version_v4';
+  static const int currentSchemaVersion = 5;
+  static const String keySchemaVersion = 'standards_schema_version_v5';
 
   /// Khởi tạo các Box Hive và nạp dữ liệu mặc định từ asset nếu rỗng hoặc phiên bản cũ
   static Future<void> init() async {
@@ -560,51 +572,72 @@ class ReferenceStandardService {
     return normTarget == normItem;
   }
 
-  /// Tìm Tiêu chuẩn Thử nghiệm phù hợp nhất theo testCode và cấp điện áp
-  static ReferenceItemModel? getStandardByTestCode(String testCode, {String voltageLevel = 'ALL'}) {
+  /// Tìm Tiêu chuẩn Thử nghiệm phù hợp nhất theo testCode, cấp điện áp và ký hiệu phép đo (symbol)
+  static ReferenceItemModel? getStandardByTestCode(String testCode, {String voltageLevel = 'ALL', String? symbol}) {
     final all = getAllStandards();
-    // Ưu tiên khớp chính xác testCode và voltageLevel
+    // Ưu tiên khớp chính xác testCode, symbol (nếu có) và voltageLevel
     for (var it in all) {
-      if (it.testCode == testCode && it.voltageLevel == voltageLevel) {
+      if (it.testCode == testCode && (symbol == null || it.symbol == symbol) && it.voltageLevel == voltageLevel) {
         return it;
       }
     }
-    // Nếu không thấy, tìm theo khớp tương thích
     for (var it in all) {
-      if (it.testCode == testCode && matchVoltage(it.voltageLevel, voltageLevel)) {
+      if (it.testCode == testCode && (symbol == null || it.symbol == symbol) && matchVoltage(it.voltageLevel, voltageLevel)) {
         return it;
+      }
+    }
+    // Fallback: nếu có symbol nhưng không tìm thấy, thử tìm chỉ theo testCode
+    if (symbol != null) {
+      for (var it in all) {
+        if (it.testCode == testCode && matchVoltage(it.voltageLevel, voltageLevel)) {
+          return it;
+        }
       }
     }
     return null;
   }
 
-  /// Tìm Tiêu chuẩn CBM phù hợp nhất theo testCode và cấp điện áp
-  static CbmItemModel? getCbmByTestCode(String testCode, {String voltageLevel = 'ALL'}) {
+  /// Tìm Tiêu chuẩn CBM phù hợp nhất theo testCode, cấp điện áp và ký hiệu phép đo (symbol)
+  static CbmItemModel? getCbmByTestCode(String testCode, {String voltageLevel = 'ALL', String? symbol}) {
     final all = getAllCBM();
     for (var it in all) {
-      if (it.testCode == testCode && it.voltageLevel == voltageLevel) {
+      if (it.testCode == testCode && (symbol == null || it.symbol == symbol) && it.voltageLevel == voltageLevel) {
         return it;
       }
     }
     for (var it in all) {
-      if (it.testCode == testCode && matchVoltage(it.voltageLevel, voltageLevel)) {
+      if (it.testCode == testCode && (symbol == null || it.symbol == symbol) && matchVoltage(it.voltageLevel, voltageLevel)) {
         return it;
+      }
+    }
+    if (symbol != null) {
+      for (var it in all) {
+        if (it.testCode == testCode && matchVoltage(it.voltageLevel, voltageLevel)) {
+          return it;
+        }
       }
     }
     return null;
   }
 
-  /// Tìm Tiêu chuẩn Kiểm định TT02 phù hợp nhất theo testCode và cấp điện áp
-  static TT02ItemModel? getTT02ByTestCode(String testCode, {String voltageLevel = 'ALL'}) {
+  /// Tìm Tiêu chuẩn Kiểm định TT02 phù hợp nhất theo testCode, cấp điện áp và ký hiệu phép đo (symbol)
+  static TT02ItemModel? getTT02ByTestCode(String testCode, {String voltageLevel = 'ALL', String? symbol}) {
     final all = getAllTT02();
     for (var it in all) {
-      if (it.testCode == testCode && it.voltageLevel == voltageLevel) {
+      if (it.testCode == testCode && (symbol == null || it.symbol == symbol) && it.voltageLevel == voltageLevel) {
         return it;
       }
     }
     for (var it in all) {
-      if (it.testCode == testCode && matchVoltage(it.voltageLevel, voltageLevel)) {
+      if (it.testCode == testCode && (symbol == null || it.symbol == symbol) && matchVoltage(it.voltageLevel, voltageLevel)) {
         return it;
+      }
+    }
+    if (symbol != null) {
+      for (var it in all) {
+        if (it.testCode == testCode && matchVoltage(it.voltageLevel, voltageLevel)) {
+          return it;
+        }
       }
     }
     return null;
@@ -638,8 +671,8 @@ class ReferenceStandardService {
   }
 
   /// 1️⃣ ĐÁNH GIÁ THEO TIÊU CHUẨN (TCVN / IEC)
-  static StandardEvalResult evaluateStandard(String testCode, double measuredValue, {String voltageLevel = 'ALL'}) {
-    final item = getStandardByTestCode(testCode, voltageLevel: voltageLevel);
+  static StandardEvalResult evaluateStandard(String testCode, double measuredValue, {String voltageLevel = 'ALL', String? symbol}) {
+    final item = getStandardByTestCode(testCode, voltageLevel: voltageLevel, symbol: symbol);
     if (item == null) {
       return const StandardEvalResult(
         isPass: true,
@@ -674,8 +707,8 @@ class ReferenceStandardService {
   }
 
   /// 2️⃣ ĐÁNH GIÁ TIÊU CHUẨN CBM (4 MỨC TÌNH TRẠNG)
-  static CbmEvalResult evaluateCbm(String testCode, double measuredValue, {String voltageLevel = 'ALL'}) {
-    final item = getCbmByTestCode(testCode, voltageLevel: voltageLevel);
+  static CbmEvalResult evaluateCbm(String testCode, double measuredValue, {String voltageLevel = 'ALL', String? symbol}) {
+    final item = getCbmByTestCode(testCode, voltageLevel: voltageLevel, symbol: symbol);
     if (item == null) {
       return const CbmEvalResult(
         level: 1,
@@ -730,8 +763,8 @@ class ReferenceStandardService {
   }
 
   /// 3️⃣ ĐÁNH GIÁ KIỂM ĐỊNH TT02
-  static TT02EvalResult evaluateTT02(String testCode, double measuredValue, {String voltageLevel = 'ALL'}) {
-    final item = getTT02ByTestCode(testCode, voltageLevel: voltageLevel);
+  static TT02EvalResult evaluateTT02(String testCode, double measuredValue, {String voltageLevel = 'ALL', String? symbol}) {
+    final item = getTT02ByTestCode(testCode, voltageLevel: voltageLevel, symbol: symbol);
     if (item == null) {
       return const TT02EvalResult(
         isPass: true,
@@ -744,7 +777,7 @@ class ReferenceStandardService {
     }
 
     final isErrorTest = testCode.toLowerCase().contains('error') || testCode.toLowerCase().contains('ratio');
-    final pass = compareValue(measuredValue, item.compare, item.value, null, null, isBilateral: isErrorTest);
+    final pass = compareValue(measuredValue, item.compare, item.value, item.min, item.max, isBilateral: isErrorTest);
     if (pass == null) {
       return TT02EvalResult(
         isPass: true,
