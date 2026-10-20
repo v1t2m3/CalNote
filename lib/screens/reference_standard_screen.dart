@@ -20,7 +20,7 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
   final TextEditingController _searchController = TextEditingController();
 
   String _searchQuery = "";
-  String _selectedVoltage = "ALL"; // "ALL", "<=35kV", "110kV"
+  String _selectedVoltage = ">35kV"; // ">35kV", "<=35kV"
 
   List<ReferenceItemModel> _standardsList = [];
   List<TT02ItemModel> _tt02List = [];
@@ -298,23 +298,21 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
                 ),
                 const SizedBox(height: 8),
 
-                // Bộ lọc Cấp Điện Áp (Cuộn ngang mượt mà, không bao giờ bị che/cắt trên điện thoại)
+                // Bộ lọc Cấp Điện Áp
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
                   child: Row(
                     children: [
                       const Text(
-                        "Cấp điện áp: ",
+                        "Cấp điện áp:",
                         style: TextStyle(
                             color: Colors.white70, fontWeight: FontWeight.bold),
                       ),
+                      const SizedBox(width: 16),
+                      _buildVoltageChip("> 35kV", ">35kV"),
                       const SizedBox(width: 8),
-                      _buildVoltageChip("Tất cả", "ALL"),
-                      const SizedBox(width: 6),
-                      _buildVoltageChip("≤ 35kV (Trung thế)", "<=35kV"),
-                      const SizedBox(width: 6),
-                      _buildVoltageChip("> 35kV (Cao thế)", ">35kV"),
+                      _buildVoltageChip("≤ 35kV", "<=35kV"),
                     ],
                   ),
                 ),
@@ -775,7 +773,9 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
     super.initState();
     _tabController = TabController(
         length: 3, vsync: this, initialIndex: widget.initialTabIndex);
-    _currentVoltage = widget.voltageLevel;
+    _currentVoltage = (widget.voltageLevel == 'ALL' || widget.voltageLevel.isEmpty)
+        ? '>35kV'
+        : widget.voltageLevel;
   }
 
   @override
@@ -829,14 +829,12 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Row(
               children: [
-                const Text("Cấp điện áp: ",
-                    style: TextStyle(color: Colors.white70, fontSize: 13)),
-                const SizedBox(width: 8),
-                _buildVoltageChip("Tất cả", "ALL"),
-                const SizedBox(width: 6),
-                _buildVoltageChip("≤ 35kV", "<=35kV"),
-                const SizedBox(width: 6),
+                const Text("Cấp điện áp:",
+                    style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 13)),
+                const SizedBox(width: 16),
                 _buildVoltageChip("> 35kV", ">35kV"),
+                const SizedBox(width: 8),
+                _buildVoltageChip("≤ 35kV", "<=35kV"),
               ],
             ),
           ),

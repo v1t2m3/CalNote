@@ -112,7 +112,7 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
                           ),
                         ),
                         Text(
-                          "* Cấp điện áp: ${widget.voltageLevel == 'ALL' ? 'Tất cả' : widget.voltageLevel}",
+                          "* Cấp điện áp: ${widget.voltageLevel == '<=35kV' ? '≤ 35kV' : (widget.voltageLevel == '>35kV' ? '> 35kV' : (widget.voltageLevel == 'ALL' ? 'Tất cả' : widget.voltageLevel))}",
                           style: AppTheme.captionItalic,
                         ),
                       ],

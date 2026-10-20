@@ -345,23 +345,23 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
                     const Divider(),
                     Row(
                       children: [
-                        const Text('Cấp điện áp: ', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white70)),
-                        const SizedBox(width: 8),
-                        ChoiceChip(
-                          label: const Text('≤ 35kV (Mặc định)'),
-                          selected: _voltageLevel == '<=35kV',
-                          selectedColor: AppTheme.myOrangeAccent,
-                          onSelected: (val) {
-                            if (val) setState(() => _voltageLevel = '<=35kV');
-                          },
-                        ),
-                        const SizedBox(width: 8),
+                        const Text('Cấp điện áp:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white70)),
+                        const SizedBox(width: 16),
                         ChoiceChip(
                           label: const Text('> 35kV'),
                           selected: _voltageLevel == '>35kV',
                           selectedColor: AppTheme.myOrangeAccent,
                           onSelected: (val) {
                             if (val) setState(() => _voltageLevel = '>35kV');
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        ChoiceChip(
+                          label: const Text('≤ 35kV'),
+                          selected: _voltageLevel == '<=35kV',
+                          selectedColor: AppTheme.myOrangeAccent,
+                          onSelected: (val) {
+                            if (val) setState(() => _voltageLevel = '<=35kV');
                           },
                         ),
                       ],

@@ -600,54 +600,33 @@ class _TransformerCalculatorScreenState
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
-            // CHỌN CẤP ĐIỆN ÁP MBA ĐỂ TỰ ĐỘNG LẤY TIÊU CHUẨN
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(
-                color: AppTheme.myMedNavy,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppTheme.myOrangeAccent.withValues(alpha: 0.4)),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.flash_on, color: AppTheme.myOrangeAccent, size: 20),
-                  const SizedBox(width: 8),
-                  const Text(
-                    "Cấp điện áp MBA: ",
-                    style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 13),
-                  ),
-                  const Spacer(),
-                  ChoiceChip(
-                    label: const Text("> 35kV (Cao thế)"),
-                    selected: _transformerVoltageLevel == '>35kV',
-                    selectedColor: AppTheme.myOrangeAccent,
-                    backgroundColor: AppTheme.myDarkNavy,
-                    labelStyle: TextStyle(
-                      color: _transformerVoltageLevel == '>35kV' ? Colors.white : Colors.white70,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+            // CẤP ĐIỆN ÁP
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Row(
+                  children: [
+                    const Text('Cấp điện áp:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white70)),
+                    const SizedBox(width: 16),
+                    ChoiceChip(
+                      label: const Text('> 35kV'),
+                      selected: _transformerVoltageLevel == '>35kV',
+                      selectedColor: AppTheme.myOrangeAccent,
+                      onSelected: (val) {
+                        if (val) setState(() => _transformerVoltageLevel = '>35kV');
+                      },
                     ),
-                    onSelected: (val) {
-                      if (val) setState(() => _transformerVoltageLevel = '>35kV');
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  ChoiceChip(
-                    label: const Text("≤ 35kV (Trung thế)"),
-                    selected: _transformerVoltageLevel == '<=35kV',
-                    selectedColor: AppTheme.myOrangeAccent,
-                    backgroundColor: AppTheme.myDarkNavy,
-                    labelStyle: TextStyle(
-                      color: _transformerVoltageLevel == '<=35kV' ? Colors.white : Colors.white70,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                    const SizedBox(width: 8),
+                    ChoiceChip(
+                      label: const Text('≤ 35kV'),
+                      selected: _transformerVoltageLevel == '<=35kV',
+                      selectedColor: AppTheme.myOrangeAccent,
+                      onSelected: (val) {
+                        if (val) setState(() => _transformerVoltageLevel = '<=35kV');
+                      },
                     ),
-                    onSelected: (val) {
-                      if (val) setState(() => _transformerVoltageLevel = '<=35kV');
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
 
