@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mte_calculator_pro/services/formula_service.dart';
 import 'package:mte_calculator_pro/services/reference_standard_service.dart';
+import 'package:mte_calculator_pro/core/theme/app_theme.dart';
 
 void main() {
   group('TT02 & Formulas Unit Tests', () {
@@ -177,6 +178,26 @@ void main() {
       expect(ReferenceStandardService.evaluateCbmLevel(cbmItem, 15.0), equals(2));
       expect(ReferenceStandardService.evaluateCbmLevel(cbmItem, 35.0), equals(3));
       expect(ReferenceStandardService.evaluateCbmLevel(cbmItem, 60.0), equals(4));
+    });
+
+    test('AppTheme CBM 4 colors and conclusion mapping adhere to EVN standard', () {
+      // 4 màu chuẩn EVN: Xanh lục, Vàng, Cam, Đỏ
+      expect(AppTheme.getCbmColor(1), equals(AppTheme.cbmLevel1)); // Xanh lục (0xFF00E676)
+      expect(AppTheme.getCbmColor(2), equals(AppTheme.cbmLevel2)); // Vàng (0xFFFFD600)
+      expect(AppTheme.getCbmColor(3), equals(AppTheme.cbmLevel3)); // Cam (0xFFFF7A00)
+      expect(AppTheme.getCbmColor(4), equals(AppTheme.cbmLevel4)); // Đỏ (0xFFFF3B30)
+
+      // 4 kết luận tương ứng: Tốt, Khá, Trung bình, Xấu
+      expect(AppTheme.getCbmConclusion(1), equals("Tốt"));
+      expect(AppTheme.getCbmConclusion(2), equals("Khá"));
+      expect(AppTheme.getCbmConclusion(3), equals("Trung bình"));
+      expect(AppTheme.getCbmConclusion(4), equals("Xấu"));
+
+      // Mapping theo tên kết luận
+      expect(AppTheme.getCbmColorByConclusion("Tốt"), equals(AppTheme.cbmLevel1));
+      expect(AppTheme.getCbmColorByConclusion("Khá"), equals(AppTheme.cbmLevel2));
+      expect(AppTheme.getCbmColorByConclusion("Trung bình"), equals(AppTheme.cbmLevel3));
+      expect(AppTheme.getCbmColorByConclusion("Xấu"), equals(AppTheme.cbmLevel4));
     });
   });
 }

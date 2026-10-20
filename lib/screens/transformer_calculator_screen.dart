@@ -658,8 +658,10 @@ class _TransformerCalculatorScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('1. ĐiỆN TRỞ CÁCH ĐIỆN (MΩ)',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'I. ĐIỆN TRỞ CÁCH ĐIỆN (MΩ)',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     Row(
                       children: [
@@ -680,7 +682,11 @@ class _TransformerCalculatorScreenState
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(
                           'R_cd Min: ${AppFormatters.formatInsulation(minRcd)}',
-                          style: const TextStyle(color: Colors.greenAccent, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            color: AppTheme.statusGreen,
+                            fontSize: AppTheme.fontSizeTitle,
+                            fontWeight: FontWeight.bold,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -705,8 +711,10 @@ class _TransformerCalculatorScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('2. ĐIỆN TRỞ MỘT CHIỀU QUY ĐỔI (mΩ)',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'II. ĐIỆN TRỞ MỘT CHIỀU CUỘN DÂY (mΩ)',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     Row(
                       children: [
@@ -813,13 +821,21 @@ class _TransformerCalculatorScreenState
                           child: Text(
                             'ΔR: ${AppFormatters.formatPercent(deltaR)}',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: deltaR! > 2.0 ? Colors.redAccent : Colors.lightGreenAccent),
+                            style: TextStyle(
+                              fontSize: AppTheme.fontSizeTitle,
+                              fontWeight: FontWeight.bold,
+                              color: deltaR! > 2.0 ? AppTheme.cbmLevel4 : AppTheme.statusGreen,
+                            ),
                           ),
                         ),
                         if (deltaR! > 2.0)
                           const Padding(
                             padding: EdgeInsets.only(top: 4),
-                            child: Text('CẢNH BÁO: Lệch pha > 2%!', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
+                            child: Text(
+                              'CẢNH BÁO: Lệch pha > 2%!',
+                              style: TextStyle(color: AppTheme.cbmLevel4, fontWeight: FontWeight.bold, fontSize: AppTheme.fontSizeBody),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                       ],
                     ],
@@ -857,8 +873,8 @@ class _TransformerCalculatorScreenState
                         };
                         final rPhaseDeviations = FormulaService.calculatePhaseDeviations(
                           phaseValues: phaseInputs,
-                          formulaId: _selectedRdcFormula?.id ?? 'MBA_Unbalance',
-                          rNsx: parseInput(rNsxCtrl.text),
+                          formulaId: _selectedRdcUnbalanceFormula?.id ?? 'MBA_Unbalance',
+                          rNsx: parseInput(rDcNsxCtrl.text),
                         );
 
                         return StandardEvaluationWidget(
@@ -885,8 +901,10 @@ class _TransformerCalculatorScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('3. SAI LỆCH TỶ SỐ BIẾN (%)',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'III. SAI LỆCH TỶ SỐ BIẾN ÁP (K)',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     _buildTextField('K Định mức (K_dm)', kDmCtrl, isExpanded: false, hintText: 'VD: 50.0000'),
                     Row(
@@ -995,8 +1013,10 @@ class _TransformerCalculatorScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('4. KHÔNG TẢI',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'IV. DÒNG ĐIỆN & TỔN HAO KHÔNG TẢI',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     Row(
                        children: [
@@ -1024,7 +1044,7 @@ class _TransformerCalculatorScreenState
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(
                           'Io: ${i0Percent?.toStringAsFixed(2) ?? '-'} %  |  Po: ${p0Total?.toStringAsFixed(1) ?? '-'} (W / kW)',
-                          style: const TextStyle(color: Colors.orangeAccent, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(color: AppTheme.accentOrange, fontSize: AppTheme.fontSizeBody, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                       )
@@ -1041,8 +1061,10 @@ class _TransformerCalculatorScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('5. NGẮN MẠCH',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'V. ĐIỆN ÁP & TỔN HAO NGẮN MẠCH',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     Row(
                        children: [
@@ -1070,7 +1092,7 @@ class _TransformerCalculatorScreenState
                         padding: const EdgeInsets.only(top: 8),
                         child: Text(
                           'Uk: ${ukPercent?.toStringAsFixed(2) ?? '-'} %  |  Pk: ${pkTotal?.toStringAsFixed(1) ?? '-'} (W / kW)',
-                          style: const TextStyle(color: Colors.orangeAccent, fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(color: AppTheme.accentOrange, fontSize: AppTheme.fontSizeBody, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                       )

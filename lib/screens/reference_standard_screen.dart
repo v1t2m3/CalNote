@@ -254,9 +254,9 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
           unselectedLabelColor: Colors.white70,
           labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           tabs: const [
-            Tab(icon: Icon(Icons.science), text: "Thử Nghiệm"),
-            Tab(icon: Icon(Icons.verified_user), text: "Kiểm Định TT02"),
-            Tab(icon: Icon(Icons.analytics), text: "Đánh Giá CBM"),
+            Tab(icon: Icon(Icons.science), text: "1. TIÊU CHUẨN"),
+            Tab(icon: Icon(Icons.verified_user), text: "2. KIỂM ĐỊNH TT02"),
+            Tab(icon: Icon(Icons.analytics), text: "3. ĐÁNH GIÁ CBM"),
           ],
         ),
       ),
@@ -543,7 +543,7 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
     return const Center(
       child: Text(
         "Không tìm thấy chỉ tiêu nào phù hợp với bộ lọc.",
-        style: TextStyle(color: Colors.white54, fontSize: 15),
+        style: TextStyle(color: Colors.white54, fontSize: AppTheme.fontSizeBody),
       ),
     );
   }
@@ -551,11 +551,10 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
   Widget _buildStandardCard(ReferenceItemModel item, int currentTab) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      color: AppTheme.myMedNavy,
+      color: AppTheme.cardDark,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-            color: AppTheme.myOrangeAccent.withValues(alpha: 0.4), width: 1),
+        side: const BorderSide(color: AppTheme.cardBorder, width: 1.2),
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -567,41 +566,38 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
               children: [
                 Chip(
                   label: Text(item.category,
-                      style: const TextStyle(fontSize: 11, color: Colors.white)),
-                  backgroundColor: AppTheme.myOrangeAccent,
+                      style: const TextStyle(fontSize: AppTheme.fontSizeCaption, color: Colors.white)),
+                  backgroundColor: AppTheme.accentOrange,
                   padding: EdgeInsets.zero,
                 ),
                 Text(
                   item.subCategory,
-                  style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 13,
-                      fontStyle: FontStyle.italic),
+                  style: AppTheme.captionItalic,
                 ),
               ],
             ),
             const SizedBox(height: 6),
             Text(item.item,
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+                    color: AppTheme.textWhite,
+                    fontSize: AppTheme.fontSizeBody,
                     fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             const Text("Quy định / Giới hạn:",
-                style: TextStyle(color: Colors.white54, fontSize: 12)),
+                style: AppTheme.captionStyle),
             Text(item.limit,
                 style: const TextStyle(
-                    color: Colors.greenAccent, fontSize: 14, height: 1.3)),
+                    color: AppTheme.statusGreen, fontSize: AppTheme.fontSizeBody, fontWeight: FontWeight.bold, height: 1.3)),
             const SizedBox(height: 8),
             const Text("Tiêu chuẩn Tham chiếu:",
-                style: TextStyle(color: Colors.white54, fontSize: 12)),
+                style: AppTheme.captionStyle),
             Text(item.standard,
-                style: const TextStyle(color: Colors.orangeAccent, fontSize: 13)),
+                style: AppTheme.captionItalic),
             const SizedBox(height: 8),
             const Text("Hành động khuyến cáo xử lý:",
-                style: TextStyle(color: Colors.white54, fontSize: 12)),
+                style: AppTheme.captionStyle),
             Text(item.recommendation,
-                style: const TextStyle(color: Colors.cyanAccent, fontSize: 13)),
+                style: const TextStyle(color: Colors.white70, fontSize: AppTheme.fontSizeCaption)),
           ],
         ),
       ),
@@ -611,11 +607,10 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
   Widget _buildTT02Card(TT02ItemModel item, int currentTab) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      color: AppTheme.myMedNavy,
+      color: AppTheme.cardDark,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-            color: Colors.lightBlueAccent.withValues(alpha: 0.5), width: 1),
+        side: const BorderSide(color: AppTheme.cardBorder, width: 1.2),
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -627,38 +622,35 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
               children: [
                 const Chip(
                   label: Text("Thông tư 02/2025/TT-BCT",
-                      style: TextStyle(fontSize: 11, color: Colors.white)),
-                  backgroundColor: Colors.blueAccent,
+                      style: TextStyle(fontSize: AppTheme.fontSizeCaption, color: Colors.white)),
+                  backgroundColor: AppTheme.accentOrange,
                 ),
                 Text(
                   item.subCategory,
-                  style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                      fontStyle: FontStyle.italic),
+                  style: AppTheme.captionItalic,
                 ),
               ],
             ),
             const SizedBox(height: 6),
             Text("Hạng mục kiểm định: ${item.item}",
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
+                    color: AppTheme.textWhite,
+                    fontSize: AppTheme.fontSizeBody,
                     fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
             Text("Chu kỳ kiểm định: ${item.period}",
-                style: const TextStyle(color: Colors.yellowAccent, fontSize: 13)),
+                style: const TextStyle(color: Colors.white70, fontSize: AppTheme.fontSizeCaption)),
             const SizedBox(height: 8),
             const Text("Ngưỡng Yêu Cầu 'ĐẠT':",
-                style: TextStyle(color: Colors.white54, fontSize: 12)),
+                style: AppTheme.captionStyle),
             Text(item.limit,
                 style: const TextStyle(
-                    color: Colors.greenAccent, fontSize: 13, height: 1.3)),
+                    color: AppTheme.statusGreen, fontSize: AppTheme.fontSizeBody, fontWeight: FontWeight.bold, height: 1.3)),
             const SizedBox(height: 8),
             const Text("Căn cứ Quy chuẩn / Tiêu chuẩn:",
-                style: TextStyle(color: Colors.white54, fontSize: 12)),
+                style: AppTheme.captionStyle),
             Text(item.standard,
-                style: const TextStyle(color: Colors.orangeAccent, fontSize: 13)),
+                style: AppTheme.captionItalic),
           ],
         ),
       ),
@@ -668,11 +660,10 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
   Widget _buildCbmCard(CbmItemModel item, int currentTab) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      color: AppTheme.myMedNavy,
+      color: AppTheme.cardDark,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-            color: Colors.purpleAccent.withValues(alpha: 0.5), width: 1),
+        side: const BorderSide(color: AppTheme.cardBorder, width: 1.2),
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -684,52 +675,50 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
               children: [
                 Chip(
                   label: Text("CBM (${item.voltageLevel})",
-                      style: const TextStyle(fontSize: 11, color: Colors.white)),
-                  backgroundColor: Colors.purpleAccent,
+                      style: const TextStyle(fontSize: AppTheme.fontSizeCaption, color: Colors.white)),
+                  backgroundColor: AppTheme.accentOrange,
                 ),
                 Text(
                   item.subCategory,
-                  style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                      fontStyle: FontStyle.italic),
+                  style: AppTheme.captionItalic,
                 ),
               ],
             ),
             const SizedBox(height: 6),
             Text(item.displayItem,
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+                    color: AppTheme.textWhite,
+                    fontSize: AppTheme.fontSizeBody,
                     fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
 
-            // THANH 4 MỨC CBM (TỐT, KHÁ, TB, XẤU)
+            // THANH 4 MỨC CBM (TỐT, KHÁ, TRUNG BÌNH, XẤU - 4 MÀU CHUẨN EVN)
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Colors.black26,
                 borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppTheme.cardBorder),
               ),
               child: Column(
                 children: [
-                  _buildCbmLevelRow("🟢 Tốt (Mức 1):", item.good, Colors.greenAccent),
+                  _buildCbmLevelRow("🟢 Tốt (Mức 1):", item.good, AppTheme.cbmLevel1),
                   const Divider(color: Colors.white12, height: 8),
-                  _buildCbmLevelRow("🟡 Khá (Mức 2):", item.fair, Colors.yellowAccent),
+                  _buildCbmLevelRow("🟡 Khá (Mức 2):", item.fair, AppTheme.cbmLevel2),
                   const Divider(color: Colors.white12, height: 8),
-                  _buildCbmLevelRow("🟠 Trung bình (Mức 3):", item.average, Colors.orangeAccent),
+                  _buildCbmLevelRow("🟠 Trung bình (Mức 3):", item.average, AppTheme.cbmLevel3),
                   const Divider(color: Colors.white12, height: 8),
-                  _buildCbmLevelRow("🔴 Xấu (Mức 4):", item.poor, Colors.redAccent),
+                  _buildCbmLevelRow("🔴 Xấu (Mức 4):", item.poor, AppTheme.cbmLevel4),
                 ],
               ),
             ),
             const SizedBox(height: 10),
             const Text("Hành động xử lý khi Xấu / Không đạt:",
-                style: TextStyle(color: Colors.white54, fontSize: 12)),
+                style: AppTheme.captionStyle),
             Text(item.recommendation,
                 style: const TextStyle(
-                    color: Colors.redAccent,
-                    fontSize: 13,
+                    color: AppTheme.cbmLevel4,
+                    fontSize: AppTheme.fontSizeCaption,
                     fontWeight: FontWeight.bold)),
           ],
         ),
@@ -745,11 +734,11 @@ class _ReferenceStandardScreenState extends State<ReferenceStandardScreen>
           width: 140,
           child: Text(title,
               style: TextStyle(
-                  color: color, fontWeight: FontWeight.bold, fontSize: 12)),
+                  color: color, fontWeight: FontWeight.bold, fontSize: AppTheme.fontSizeCaption)),
         ),
         Expanded(
           child: Text(val,
-              style: const TextStyle(color: Colors.white, fontSize: 12)),
+              style: const TextStyle(color: AppTheme.textWhite, fontSize: AppTheme.fontSizeCaption)),
         ),
       ],
     );
@@ -826,9 +815,9 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
           labelColor: AppTheme.myOrangeAccent,
           unselectedLabelColor: Colors.white70,
           tabs: const [
-            Tab(text: "🧪 Thử Nghiệm"),
-            Tab(text: "📋 Kiểm Định TT02"),
-            Tab(text: "📊 Đánh Giá CBM"),
+            Tab(text: "1. TIÊU CHUẨN"),
+            Tab(text: "2. KIỂM ĐỊNH TT02"),
+            Tab(text: "3. ĐÁNH GIÁ CBM"),
           ],
         ),
       ),
@@ -1068,46 +1057,47 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
                   children: [
                     Text(item.subCategory,
                         style: const TextStyle(
-                            color: Colors.purpleAccent,
+                            color: AppTheme.accentOrange,
                             fontWeight: FontWeight.bold,
-                            fontSize: 13)),
+                            fontSize: AppTheme.fontSizeCaption)),
                     _buildCompareToggleButton(2),
                   ],
                 ),
                 const SizedBox(height: 6),
                 Text(item.displayItem,
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                        color: AppTheme.textWhite,
+                        fontSize: AppTheme.fontSizeBody,
                         fontWeight: FontWeight.bold)),
                 const SizedBox(height: 10),
 
-                // THANH 4 MỨC ĐÁNH GIÁ CBM
+                // THANH 4 MỨC ĐÁNH GIÁ CBM (4 MÀU CHUẨN EVN)
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: Colors.black26,
                     borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppTheme.cardBorder),
                   ),
                   child: Column(
                     children: [
-                      _buildCbmLevelRow("🟢 Tốt (Mức 1):", item.good, Colors.greenAccent),
+                      _buildCbmLevelRow("🟢 Tốt (Mức 1):", item.good, AppTheme.cbmLevel1),
                       const Divider(color: Colors.white12, height: 8),
-                      _buildCbmLevelRow("🟡 Khá (Mức 2):", item.fair, Colors.yellowAccent),
+                      _buildCbmLevelRow("🟡 Khá (Mức 2):", item.fair, AppTheme.cbmLevel2),
                       const Divider(color: Colors.white12, height: 8),
-                      _buildCbmLevelRow("🟠 Trung bình (Mức 3):", item.average, Colors.orangeAccent),
+                      _buildCbmLevelRow("🟠 Trung bình (Mức 3):", item.average, AppTheme.cbmLevel3),
                       const Divider(color: Colors.white12, height: 8),
-                      _buildCbmLevelRow("🔴 Xấu (Mức 4):", item.poor, Colors.redAccent),
+                      _buildCbmLevelRow("🔴 Xấu (Mức 4):", item.poor, AppTheme.cbmLevel4),
                     ],
                   ),
                 ),
                 const SizedBox(height: 10),
                 const Text("Hành động xử lý khi Xấu / Không đạt:",
-                    style: TextStyle(color: Colors.white54, fontSize: 12)),
+                    style: AppTheme.captionItalic),
                 Text(item.recommendation,
                     style: const TextStyle(
-                        color: Colors.redAccent,
-                        fontSize: 13,
+                        color: AppTheme.cbmLevel4,
+                        fontSize: AppTheme.fontSizeCaption,
                         fontWeight: FontWeight.bold)),
               ],
             ),
@@ -1121,7 +1111,7 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
     return PopupMenuButton<int>(
       tooltip: 'Chuyển đổi tiêu chuẩn so sánh',
       icon: const Icon(Icons.swap_horiz, color: Colors.white70),
-      color: AppTheme.myDarkNavy,
+      color: AppTheme.cardDark,
       onSelected: (targetIndex) {
         _tabController.animateTo(targetIndex);
       },
@@ -1131,10 +1121,10 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
           enabled: currentTab != 0,
           child: const Row(
             children: [
-              Icon(Icons.science, color: AppTheme.myOrangeAccent, size: 18),
+              Icon(Icons.science, color: AppTheme.accentOrange, size: 18),
               SizedBox(width: 8),
               Text("Xem Tiêu chuẩn Thử nghiệm",
-                  style: TextStyle(color: Colors.white, fontSize: 13)),
+                  style: TextStyle(color: Colors.white, fontSize: AppTheme.fontSizeCaption)),
             ],
           ),
         ),
@@ -1143,10 +1133,10 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
           enabled: currentTab != 1,
           child: const Row(
             children: [
-              Icon(Icons.verified_user, color: Colors.blueAccent, size: 18),
+              Icon(Icons.verified_user, color: AppTheme.statusGreen, size: 18),
               SizedBox(width: 8),
               Text("Xem Kiểm định TT02",
-                  style: TextStyle(color: Colors.white, fontSize: 13)),
+                  style: TextStyle(color: Colors.white, fontSize: AppTheme.fontSizeCaption)),
             ],
           ),
         ),
@@ -1155,10 +1145,10 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
           enabled: currentTab != 2,
           child: const Row(
             children: [
-              Icon(Icons.analytics, color: Colors.purpleAccent, size: 18),
+              Icon(Icons.analytics, color: AppTheme.accentOrange, size: 18),
               SizedBox(width: 8),
               Text("Xem Đánh giá CBM",
-                  style: TextStyle(color: Colors.white, fontSize: 13)),
+                  style: TextStyle(color: Colors.white, fontSize: AppTheme.fontSizeCaption)),
             ],
           ),
         ),
@@ -1174,11 +1164,11 @@ class _DeviceDetailStandardScreenState extends State<DeviceDetailStandardScreen>
           width: 140,
           child: Text(title,
               style: TextStyle(
-                  color: color, fontWeight: FontWeight.bold, fontSize: 12)),
+                  color: color, fontWeight: FontWeight.bold, fontSize: AppTheme.fontSizeCaption)),
         ),
         Expanded(
           child: Text(val,
-              style: const TextStyle(color: Colors.white, fontSize: 12)),
+              style: const TextStyle(color: AppTheme.textWhite, fontSize: AppTheme.fontSizeCaption)),
         ),
       ],
     );

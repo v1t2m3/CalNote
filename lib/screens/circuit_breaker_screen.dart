@@ -396,11 +396,8 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('1. ĐIỆN TRỞ CÁCH ĐIỆN (MΩ)',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.myOrangeAccent)),
+                    const Text('I. ĐIỆN TRỞ CÁCH ĐIỆN (MΩ)',
+                        style: AppTheme.titleModuleStyle),
                     const Divider(),
                     Row(
                       children: [
@@ -421,7 +418,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                         padding: const EdgeInsets.only(top: 12),
                         child: Text(
                           'Rcd thấp nhất: ${AppFormatters.formatInsulation(minRcd)}',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.greenAccent),
+                          style: AppTheme.bodyBoldPass,
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -446,11 +443,8 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('2. ĐIỆN TRỞ TIẾP XÚC (μΩ)',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.myOrangeAccent)),
+                    const Text('II. ĐIỆN TRỞ TIẾP XÚC (μΩ)',
+                        style: AppTheme.titleModuleStyle),
                     const Divider(),
                     Row(
                       children: [
@@ -494,9 +488,9 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                         child: Text(
                           'Rtx Max: ${AppFormatters.formatRtx(maxRtx)}${deltaRtx != null ? ' | ΔR: ${AppFormatters.formatPercent(deltaRtx)}' : ''}',
                           style: TextStyle(
-                            fontSize: 17,
+                            fontSize: AppTheme.fontSizeBody,
                             fontWeight: FontWeight.bold,
-                            color: (deltaRtx != null && deltaRtx! <= 50.0) ? Colors.greenAccent : Colors.redAccent,
+                            color: (deltaRtx != null && deltaRtx! <= 50.0) ? AppTheme.statusGreen : AppTheme.cbmLevel4,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -558,11 +552,8 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('3. ĐỘ KHÔNG ĐỒNG THỜI THỜI GIAN (ms)',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.myOrangeAccent)),
+                    const Text('III. ĐỘ KHÔNG ĐỒNG THỜI THỜI GIAN (ms)',
+                        style: AppTheme.titleModuleStyle),
                     const Divider(),
                     Row(
                       children: [
@@ -630,9 +621,10 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                              'CẢNH BÁO: Δt vượt ngưỡng cho phép (${_actionType == 'Close' ? '4ms' : '2ms'})!',
+                              '* CẢNH BÁO: Δt vượt ngưỡng cho phép (${_actionType == 'Close' ? '4ms' : '2ms'})!',
                               style: const TextStyle(
-                                  color: Colors.redAccent,
+                                  color: AppTheme.cbmLevel4,
+                                  fontSize: AppTheme.fontSizeCaption,
                                   fontWeight: FontWeight.bold)),
                         ),
                       StandardEvaluationWidget(

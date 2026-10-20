@@ -200,11 +200,10 @@ class _CtVtScreenState extends State<CtVtScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('SAI SỐ TỶ SỐ TI/TU (%)',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'I. SAI SỐ TỶ SỐ BIẾN DÒNG / ÁP (TI / TU)',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     Row(
                       children: [
@@ -220,18 +219,18 @@ class _CtVtScreenState extends State<CtVtScreen> {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         const Text('Cấp chính xác: ',
-                            style: TextStyle(fontSize: 16, color: Colors.white70)),
+                            style: TextStyle(fontSize: AppTheme.fontSizeBody, color: Colors.white70)),
                         Radio<String>(
                           value: '0.2',
                           groupValue: _accuracyClass,
-                          activeColor: AppTheme.myOrangeAccent,
+                          activeColor: AppTheme.accentOrange,
                           onChanged: (val) => setState(() => _accuracyClass = val!),
                         ),
                         const Text('Class 0.2', style: TextStyle(color: Colors.white)),
                         Radio<String>(
                           value: '0.5',
                           groupValue: _accuracyClass,
-                          activeColor: AppTheme.myOrangeAccent,
+                          activeColor: AppTheme.accentOrange,
                           onChanged: (val) => setState(() => _accuracyClass = val!),
                         ),
                         const Text('Class 0.5', style: TextStyle(color: Colors.white)),
@@ -250,7 +249,7 @@ class _CtVtScreenState extends State<CtVtScreen> {
                             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                             child: Text(
                               'ĐKBĐ Loại B dự kiến: uB = ${uB.toStringAsFixed(4)} %',
-                              style: const TextStyle(color: Colors.orangeAccent, fontSize: 16),
+                              style: const TextStyle(color: AppTheme.accentOrange, fontSize: AppTheme.fontSizeCaption),
                             ),
                           );
                         }
@@ -269,17 +268,17 @@ class _CtVtScreenState extends State<CtVtScreen> {
                           children: [
                             const Text('f = ',
                                 style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                                    fontSize: AppTheme.fontSizeTitle, fontWeight: FontWeight.bold, color: Colors.white)),
                             Expanded(
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 alignment: Alignment.centerRight,
                                 child: Text('${errorResult! >= 0 ? "+" : ""}${errorResult!.toStringAsFixed(4)} %',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium?.copyWith(
-                                           color: isFailed ? Colors.redAccent : Colors.lightGreenAccent
-                                        )),
+                                    style: TextStyle(
+                                      fontSize: AppTheme.fontSizeTitle,
+                                      fontWeight: FontWeight.bold,
+                                      color: isFailed ? AppTheme.cbmLevel4 : AppTheme.statusGreen,
+                                    )),
                               ),
                             ),
                           ],
@@ -289,19 +288,27 @@ class _CtVtScreenState extends State<CtVtScreen> {
                         const Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                              'CẢNH BÁO: Thiết bị KHÔNG ĐẠT cấp chính xác!',
-                              style: TextStyle(
-                                  color: Colors.redAccent,
-                                  fontWeight: FontWeight.bold)),
+                            'KẾT LUẬN: KHÔNG ĐẠT CẤP CHÍNH XÁC',
+                            style: TextStyle(
+                              color: AppTheme.cbmLevel4,
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppTheme.fontSizeBody,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         )
                       else
                         const Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                              'THÀNH CÔNG: Thiết bị đạt cấp chính xác.',
-                              style: TextStyle(
-                                  color: Colors.lightGreenAccent,
-                                  fontWeight: FontWeight.bold)),
+                            'KẾT LUẬN: ĐẠT CẤP CHÍNH XÁC',
+                            style: TextStyle(
+                              color: AppTheme.statusGreen,
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppTheme.fontSizeBody,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                     ],
                     UncertaintyEquipmentSection(

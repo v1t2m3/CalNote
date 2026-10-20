@@ -379,8 +379,10 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('1. ĐIỆN TRỞ CÁCH ĐIỆN (Rcđ - MΩ)',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'I. ĐIỆN TRỞ CÁCH ĐIỆN (Rcđ - MΩ)',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     Row(
                       children: [
@@ -401,7 +403,11 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
                         padding: const EdgeInsets.only(top: 12),
                         child: Text(
                           'Rcđ thấp nhất: ${AppFormatters.formatInsulation(minRcd)}',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.greenAccent),
+                          style: const TextStyle(
+                            fontSize: AppTheme.fontSizeTitle,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.statusGreen,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -426,8 +432,10 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('2. ĐIỆN TRỞ TIẾP XÚC (Rtx - μΩ)',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'II. ĐIỆN TRỞ TIẾP XÚC (Rtx - μΩ)',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     Row(
                       children: [
@@ -470,11 +478,11 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
                         child: Text(
                           'Rtx Max: ${AppFormatters.formatRtx(maxRtx)}${deltaRtx != null ? ' | ΔR: ${AppFormatters.formatPercent(deltaRtx)}' : ''}',
                           style: TextStyle(
-                            fontSize: 17,
+                            fontSize: AppTheme.fontSizeTitle,
                             fontWeight: FontWeight.bold,
                             color: (deltaRtx != null && deltaRtx! <= 50.0)
-                                ? Colors.greenAccent
-                                : Colors.redAccent,
+                                ? AppTheme.statusGreen
+                                : AppTheme.cbmLevel4,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -519,8 +527,10 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('3. THỜI GIAN THAO TÁC (ms)',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent)),
+                        const Text(
+                          'III. THỜI GIAN THAO TÁC & ĐỘ ĐỒNG PHA (ms)',
+                          style: AppTheme.titleModuleStyle,
+                        ),
                         DropdownButton<String>(
                           value: _actionType,
                           dropdownColor: AppTheme.myDarkNavy,
@@ -560,11 +570,11 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
                         child: Text(
                           'Độ không đồng pha Δt: ${AppFormatters.formatTimeMs(timeResult)}',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: AppTheme.fontSizeTitle,
                             fontWeight: FontWeight.bold,
                             color: (_actionType == 'Close' ? timeResult! <= 4.0 : timeResult! <= 2.0)
-                                ? Colors.greenAccent
-                                : Colors.redAccent,
+                                ? AppTheme.statusGreen
+                                : AppTheme.cbmLevel4,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -581,7 +591,7 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 70),
+            const SizedBox(height: 80),
           ],
         ),
       ),

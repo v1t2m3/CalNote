@@ -335,11 +335,10 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('1. DÒNG RÒ VẬN HÀNH & QUY ĐỔI (mA)',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'I. DÒNG RÒ QUA CHỐNG SÉT VAN (LA)',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     Row(
                       children: [
@@ -375,9 +374,10 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                         child: Text(
                           'I_tc quy đổi: ${AppFormatters.formatCurrentMa(iResult)}',
                           style: const TextStyle(
-                              color: Colors.greenAccent,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                            color: AppTheme.statusGreen,
+                            fontSize: AppTheme.fontSizeTitle,
+                            fontWeight: FontWeight.bold,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -387,9 +387,10 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                         child: Text(
                           'Dòng rò tổng I_total: ${AppFormatters.formatCurrentMa(iTotalCalc)}',
                           style: const TextStyle(
-                              color: Colors.cyanAccent,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold),
+                            color: AppTheme.textWhite,
+                            fontSize: AppTheme.fontSizeBody,
+                            fontWeight: FontWeight.bold,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -399,9 +400,10 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                         child: Text(
                           'Ir20 quy đổi 20°C: ${AppFormatters.formatCurrentUa(iR20Calc)}',
                           style: const TextStyle(
-                              color: Colors.lightGreenAccent,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold),
+                            color: AppTheme.statusGreen,
+                            fontSize: AppTheme.fontSizeBody,
+                            fontWeight: FontWeight.bold,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -427,11 +429,10 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('2. ĐIỆN ÁP RÒ 1mA (U_1mA)',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'II. ĐIỆN ÁP RÒ 1mA (U_1mA)',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     Row(
                       children: [
@@ -451,9 +452,9 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                         'Sai số ΔU_1mA: ${AppFormatters.formatPercent(u1mAError, showSign: true)}',
                         style: TextStyle(
                           color: u1mAError!.abs() <= 5.0
-                              ? Colors.greenAccent
-                              : Colors.redAccent,
-                          fontSize: 16,
+                              ? AppTheme.statusGreen
+                              : AppTheme.cbmLevel4,
+                          fontSize: AppTheme.fontSizeTitle,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
@@ -464,9 +465,10 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                             : '⚠️ Vượt ngưỡng cho phép (|ΔU| > 5%)',
                         style: TextStyle(
                           color: u1mAError!.abs() <= 5.0
-                              ? Colors.lightGreenAccent
-                              : Colors.redAccent,
+                              ? AppTheme.statusGreen
+                              : AppTheme.cbmLevel4,
                           fontWeight: FontWeight.bold,
+                          fontSize: AppTheme.fontSizeBody,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -492,11 +494,10 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('3. ĐIỆN TRỞ CÁCH ĐIỆN & ĐẾ CÁCH ĐIỆN',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'III. ĐIỆN TRỞ CÁCH ĐIỆN & ĐẾ BỘ ĐẾM SÉT',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     Row(
                       children: [
@@ -516,9 +517,10 @@ class _SurgeArresterScreenState extends State<SurgeArresterScreen> {
                         child: Text(
                           'R_cd Min: ${AppFormatters.formatInsulation(minRcdLa)}',
                           style: const TextStyle(
-                              color: Colors.greenAccent,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                            color: AppTheme.statusGreen,
+                            fontSize: AppTheme.fontSizeTitle,
+                            fontWeight: FontWeight.bold,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),

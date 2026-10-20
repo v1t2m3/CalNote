@@ -427,8 +427,8 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      '1. ĐIỆN TRỞ CÁCH ĐIỆN (MΩ)',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent),
+                      'I. ĐIỆN TRỞ CÁCH ĐIỆN DAO CÁCH LY (MΩ)',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     Row(
@@ -450,7 +450,11 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                         padding: const EdgeInsets.only(top: 12),
                         child: Text(
                           'Rcđ thấp nhất: ${AppFormatters.formatInsulation(minRcd)}',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.greenAccent),
+                          style: const TextStyle(
+                            fontSize: AppTheme.fontSizeTitle,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.statusGreen,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -476,8 +480,8 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      '2. ĐIỆN TRỞ TIẾP XÚC LƯỠI DAO (μΩ)',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent),
+                      'II. ĐIỆN TRỞ TIẾP XÚC LƯỠI DAO CHÍNH (μΩ)',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     Row(
@@ -521,9 +525,11 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                         child: Text(
                           'Rtx Max: ${AppFormatters.formatRtx(maxRtx)} | ΔR: ${AppFormatters.formatPercent(deltaRtx)}',
                           style: TextStyle(
-                            fontSize: 17,
+                            fontSize: AppTheme.fontSizeTitle,
                             fontWeight: FontWeight.bold,
-                            color: (deltaRtx != null && deltaRtx! <= 50.0) ? Colors.greenAccent : Colors.redAccent,
+                            color: (deltaRtx != null && deltaRtx! <= 50.0)
+                                ? AppTheme.statusGreen
+                                : AppTheme.cbmLevel4,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -580,8 +586,8 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      '3. ĐIỆN TRỞ TIẾP XÚC DAO TIẾP ĐỊA (μΩ)',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.myOrangeAccent),
+                      'III. ĐIỆN TRỞ TIẾP XÚC DAO TIẾP ĐỊA (μΩ)',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     Row(
@@ -625,9 +631,11 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                         child: Text(
                           'Rtx DTD Max: ${AppFormatters.formatRtx(maxRtxDtd)} | ΔR: ${AppFormatters.formatPercent(deltaRtxDtd)}',
                           style: TextStyle(
-                            fontSize: 17,
+                            fontSize: AppTheme.fontSizeTitle,
                             fontWeight: FontWeight.bold,
-                            color: (deltaRtxDtd != null && deltaRtxDtd! <= 50.0) ? Colors.greenAccent : Colors.redAccent,
+                            color: (deltaRtxDtd != null && deltaRtxDtd! <= 50.0)
+                                ? AppTheme.statusGreen
+                                : AppTheme.cbmLevel4,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -674,7 +682,7 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                 ),
               ),
             ),
-            const SizedBox(height: 70),
+            const SizedBox(height: 80),
           ],
         ),
       ),

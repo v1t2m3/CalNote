@@ -25,6 +25,8 @@ class FormulaModel {
     required this.unit,
   });
 
+  String get id => testId;
+
   factory FormulaModel.fromJson(Map<String, dynamic> json) {
     return FormulaModel(
       testId: json['test_id'] ?? '',

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:hive/hive.dart';
+import '../core/theme/app_theme.dart';
 
 /// Kết quả đối chiếu Tiêu chuẩn Thử nghiệm (TCVN / IEC)
 class StandardEvalResult {
@@ -728,7 +729,10 @@ class ReferenceStandardService {
           final val = lData['value'];
           final mn = lData['min'];
           final mx = lData['max'];
-          final concl = lData['conclusion']?.toString() ?? '';
+          String concl = lData['conclusion']?.toString().trim() ?? '';
+          if (concl.isEmpty) {
+            concl = AppTheme.getCbmConclusion(i);
+          }
 
           final match = compareValue(measuredValue, comp, val, mn, mx);
           if (match == true) {

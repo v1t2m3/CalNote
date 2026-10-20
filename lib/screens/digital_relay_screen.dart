@@ -401,11 +401,8 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      '1. F50/F51: QUÁ DÒNG CẮT NHANH & CÓ THỜI GIAN',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.myOrangeAccent),
+                      'I. F50/F51: QUÁ DÒNG CẮT NHANH & CÓ THỜI GIAN',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     DropdownButtonFormField<String>(
@@ -467,11 +464,12 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                           child: Text(
                             'Δt = ${tTimeErrorPercent! >= 0 ? "+" : ""}${tTimeErrorPercent!.toStringAsFixed(2)}%',
                             style: TextStyle(
-                                color: tTimeErrorPercent!.abs() <= 5.0
-                                    ? Colors.lightGreenAccent
-                                    : Colors.redAccent,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
+                              color: tTimeErrorPercent!.abs() <= 5.0
+                                  ? AppTheme.statusGreen
+                                  : AppTheme.cbmLevel4,
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppTheme.fontSizeBody,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -491,11 +489,8 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      '2. F67: QUÁ DÒNG CÓ HƯỚNG & GÓC NHẠY MTA',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.myOrangeAccent),
+                      'II. F67: QUÁ DÒNG CÓ HƯỚNG & GÓC NHẠY MTA',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     _buildTextField('Góc nhạy MTA (°)', mtaCtrl,
@@ -546,11 +541,8 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      '3. F21: BẢO VỆ KHOẢNG CÁCH & HỆ SỐ BÙ ĐẤT (K0)',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.myOrangeAccent),
+                      'III. F21: BẢO VỆ KHOẢNG CÁCH & HỆ SỐ BÙ ĐẤT (K0)',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     Row(
@@ -619,11 +611,8 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      '4. F87T: BẢO VỆ SO LỆCH MÁY BIẾN ÁP 110kV',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.myOrangeAccent),
+                      'IV. F87T: BẢO VỆ SO LỆCH MÁY BIẾN ÁP',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     Row(
@@ -707,11 +696,8 @@ class _DigitalRelayScreenState extends State<DigitalRelayScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      '5. F87B / F87L: SO LỆCH THANH CÁI & ĐƯỜNG DÂY',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.myOrangeAccent),
+                      'V. F87B / F87L: SO LỆCH THANH CÁI & ĐƯỜNG DÂY',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     Row(

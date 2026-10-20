@@ -94,8 +94,8 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
                 children: [
                   EquipmentIconWidget(
                     testCode: widget.testCode,
-                    size: 22,
-                    color: AppTheme.myOrangeAccent,
+                    size: 24,
+                    color: AppTheme.accentOrange,
                     fallbackIcon: Icons.fact_check,
                   ),
                   const SizedBox(width: 8),
@@ -106,15 +106,14 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
                         Text(
                           widget.customTitle ?? "ĐỐI CHIẾU TIÊU CHUẨN ĐÁNH GIÁ",
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppTheme.textWhite,
                             fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                            fontSize: AppTheme.fontSizeTitle,
                           ),
                         ),
                         Text(
-                          "Cấp điện áp: ${widget.voltageLevel == 'ALL' ? 'Tất cả' : widget.voltageLevel}",
-                          style: const TextStyle(
-                              color: Colors.white60, fontSize: 11),
+                          "* Cấp điện áp: ${widget.voltageLevel == 'ALL' ? 'Tất cả' : widget.voltageLevel}",
+                          style: AppTheme.captionItalic,
                         ),
                       ],
                     ),
@@ -154,18 +153,18 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
     final bool isFailed = !res.isPass;
     final Color statusColor;
     if (res.statusText.contains("Chưa") || res.statusText.toLowerCase().contains("tham chiếu")) {
-      statusColor = Colors.cyanAccent;
+      statusColor = AppTheme.textWhite;
     } else {
-      statusColor = res.isPass ? Colors.greenAccent : Colors.redAccent;
+      statusColor = res.isPass ? AppTheme.statusGreen : AppTheme.cbmLevel4;
     }
 
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.black26,
+        color: AppTheme.cardDark,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: isFailed ? Colors.redAccent.withValues(alpha: 0.6) : Colors.white12,
+          color: isFailed ? AppTheme.cbmLevel4.withValues(alpha: 0.6) : AppTheme.cardBorder,
         ),
       ),
       child: Column(
@@ -176,15 +175,15 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
               const Expanded(
                 child: Row(
                   children: [
-                    Icon(Icons.science, color: AppTheme.myOrangeAccent, size: 16),
+                    Icon(Icons.science, color: AppTheme.accentOrange, size: 16),
                     SizedBox(width: 6),
                     Flexible(
                       child: Text(
                         "1. THEO TIÊU CHUẨN",
                         style: TextStyle(
-                          color: AppTheme.myOrangeAccent,
+                          color: AppTheme.accentOrange,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                          fontSize: AppTheme.fontSizeBody,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -208,7 +207,7 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
                       style: TextStyle(
                         color: statusColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 11,
+                        fontSize: AppTheme.fontSizeCaption,
                       ),
                     ),
                   ),
@@ -220,14 +219,14 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
           Row(
             children: [
               const Text("• Ngưỡng quy định: ",
-                  style: TextStyle(color: Colors.white70, fontSize: 12)),
+                  style: TextStyle(color: Colors.white70, fontSize: AppTheme.fontSizeBody)),
               Expanded(
                 child: Text(
                   res.limitText,
                   style: const TextStyle(
-                      color: Colors.greenAccent,
+                      color: AppTheme.statusGreen,
                       fontWeight: FontWeight.bold,
-                      fontSize: 12),
+                      fontSize: AppTheme.fontSizeBody),
                 ),
               ),
             ],
@@ -236,8 +235,8 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
             Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Text(
-                "• Căn cứ: ${res.standardText}",
-                style: const TextStyle(color: Colors.white54, fontSize: 11),
+                "* Căn cứ: ${res.standardText}",
+                style: AppTheme.captionItalic,
               ),
             ),
 
@@ -257,27 +256,13 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
     );
   }
 
-  // 2️⃣ Thẻ Tiêu chuẩn Đánh giá CBM (4 mức)
+  // 2️⃣ Thẻ Tiêu chuẩn Đánh giá CBM (4 mức chuẩn EVN)
   Widget _buildCbmCard(CbmEvalResult res, double effectiveVal) {
     Color levelColor;
     if (res.levelName.contains("Chưa") || res.levelName.toLowerCase().contains("tham chiếu")) {
-      levelColor = Colors.cyanAccent;
+      levelColor = AppTheme.textWhite;
     } else {
-      switch (res.level) {
-        case 1:
-          levelColor = Colors.greenAccent;
-          break;
-        case 2:
-          levelColor = Colors.yellowAccent;
-          break;
-        case 3:
-          levelColor = Colors.orangeAccent;
-          break;
-        case 4:
-        default:
-          levelColor = Colors.redAccent;
-          break;
-      }
+      levelColor = AppTheme.getCbmColor(res.level);
     }
 
     final bool isBad = res.level >= 3;
@@ -285,10 +270,13 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.black26,
+        color: AppTheme.cardDark,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: isBad ? Colors.orangeAccent.withValues(alpha: 0.6) : Colors.white12,
+          color: (res.levelName.contains("Chưa") || res.levelName.toLowerCase().contains("tham chiếu"))
+              ? AppTheme.cardBorder
+              : levelColor.withValues(alpha: 0.6),
+          width: 1.2,
         ),
       ),
       child: Column(
@@ -299,15 +287,15 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
               const Expanded(
                 child: Row(
                   children: [
-                    Icon(Icons.analytics, color: Colors.purpleAccent, size: 16),
+                    Icon(Icons.analytics, color: AppTheme.accentOrange, size: 16),
                     SizedBox(width: 6),
                     Flexible(
                       child: Text(
                         "2. ĐÁNH GIÁ THEO CBM",
                         style: TextStyle(
-                          color: Colors.purpleAccent,
+                          color: AppTheme.accentOrange,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                          fontSize: AppTheme.fontSizeBody,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -331,7 +319,7 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
                       style: TextStyle(
                         color: levelColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 11,
+                        fontSize: AppTheme.fontSizeCaption,
                       ),
                     ),
                   ),
@@ -346,9 +334,9 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
               child: Text(
                 res.item!.displayItem,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppTheme.textWhite,
                   fontWeight: FontWeight.bold,
-                  fontSize: 13,
+                  fontSize: AppTheme.fontSizeBody,
                 ),
               ),
             ),
@@ -356,14 +344,14 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
             Row(
               children: [
                 const Text("• Dải phân loại CBM: ",
-                    style: TextStyle(color: Colors.white70, fontSize: 12)),
+                    style: TextStyle(color: Colors.white70, fontSize: AppTheme.fontSizeBody)),
                 Expanded(
                   child: Text(
                     res.rangeText,
                     style: TextStyle(
                         color: levelColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 12),
+                        fontSize: AppTheme.fontSizeBody),
                   ),
                 ),
               ],
@@ -372,8 +360,8 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
             Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Text(
-                "• Quy trình: ${res.item!.standard}",
-                style: const TextStyle(color: Colors.white54, fontSize: 11),
+                "* Quy trình: ${res.item!.standard}",
+                style: AppTheme.captionItalic,
               ),
             ),
 
@@ -398,18 +386,18 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
     final bool isFailed = !res.isPass;
     final Color statusColor;
     if (res.statusText.contains("Chưa") || res.statusText.toLowerCase().contains("tham chiếu")) {
-      statusColor = Colors.cyanAccent;
+      statusColor = AppTheme.textWhite;
     } else {
-      statusColor = res.isPass ? Colors.greenAccent : Colors.redAccent;
+      statusColor = res.isPass ? AppTheme.statusGreen : AppTheme.cbmLevel4;
     }
 
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.black26,
+        color: AppTheme.cardDark,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: isFailed ? Colors.redAccent.withValues(alpha: 0.6) : Colors.white12,
+          color: isFailed ? AppTheme.cbmLevel4.withValues(alpha: 0.6) : AppTheme.cardBorder,
         ),
       ),
       child: Column(
@@ -420,15 +408,15 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
               const Expanded(
                 child: Row(
                   children: [
-                    Icon(Icons.verified_user, color: Colors.blueAccent, size: 16),
+                    Icon(Icons.verified_user, color: AppTheme.accentOrange, size: 16),
                     SizedBox(width: 6),
                     Flexible(
                       child: Text(
                         "3. KIỂM ĐỊNH TT02",
                         style: TextStyle(
-                          color: Colors.blueAccent,
+                          color: AppTheme.accentOrange,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                          fontSize: AppTheme.fontSizeBody,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -452,7 +440,7 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
                       style: TextStyle(
                         color: statusColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: 11,
+                        fontSize: AppTheme.fontSizeCaption,
                       ),
                     ),
                   ),
@@ -464,14 +452,14 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
           Row(
             children: [
               const Text("• Ngưỡng ĐẠT kiểm định: ",
-                  style: TextStyle(color: Colors.white70, fontSize: 12)),
+                  style: TextStyle(color: Colors.white70, fontSize: AppTheme.fontSizeBody)),
               Expanded(
                 child: Text(
                   res.limitText,
                   style: const TextStyle(
-                      color: Colors.lightBlueAccent,
+                      color: AppTheme.statusGreen,
                       fontWeight: FontWeight.bold,
-                      fontSize: 12),
+                      fontSize: AppTheme.fontSizeBody),
                 ),
               ),
             ],
@@ -480,16 +468,16 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
             Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Text(
-                "• Chu kỳ: ${res.periodText}",
-                style: const TextStyle(color: Colors.yellowAccent, fontSize: 11),
+                "* Chu kỳ: ${res.periodText}",
+                style: AppTheme.captionItalic,
               ),
             ),
           if (res.standardText.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Text(
-                "• Căn cứ: ${res.standardText}",
-                style: const TextStyle(color: Colors.white54, fontSize: 11),
+                "* Căn cứ: ${res.standardText}",
+                style: AppTheme.captionItalic,
               ),
             ),
 
@@ -557,23 +545,30 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
     );
   }
 
-  // Chi tiết từng pha A, B, C (Tiêu chuẩn / TT02)
+  // Chi tiết từng pha a., b., c. (Tiêu chuẩn / TT02)
   Widget _buildPhaseBreakdown(String? comp, dynamic threshold, dynamic mn, dynamic mx) {
     if (widget.phaseValues == null || widget.phaseValues!.isEmpty) {
       return const SizedBox.shrink();
     }
+
+    final entriesList = widget.phaseValues!.entries.toList();
 
     return Padding(
       padding: const EdgeInsets.only(top: 6, bottom: 2),
       child: Wrap(
         spacing: 8,
         runSpacing: 4,
-        children: widget.phaseValues!.entries.map((entry) {
+        children: entriesList.asMap().entries.map((mEntry) {
+          final idx = mEntry.key;
+          final entry = mEntry.value;
+          final letter = String.fromCharCode(97 + idx); // 0 -> 'a', 1 -> 'b', 2 -> 'c'
+          final phaseLabel = entry.key.toLowerCase().startsWith('$letter.') ? entry.key : '$letter. ${entry.key}';
+
           final val = entry.value;
           final pass = ReferenceStandardService.compareValue(val, comp, threshold, mn, mx);
           final pColor = pass == null
               ? Colors.white70
-              : (pass ? Colors.greenAccent : Colors.redAccent);
+              : (pass ? AppTheme.statusGreen : AppTheme.cbmLevel4);
 
           final formattedVal = AppFormatters.formatSmart(val, testId: widget.testCode, unit: widget.unit);
           final unitSuffix = widget.unit.isNotEmpty ? ' ${widget.unit}' : '';
@@ -586,8 +581,8 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
               border: Border.all(color: pColor.withValues(alpha: 0.4)),
             ),
             child: Text(
-              "${entry.key}: $formattedVal$unitSuffix (${pass == null ? 'N/A' : (pass ? 'Đạt' : 'Không đạt')})",
-              style: TextStyle(color: pColor, fontSize: 11, fontWeight: FontWeight.bold),
+              "$phaseLabel: $formattedVal$unitSuffix (${pass == null ? 'N/A' : (pass ? 'Đạt' : 'Không đạt')})",
+              style: TextStyle(color: pColor, fontSize: AppTheme.fontSizeCaption, fontWeight: FontWeight.bold),
             ),
           );
         }).toList(),
@@ -595,36 +590,29 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
     );
   }
 
-  // Chi tiết từng pha A, B, C (Đánh giá CBM)
+  // Chi tiết từng pha a., b., c. (Đánh giá CBM)
   Widget _buildCbmPhaseBreakdown(CbmItemModel? item) {
     if (widget.phaseValues == null || widget.phaseValues!.isEmpty) {
       return const SizedBox.shrink();
     }
+
+    final entriesList = widget.phaseValues!.entries.toList();
 
     return Padding(
       padding: const EdgeInsets.only(top: 6, bottom: 2),
       child: Wrap(
         spacing: 8,
         runSpacing: 4,
-        children: widget.phaseValues!.entries.map((entry) {
+        children: entriesList.asMap().entries.map((mEntry) {
+          final idx = mEntry.key;
+          final entry = mEntry.value;
+          final letter = String.fromCharCode(97 + idx); // 0 -> 'a', 1 -> 'b', 2 -> 'c'
+          final phaseLabel = entry.key.toLowerCase().startsWith('$letter.') ? entry.key : '$letter. ${entry.key}';
+
           final val = entry.value;
           final level = ReferenceStandardService.evaluateCbmLevel(item, val);
-          Color lColor;
-          switch (level) {
-            case 1:
-              lColor = Colors.greenAccent;
-              break;
-            case 2:
-              lColor = Colors.yellowAccent;
-              break;
-            case 3:
-              lColor = Colors.orangeAccent;
-              break;
-            case 4:
-            default:
-              lColor = Colors.redAccent;
-              break;
-          }
+          final Color lColor = AppTheme.getCbmColor(level);
+          final String concl = AppTheme.getCbmConclusion(level);
 
           final formattedVal = AppFormatters.formatSmart(val, testId: widget.testCode, unit: widget.unit);
           final unitSuffix = widget.unit.isNotEmpty ? ' ${widget.unit}' : '';
@@ -632,13 +620,13 @@ class _StandardEvaluationWidgetState extends State<StandardEvaluationWidget> {
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: lColor.withValues(alpha: 0.1),
+              color: lColor.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: lColor.withValues(alpha: 0.4)),
+              border: Border.all(color: lColor.withValues(alpha: 0.5)),
             ),
             child: Text(
-              "${entry.key}: $formattedVal$unitSuffix (Mức $level)",
-              style: TextStyle(color: lColor, fontSize: 11, fontWeight: FontWeight.bold),
+              "$phaseLabel: $formattedVal$unitSuffix (Mức $level - $concl)",
+              style: TextStyle(color: lColor, fontSize: AppTheme.fontSizeCaption, fontWeight: FontWeight.bold),
             ),
           );
         }).toList(),

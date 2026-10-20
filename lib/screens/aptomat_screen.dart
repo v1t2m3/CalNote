@@ -84,14 +84,14 @@ class _AptomatScreenState extends State<AptomatScreen> {
     }
 
     if (tCut < tMinLth!) {
-       evaluateResult = "NHẢY QUÁ SỚM";
-       resultColor = Colors.orangeAccent;
+       evaluateResult = "KHÔNG ĐẠT (Nhảy quá sớm)";
+       resultColor = AppTheme.cbmLevel4;
     } else if (tCut > tMaxLth!) {
-       evaluateResult = "NHẢY QUÁ CHẬM - NGUY HIỂM";
-       resultColor = Colors.redAccent;
+       evaluateResult = "KHÔNG ĐẠT (Nhảy quá chậm)";
+       resultColor = AppTheme.cbmLevel4;
     } else {
        evaluateResult = "ĐẠT";
-       resultColor = Colors.greenAccent;
+       resultColor = AppTheme.statusGreen;
     }
     setState(() {});
   }
@@ -156,7 +156,7 @@ class _AptomatScreenState extends State<AptomatScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveAllNotes,
-        backgroundColor: evaluateResult != null ? AppTheme.myOrangeAccent : Colors.grey,
+        backgroundColor: evaluateResult != null ? AppTheme.accentOrange : Colors.grey,
         icon: const Icon(Icons.bookmark_add),
         label: const Text('Lưu Sổ'),
       ),
@@ -175,12 +175,15 @@ class _AptomatScreenState extends State<AptomatScreen> {
                      Row(
                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                        children: [
-                         const Text('1. CHỌN THƯ VIỆN ĐẶC TUYẾN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.myOrangeAccent)),
+                         const Text(
+                           'I. CHỌN THƯ VIỆN ĐẶC TUYẾN',
+                           style: AppTheme.titleModuleStyle,
+                         ),
                          IconButton(
                            onPressed: () {
                              Navigator.push(context, MaterialPageRoute(builder: (_) => const CurveDigitizerScreen())).then((value) => _loadCurves());
                            },
-                           icon: const Icon(Icons.add_a_photo, color: AppTheme.myBrightBlue),
+                           icon: const Icon(Icons.add_a_photo, color: AppTheme.accentOrange),
                            tooltip: 'Chụp ảnh phân tích mới',
                          )
                        ],
@@ -189,7 +192,10 @@ class _AptomatScreenState extends State<AptomatScreen> {
                      if (_curves.isEmpty)
                        const Padding(
                          padding: EdgeInsets.symmetric(vertical: 12.0),
-                         child: Text('Chưa có dữ liệu nào. Vui lòng thêm bằng chụp hình hoặc import file JSON.', style: TextStyle(color: Colors.amberAccent)),
+                         child: Text(
+                           'Chưa có dữ liệu nào. Vui lòng thêm bằng chụp hình hoặc import file JSON.',
+                           style: AppTheme.captionItalic,
+                         ),
                        )
                      else
                        DropdownButtonFormField<BreakerCurve>(
@@ -219,7 +225,10 @@ class _AptomatScreenState extends State<AptomatScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('2. THÔNG SỐ ĐẦU VÀO & THỜI GIAN CẮT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'II. THÔNG SỐ ĐẦU VÀO & THỜI GIAN CẮT',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     Row(
                       children: [
@@ -239,7 +248,6 @@ class _AptomatScreenState extends State<AptomatScreen> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                        onPressed: _tinhToanBaoVe,
-                       style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
                        child: const Text('PHÂN TÍCH TÁC ĐỘNG')
                     ),
                   ],
@@ -259,19 +267,30 @@ class _AptomatScreenState extends State<AptomatScreen> {
                    ),
                    child: Column(
                      children: [
-                        Text('TỶ LỆ QUÁ DÒNG K: ${kCalc?.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                        Text(
+                          'TỶ LỆ QUÁ DÒNG K: ${kCalc?.toStringAsFixed(2)}',
+                          style: AppTheme.bodyBoldWhite,
+                        ),
                         const SizedBox(height: 8),
-                        Text('THỜI GIAN LÝ THUYẾT: ${tMinLth?.toStringAsFixed(3)}s ~ ${tMaxLth?.toStringAsFixed(3)}s', style: const TextStyle(fontSize: 16, color: Colors.white70)),
+                        Text(
+                          'THỜI GIAN LÝ THUYẾT: ${tMinLth?.toStringAsFixed(3)}s ~ ${tMaxLth?.toStringAsFixed(3)}s',
+                          style: AppTheme.captionStyle,
+                        ),
                         const Divider(),
                         Text(
                           evaluateResult!,
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: resultColor),
+                          style: TextStyle(
+                            fontSize: AppTheme.fontSizeTitle,
+                            fontWeight: FontWeight.bold,
+                            color: resultColor,
+                          ),
                           textAlign: TextAlign.center,
                         )
                      ],
                    ),
                  ),
                ),
+            const SizedBox(height: 80),
           ],
         ),
       ),

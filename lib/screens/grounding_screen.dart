@@ -144,11 +144,10 @@ class _GroundingScreenState extends State<GroundingScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('QUY ĐỔI TIẾP ĐỊA MÙA (Ω)',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.myOrangeAccent)),
+                    const Text(
+                      'I. QUY ĐỔI TIẾP ĐỊA MÙA (Ω)',
+                      style: AppTheme.titleModuleStyle,
+                    ),
                     const Divider(),
                     Row(
                       children: [
@@ -164,18 +163,18 @@ class _GroundingScreenState extends State<GroundingScreen> {
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         const Text('Ngưỡng cho phép: ',
-                            style: TextStyle(fontSize: 16, color: Colors.white70)),
+                            style: TextStyle(fontSize: AppTheme.fontSizeBody, color: Colors.white70)),
                         Radio<String>(
                           value: '4',
                           groupValue: _thresholdClass,
-                          activeColor: AppTheme.myOrangeAccent,
+                          activeColor: AppTheme.accentOrange,
                           onChanged: (val) => setState(() => _thresholdClass = val!),
                         ),
                         const Text('≤ 4 Ω', style: TextStyle(color: Colors.white)),
                         Radio<String>(
                           value: '10',
                           groupValue: _thresholdClass,
-                          activeColor: AppTheme.myOrangeAccent,
+                          activeColor: AppTheme.accentOrange,
                           onChanged: (val) => setState(() => _thresholdClass = val!),
                         ),
                         const Text('≤ 10 Ω', style: TextStyle(color: Colors.white)),
@@ -194,7 +193,7 @@ class _GroundingScreenState extends State<GroundingScreen> {
                             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                             child: Text(
                               'ĐKBĐ Loại B dự kiến: uB = ${uB.toStringAsFixed(4)} Ω',
-                              style: const TextStyle(color: Colors.orangeAccent, fontSize: 16),
+                              style: const TextStyle(color: AppTheme.accentOrange, fontSize: AppTheme.fontSizeCaption),
                             ),
                           );
                         }
@@ -213,17 +212,17 @@ class _GroundingScreenState extends State<GroundingScreen> {
                           children: [
                             const Text('R_qđ = ',
                                 style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                                    fontSize: AppTheme.fontSizeTitle, fontWeight: FontWeight.bold, color: Colors.white)),
                             Expanded(
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 alignment: Alignment.centerRight,
                                 child: Text('${rResult!.toStringAsFixed(2)} Ω',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium?.copyWith(
-                                          color: isFailed ? Colors.redAccent : Colors.lightGreenAccent
-                                        )),
+                                    style: TextStyle(
+                                      fontSize: AppTheme.fontSizeTitle,
+                                      fontWeight: FontWeight.bold,
+                                      color: isFailed ? AppTheme.cbmLevel4 : AppTheme.statusGreen,
+                                    )),
                               ),
                             ),
                           ],
@@ -233,19 +232,27 @@ class _GroundingScreenState extends State<GroundingScreen> {
                         const Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                              'CẢNH BÁO: Điện trở vượt ngưỡng an toàn!',
-                              style: TextStyle(
-                                  color: Colors.redAccent,
-                                  fontWeight: FontWeight.bold)),
+                            'KẾT LUẬN: KHÔNG ĐẠT TIÊU CHUẨN',
+                            style: TextStyle(
+                              color: AppTheme.cbmLevel4,
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppTheme.fontSizeBody,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         )
                       else
                         const Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                              'THÀNH CÔNG: Điện trở đạt chuẩn.',
-                              style: TextStyle(
-                                  color: Colors.lightGreenAccent,
-                                  fontWeight: FontWeight.bold)),
+                            'KẾT LUẬN: ĐẠT TIÊU CHUẨN',
+                            style: TextStyle(
+                              color: AppTheme.statusGreen,
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppTheme.fontSizeBody,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                     ]
                   ],

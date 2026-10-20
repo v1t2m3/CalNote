@@ -31,9 +31,9 @@ class FormulaSelectorWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 6),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: AppTheme.myDarkNavy.withValues(alpha: 0.6),
+        color: AppTheme.cardDark,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white12),
+        border: Border.all(color: AppTheme.cardBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,14 +41,14 @@ class FormulaSelectorWidget extends StatelessWidget {
           Row(
             children: [
               const Icon(Icons.calculate_outlined,
-                  size: 16, color: AppTheme.myOrangeAccent),
+                  size: 18, color: AppTheme.accentOrange),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
                   customLabel,
                   style: const TextStyle(
                     color: Colors.white70,
-                    fontSize: 12,
+                    fontSize: AppTheme.fontSizeCaption,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -57,19 +57,19 @@ class FormulaSelectorWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                 decoration: BoxDecoration(
-                  color: AppTheme.myMedNavy,
+                  color: AppTheme.bgDark,
                   borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: AppTheme.myOrangeAccent.withValues(alpha: 0.5)),
+                  border: Border.all(color: AppTheme.accentOrange.withValues(alpha: 0.6)),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     value: currentFormula.testId,
                     isDense: true,
-                    dropdownColor: AppTheme.myMedNavy,
-                    icon: const Icon(Icons.arrow_drop_down, color: AppTheme.myOrangeAccent, size: 20),
+                    dropdownColor: AppTheme.cardDark,
+                    icon: const Icon(Icons.arrow_drop_down, color: AppTheme.accentOrange, size: 20),
                     style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
+                      color: AppTheme.textWhite,
+                      fontSize: AppTheme.fontSizeCaption,
                       fontWeight: FontWeight.bold,
                     ),
                     items: formulas.map((f) {
@@ -93,12 +93,8 @@ class FormulaSelectorWidget extends StatelessWidget {
           const SizedBox(height: 4),
           // Dòng hiển thị công thức toán học minh họa
           Text(
-            "Công thức: ${currentFormula.name} = ${_formatFormula(currentFormula.formula)}",
-            style: const TextStyle(
-              color: Colors.white54,
-              fontSize: 11,
-              fontStyle: FontStyle.italic,
-            ),
+            "* Công thức: ${currentFormula.name} = ${_formatFormula(currentFormula.formula)}",
+            style: AppTheme.captionItalic,
           ),
         ],
       ),

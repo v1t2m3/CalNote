@@ -75,17 +75,17 @@ class _CableScreenState extends State<CableScreen> {
             : (r60 / r15);
 
         if (darResult! < 1.0) {
-          darEval = 'Kém / Không đạt (< 1.0)';
-          darColor = Colors.redAccent;
+          darEval = 'Không đạt (< 1.0)';
+          darColor = AppTheme.cbmLevel4;
         } else if (darResult! < 1.25) {
           darEval = 'Nghi ngờ (1.0 - 1.25)';
-          darColor = Colors.orangeAccent;
+          darColor = AppTheme.accentOrange;
         } else if (darResult! < 1.6) {
           darEval = 'Tốt (1.25 - 1.6)';
-          darColor = Colors.lightGreenAccent;
+          darColor = AppTheme.statusGreen;
         } else {
           darEval = 'Rất tốt (≥ 1.6)';
-          darColor = Colors.greenAccent;
+          darColor = AppTheme.statusGreen;
         }
       } else {
         darResult = null;
@@ -100,17 +100,17 @@ class _CableScreenState extends State<CableScreen> {
             : (r10 / r60);
 
         if (piResult! < 1.0) {
-          piEval = 'Nguy hiểm / Rất kém (< 1.0)';
-          piColor = Colors.redAccent;
+          piEval = 'Không đạt (< 1.0)';
+          piColor = AppTheme.cbmLevel4;
         } else if (piResult! < 2.0) {
           piEval = 'Nghi ngờ (1.0 - 2.0)';
-          piColor = Colors.orangeAccent;
+          piColor = AppTheme.accentOrange;
         } else if (piResult! < 4.0) {
           piEval = 'Tốt (2.0 - 4.0)';
-          piColor = Colors.lightGreenAccent;
+          piColor = AppTheme.statusGreen;
         } else {
           piEval = 'Rất tốt (≥ 4.0)';
-          piColor = Colors.greenAccent;
+          piColor = AppTheme.statusGreen;
         }
       } else {
         piResult = null;
@@ -357,11 +357,8 @@ class _CableScreenState extends State<CableScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      '1. ĐIỆN TRỞ CÁCH ĐIỆN CÁP (MΩ)',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.myOrangeAccent),
+                      'I. ĐIỆN TRỞ CÁCH ĐIỆN CÁP (MΩ)',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     Row(
@@ -393,9 +390,10 @@ class _CableScreenState extends State<CableScreen> {
                           child: Text(
                             'DAR: ${AppFormatters.formatDarPi(darResult!)} - $darEval',
                             style: TextStyle(
-                                color: darColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
+                              color: darColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppTheme.fontSizeTitle,
+                            ),
                           ),
                         ),
                       ),
@@ -407,9 +405,10 @@ class _CableScreenState extends State<CableScreen> {
                           child: Text(
                             'PI: ${AppFormatters.formatDarPi(piResult!)} - $piEval',
                             style: TextStyle(
-                                color: piColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
+                              color: piColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppTheme.fontSizeTitle,
+                            ),
                           ),
                         ),
                       ),
@@ -421,9 +420,10 @@ class _CableScreenState extends State<CableScreen> {
                           child: Text(
                             'R60s (20°C): ${AppFormatters.formatInsulation(r60sConverted!)} MΩ',
                             style: const TextStyle(
-                                color: Colors.cyanAccent,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
+                              color: AppTheme.statusGreen,
+                              fontWeight: FontWeight.bold,
+                              fontSize: AppTheme.fontSizeBody,
+                            ),
                           ),
                         ),
                       ),
@@ -442,11 +442,8 @@ class _CableScreenState extends State<CableScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      '2. ĐIỆN TRỞ RUỘT DẪN QUY ĐỔI 20°C (mΩ)',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.myOrangeAccent),
+                      'II. ĐIỆN TRỞ RUỘT DẪN QUY ĐỔI 20°C (mΩ)',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     Row(
@@ -498,9 +495,10 @@ class _CableScreenState extends State<CableScreen> {
                                       child: Text(
                                         'Ra: ${rResultA!.toStringAsFixed(3)} mΩ',
                                         style: const TextStyle(
-                                            color: Colors.greenAccent,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
+                                          color: AppTheme.statusGreen,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: AppTheme.fontSizeBody,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -512,9 +510,10 @@ class _CableScreenState extends State<CableScreen> {
                                       child: Text(
                                         'Rb: ${rResultB!.toStringAsFixed(3)} mΩ',
                                         style: const TextStyle(
-                                            color: Colors.greenAccent,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
+                                          color: AppTheme.statusGreen,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: AppTheme.fontSizeBody,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -526,9 +525,10 @@ class _CableScreenState extends State<CableScreen> {
                                       child: Text(
                                         'Rc: ${rResultC!.toStringAsFixed(3)} mΩ',
                                         style: const TextStyle(
-                                            color: Colors.greenAccent,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
+                                          color: AppTheme.statusGreen,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: AppTheme.fontSizeBody,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -541,11 +541,12 @@ class _CableScreenState extends State<CableScreen> {
                                 child: Text(
                                   'ΔR = ${deltaRdc!.toStringAsFixed(2)}% ${deltaRdc! <= 2.0 ? "(✓ Đạt ≤2%)" : "(⚠️ Cảnh báo >2%)"}',
                                   style: TextStyle(
-                                      color: deltaRdc! <= 2.0
-                                          ? Colors.lightGreenAccent
-                                          : Colors.redAccent,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
+                                    color: deltaRdc! <= 2.0
+                                        ? AppTheme.statusGreen
+                                        : AppTheme.cbmLevel4,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: AppTheme.fontSizeTitle,
+                                  ),
                                 ),
                               ),
                             ],
@@ -567,11 +568,8 @@ class _CableScreenState extends State<CableScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      '3. THỬ CHỊU ĐIỆN ÁP CAO & DÒNG RÒ (HI-POT DC / VLF)',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.myOrangeAccent),
+                      'III. THỬ CHỊU ĐIỆN ÁP CAO & DÒNG RÒ (HI-POT)',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     _buildTextField('Điện áp thử U_test (kV)', uTestCtrl,
@@ -598,9 +596,10 @@ class _CableScreenState extends State<CableScreen> {
                           child: Text(
                             'Bất cân bằng dòng rò ΔI: ${unbalanceLeakage!.toStringAsFixed(2)}%',
                             style: const TextStyle(
-                                color: Colors.cyanAccent,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
+                              color: AppTheme.textWhite,
+                              fontSize: AppTheme.fontSizeTitle,
+                              fontWeight: FontWeight.bold,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),

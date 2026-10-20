@@ -70,17 +70,17 @@ class _InsulationCalculatorScreenState
 
         // Evaluation for DAR (IEEE 43)
         if (darResult! < 1.0) {
-          darEvaluation = 'Kém / Không đạt (< 1.0)';
-          darColor = Colors.redAccent;
+          darEvaluation = 'Không đạt (< 1.0)';
+          darColor = AppTheme.cbmLevel4;
         } else if (darResult! < 1.25) {
-          darEvaluation = 'Nghi ngờ / Tối thiểu (1.0 - 1.25)';
-          darColor = Colors.orangeAccent;
+          darEvaluation = 'Nghi ngờ (1.0 - 1.25)';
+          darColor = AppTheme.accentOrange;
         } else if (darResult! < 1.6) {
           darEvaluation = 'Tốt (1.25 - 1.6)';
-          darColor = Colors.lightGreenAccent;
+          darColor = AppTheme.statusGreen;
         } else {
           darEvaluation = 'Rất tốt (≥ 1.6)';
-          darColor = Colors.greenAccent;
+          darColor = AppTheme.statusGreen;
         }
       } else {
         darResult = null;
@@ -101,17 +101,17 @@ class _InsulationCalculatorScreenState
 
         // Evaluation for PI (IEEE 43)
         if (piResult! < 1.0) {
-          piEvaluation = 'Nguy hiểm / Rất kém (< 1.0)';
-          piColor = Colors.redAccent;
+          piEvaluation = 'Không đạt (< 1.0)';
+          piColor = AppTheme.cbmLevel4;
         } else if (piResult! < 2.0) {
           piEvaluation = 'Nghi ngờ / Cần theo dõi (1.0 - 2.0)';
-          piColor = Colors.orangeAccent;
+          piColor = AppTheme.accentOrange;
         } else if (piResult! < 4.0) {
           piEvaluation = 'Tốt (2.0 - 4.0)';
-          piColor = Colors.lightGreenAccent;
+          piColor = AppTheme.statusGreen;
         } else {
           piEvaluation = 'Rất tốt (≥ 4.0)';
-          piColor = Colors.greenAccent;
+          piColor = AppTheme.statusGreen;
         }
       } else {
         piResult = null;
@@ -252,11 +252,8 @@ class _InsulationCalculatorScreenState
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      '1. THÔNG SỐ ĐIỆN TRỞ CÁCH ĐIỆN (MΩ)',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.myOrangeAccent),
+                      'I. THÔNG SỐ ĐIỆN TRỞ CÁCH ĐIỆN (MΩ)',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     Row(
@@ -270,11 +267,8 @@ class _InsulationCalculatorScreenState
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                       '2. NHIỆT ĐỘ THỬ NGHIỆM (°C)',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.myOrangeAccent),
+                       'II. NHIỆT ĐỘ THỬ NGHIỆM (°C)',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
                     Row(
@@ -312,7 +306,7 @@ class _InsulationCalculatorScreenState
                             child: Text(
                               'DAR (R60/R15):',
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                  fontSize: AppTheme.fontSizeTitle, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                           ),
                           Flexible(
@@ -345,7 +339,7 @@ class _InsulationCalculatorScreenState
                             style: TextStyle(
                                 color: darColor,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15),
+                                fontSize: AppTheme.fontSizeBody),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -372,7 +366,7 @@ class _InsulationCalculatorScreenState
                             child: Text(
                               'PI (R10m/R1m):',
                               style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                  fontSize: AppTheme.fontSizeTitle, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                           ),
                           Flexible(
@@ -405,7 +399,7 @@ class _InsulationCalculatorScreenState
                             style: TextStyle(
                                 color: piColor,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15),
+                                fontSize: AppTheme.fontSizeBody),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -429,7 +423,7 @@ class _InsulationCalculatorScreenState
                         child: Text(
                           'R_cd(qđ) (${tTcCtrl.text}°C):',
                           style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                              fontSize: AppTheme.fontSizeBody, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
                       Flexible(
@@ -439,9 +433,9 @@ class _InsulationCalculatorScreenState
                           child: Text(
                             '${r60sConverted!.toStringAsFixed(1)} MΩ',
                             style: const TextStyle(
-                                fontSize: 22,
+                                fontSize: AppTheme.fontSizeTitle,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.cyanAccent),
+                                color: AppTheme.statusGreen),
                           ),
                         ),
                       ),
@@ -460,11 +454,8 @@ class _InsulationCalculatorScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '📖 Tiêu chuẩn Đánh giá IEEE 43 / IEC',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.myOrangeAccent),
+                      'III. TIÊU CHUẨN ĐÁNH GIÁ THAM CHIẾU (IEEE 43)',
+                      style: AppTheme.titleModuleStyle,
                     ),
                     Divider(),
                     Text('• Hệ số phân cực (PI = R_10m / R_1m):',
