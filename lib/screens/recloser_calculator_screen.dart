@@ -404,7 +404,7 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
                         child: Text(
                           'Rcđ thấp nhất: ${AppFormatters.formatInsulation(minRcd)}',
                           style: const TextStyle(
-                            fontSize: AppTheme.fontSizeTitle,
+                            fontSize: AppTheme.fontSizeBody,
                             fontWeight: FontWeight.bold,
                             color: AppTheme.statusGreen,
                           ),
@@ -570,7 +570,7 @@ class _RecloserCalculatorScreenState extends State<RecloserCalculatorScreen> {
                         child: Text(
                           'Độ không đồng pha Δt: ${AppFormatters.formatTimeMs(timeResult)}',
                           style: TextStyle(
-                            fontSize: AppTheme.fontSizeTitle,
+                            fontSize: AppTheme.fontSizeBody,
                             fontWeight: FontWeight.bold,
                             color: (_actionType == 'Close' ? timeResult! <= 4.0 : timeResult! <= 2.0)
                                 ? AppTheme.statusGreen

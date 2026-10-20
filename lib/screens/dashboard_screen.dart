@@ -111,7 +111,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               SizedBox(width: 10),
               Text(
                 'Nhập dữ liệu JSON',
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.white, fontSize: AppTheme.fontSizeTitle, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -241,7 +241,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               SizedBox(width: 10),
               Text(
                 'Khôi phục mặc định',
-                style: TextStyle(color: Colors.white, fontSize: 19),
+                style: TextStyle(color: Colors.white, fontSize: AppTheme.fontSizeTitle, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -382,7 +382,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   SizedBox(height: 12),
                   Text('⚙️ Cài đặt & Công cụ',
                       style: TextStyle(
-                          fontSize: 22,
+                          fontSize: AppTheme.fontSizeTitle,
                           fontWeight: FontWeight.bold,
                           color: Colors.white)),
                 ],

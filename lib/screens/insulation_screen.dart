@@ -306,7 +306,7 @@ class _InsulationCalculatorScreenState
                             child: Text(
                               'DAR (R60/R15):',
                               style: TextStyle(
-                                  fontSize: AppTheme.fontSizeTitle, fontWeight: FontWeight.bold, color: Colors.white),
+                                  fontSize: AppTheme.fontSizeBody, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                           ),
                           Flexible(
@@ -316,7 +316,7 @@ class _InsulationCalculatorScreenState
                               child: Text(
                                 AppFormatters.formatDarPi(darResult),
                                 style: TextStyle(
-                                    fontSize: 26,
+                                    fontSize: AppTheme.fontSizeBody,
                                     fontWeight: FontWeight.bold,
                                     color: darColor),
                               ),
@@ -366,7 +366,7 @@ class _InsulationCalculatorScreenState
                             child: Text(
                               'PI (R10m/R1m):',
                               style: TextStyle(
-                                  fontSize: AppTheme.fontSizeTitle, fontWeight: FontWeight.bold, color: Colors.white),
+                                  fontSize: AppTheme.fontSizeBody, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                           ),
                           Flexible(
@@ -376,7 +376,7 @@ class _InsulationCalculatorScreenState
                               child: Text(
                                 AppFormatters.formatDarPi(piResult),
                                 style: TextStyle(
-                                    fontSize: 26,
+                                    fontSize: AppTheme.fontSizeBody,
                                     fontWeight: FontWeight.bold,
                                     color: piColor),
                               ),

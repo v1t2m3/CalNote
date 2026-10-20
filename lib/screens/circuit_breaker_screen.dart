@@ -590,42 +590,29 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                       child: const Text('TÍNH Δt'),
                     ),
                     if (timeResult != null) ...[
-                      const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                            color: AppTheme.myMedNavy,
-                            borderRadius: BorderRadius.circular(12)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text('Δt = ',
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
-                            Expanded(
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                alignment: Alignment.centerRight,
-                                child: Text('${timeResult!.toStringAsFixed(1)} ms',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium?.copyWith(
-                                           color: hasTimeWarning ? Colors.redAccent : Colors.lightGreenAccent
-                                        )),
-                              ),
-                            ),
-                          ],
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: Text(
+                          'Độ không đồng thời Δt: ${timeResult!.toStringAsFixed(1)} ms',
+                          style: TextStyle(
+                            fontSize: AppTheme.fontSizeBody,
+                            fontWeight: FontWeight.bold,
+                            color: hasTimeWarning ? AppTheme.cbmLevel4 : AppTheme.statusGreen,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       if (hasTimeWarning)
                         Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
+                          padding: const EdgeInsets.only(top: 4.0),
                           child: Text(
-                              '* CẢNH BÁO: Δt vượt ngưỡng cho phép (${_actionType == 'Close' ? '4ms' : '2ms'})!',
+                              '* Cảnh báo: Δt vượt ngưỡng cho phép (${_actionType == 'Close' ? '4ms' : '2ms'})!',
                               style: const TextStyle(
                                   color: AppTheme.cbmLevel4,
                                   fontSize: AppTheme.fontSizeCaption,
-                                  fontWeight: FontWeight.bold)),
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center),
                         ),
                       StandardEvaluationWidget(
                         testCode: _actionType == 'Close' ? 'MC_Time_Close' : 'MC_Time_Open',

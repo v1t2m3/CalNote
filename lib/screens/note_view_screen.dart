@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../models/test_record.dart';
 import '../core/utils/app_formatters.dart';
+import '../core/theme/app_theme.dart';
 
 
 class NoteViewScreen extends StatelessWidget {
@@ -31,11 +32,11 @@ class NoteViewScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Tên phép thử nghiệm', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                    const Text('Tên phép thử nghiệm', style: AppTheme.captionStyle),
                     const SizedBox(height: 4),
-                    Text(record.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+                    Text(record.title, style: AppTheme.titleModuleStyle),
                     const SizedBox(height: 8),
-                    Text('Ngày đo: ${record.timestamp.toString().substring(0, 16)}', style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.white70)),
+                    Text('Ngày đo: ${record.timestamp.toString().substring(0, 16)}', style: AppTheme.captionItalic),
                   ],
                 ),
               ),
@@ -52,7 +53,7 @@ class NoteViewScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Tính toán: ${calc.name}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blueAccent)),
+                    Text('Tính toán: ${calc.name}', style: const TextStyle(fontSize: AppTheme.fontSizeTitle, fontWeight: FontWeight.bold, color: AppTheme.accentOrange)),
                     const Divider(),
                     ...calc.inputs.entries.map((entry) {
                       return Padding(
@@ -60,8 +61,8 @@ class NoteViewScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(entry.key, style: const TextStyle(fontSize: 16, color: Colors.white70)),
-                            Text('${entry.value}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                            Text(entry.key, style: const TextStyle(fontSize: AppTheme.fontSizeBody, color: Colors.white70)),
+                            Text('${entry.value}', style: AppTheme.bodyBoldWhite),
                           ],
                         ),
                       );
@@ -70,12 +71,12 @@ class NoteViewScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('=> Kết quả tính:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                        const Text('=> Kết quả tính:', style: TextStyle(fontSize: AppTheme.fontSizeBody, fontWeight: FontWeight.bold, color: Colors.white)),
                         Expanded(
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             alignment: Alignment.centerRight,
-                            child: Text(AppFormatters.formatSmart(calc.result, unit: calc.unit), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.orangeAccent)),
+                            child: Text(AppFormatters.formatSmart(calc.result, unit: calc.unit), style: const TextStyle(fontSize: AppTheme.fontSizeBody, fontWeight: FontWeight.bold, color: AppTheme.accentOrange)),
                           ),
                         ),
                       ],
