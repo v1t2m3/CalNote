@@ -152,6 +152,28 @@ void main() {
       expect(ReferenceStandardService.compareValue(devsDegraded['Pha C']!, '≤', 10, null, null), isFalse); // 40% > 10%
     });
 
+    test('FormulaService calculatePhaseDeviations evaluates MBA winding resistance against R_nsx with absolute deviation', () {
+      final mbaPhaseValues = {'Pha A': 1.23, 'Pha B': 1.25, 'Pha C': 1.28};
+
+      // R_nsx = 1.25 mΩ
+      // Pha A = 1.23: |1.23 - 1.25| / 1.25 * 100 = 1.6% (<= 2% -> Pass)
+      // Pha B = 1.25: |1.25 - 1.25| / 1.25 * 100 = 0.0% (<= 2% -> Pass)
+      // Pha C = 1.28: |1.28 - 1.25| / 1.25 * 100 = 2.4% (> 2% -> Fail standard <= 2%)
+      final devsNsx = FormulaService.calculatePhaseDeviations(
+        phaseValues: mbaPhaseValues,
+        formulaId: 'MBA_Unbalance_Nsx',
+        rNsx: 1.25,
+      );
+
+      expect(devsNsx['Pha A'], closeTo(1.6, 1e-3));
+      expect(devsNsx['Pha B'], closeTo(0.0, 1e-3));
+      expect(devsNsx['Pha C'], closeTo(2.4, 1e-3));
+
+      expect(ReferenceStandardService.compareValue(devsNsx['Pha A']!, '≤', 2.0, null, null), isTrue);
+      expect(ReferenceStandardService.compareValue(devsNsx['Pha B']!, '≤', 2.0, null, null), isTrue);
+      expect(ReferenceStandardService.compareValue(devsNsx['Pha C']!, '≤', 2.0, null, null), isFalse);
+    });
+
     test('ReferenceStandardService evaluateCbmLevel classifies values properly', () {
       const cbmItem = CbmItemModel(
         id: 'CBM_001',

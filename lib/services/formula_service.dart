@@ -217,10 +217,15 @@ class FormulaService {
       // Mặc định hoặc so với R_nsx
       if (rNsx != null && rNsx > 0) {
         for (var e in validEntries) {
-          final diff = e.value - rNsx;
-          // Đối với điện trở tiếp xúc, nếu nhỏ hơn hoặc bằng R_nsx thì đạt hoàn toàn (0.0%)
-          // Nếu lớn hơn R_nsx thì tính phần trăm vượt
-          devs[e.key] = diff > 0 ? (diff / rNsx) * 100.0 : 0.0;
+          if (fId.contains('mba')) {
+            // Đối với cuộn dây MBA, độ lệch so với R_nsx tính theo giá trị sai khác tuyệt đối
+            devs[e.key] = ((e.value - rNsx).abs() / rNsx) * 100.0;
+          } else {
+            final diff = e.value - rNsx;
+            // Đối với điện trở tiếp xúc, nếu nhỏ hơn hoặc bằng R_nsx thì đạt hoàn toàn (0.0%)
+            // Nếu lớn hơn R_nsx thì tính phần trăm vượt
+            devs[e.key] = diff > 0 ? (diff / rNsx) * 100.0 : 0.0;
+          }
         }
       } else if (minR > 0) {
         // Fallback khi chưa nhập R_nsx: tính so với giá trị nhỏ nhất giữa các pha

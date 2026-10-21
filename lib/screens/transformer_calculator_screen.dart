@@ -141,21 +141,33 @@ class _TransformerCalculatorScreenState
       if (rResultB != null) validRs.add(rResultB!);
       if (rResultC != null) validRs.add(rResultC!);
 
-      if (validRs.length > 1) {
+      final errModel = _selectedRdcUnbalanceFormula ?? FormulaService.getFormulaById('MBA_Unbalance');
+      bool canCalculate = errModel != null && errModel.inputs.contains('R_nsx')
+          ? validRs.isNotEmpty
+          : validRs.length > 1;
+
+      if (canCalculate) {
         double maxR = validRs.reduce(max);
         double minR = validRs.reduce(min);
         double avgR = validRs.reduce((a, b) => a + b) / validRs.length;
         double rNsx = parseInput(rDcNsxCtrl.text);
 
-        final errModel = _selectedRdcUnbalanceFormula ?? FormulaService.getFormulaById('MBA_Unbalance');
         if (errModel != null) {
-          final vars = <String, num>{
-            'R_max': maxR,
-            'R_min': minR,
-            'R_avg': avgR,
-            'R_nsx': rNsx > 0 ? rNsx : (minR > 0 ? minR : 1.0),
-          };
-          deltaR = FormulaService.calculate(errModel.formula, vars);
+          if (errModel.inputs.contains('R_nsx')) {
+            if (rNsx > 0) {
+              double maxDiff = validRs.map((r) => (r - rNsx).abs()).reduce(max);
+              deltaR = (maxDiff / rNsx) * 100.0;
+            } else {
+              deltaR = null;
+            }
+          } else {
+            final vars = <String, num>{
+              'R_max': maxR,
+              'R_min': minR,
+              'R_avg': avgR,
+            };
+            deltaR = FormulaService.calculate(errModel.formula, vars);
+          }
         } else {
           deltaR = ((maxR - minR) / avgR) * 100;
         }
@@ -231,20 +243,31 @@ class _TransformerCalculatorScreenState
               .where((res) => res?.derivedCorrected != null)
               .map((res) => res!.derivedCorrected!)
               .toList();
-          if (validHc.length > 1) {
+          bool canCalculateHc = errModel != null && errModel.inputs.contains('R_nsx')
+              ? validHc.isNotEmpty
+              : validHc.length > 1;
+
+          if (canCalculateHc) {
             double maxHc = validHc.reduce(max);
             double minHc = validHc.reduce(min);
             double avgHc = validHc.reduce((a, b) => a + b) / validHc.length;
             double rNsx = parseInput(rDcNsxCtrl.text);
-            final errModel = _selectedRdcUnbalanceFormula ?? FormulaService.getFormulaById('MBA_Unbalance');
             if (errModel != null) {
-              final vars = <String, num>{
-                'R_max': maxHc,
-                'R_min': minHc,
-                'R_avg': avgHc,
-                'R_nsx': rNsx > 0 ? rNsx : (minHc > 0 ? minHc : 1.0),
-              };
-              deltaRHc = FormulaService.calculate(errModel.formula, vars);
+              if (errModel.inputs.contains('R_nsx')) {
+                if (rNsx > 0) {
+                  double maxDiffHc = validHc.map((r) => (r - rNsx).abs()).reduce(max);
+                  deltaRHc = (maxDiffHc / rNsx) * 100.0;
+                } else {
+                  deltaRHc = null;
+                }
+              } else {
+                final vars = <String, num>{
+                  'R_max': maxHc,
+                  'R_min': minHc,
+                  'R_avg': avgHc,
+                };
+                deltaRHc = FormulaService.calculate(errModel.formula, vars);
+              }
             } else {
               deltaRHc = avgHc > 0 ? ((maxHc - minHc) / avgHc) * 100.0 : 0.0;
             }
@@ -484,7 +507,8 @@ class _TransformerCalculatorScreenState
           if (rDoBCtrl.text.isNotEmpty) 'Rb': parseInput(rDoBCtrl.text),
           if (rDoCCtrl.text.isNotEmpty) 'Rc': parseInput(rDoCCtrl.text),
           if (tDoCtrl.text.isNotEmpty) 'T_do': parseInput(tDoCtrl.text),
-          if (tTcCtrl.text.isNotEmpty) 'T_tc': parseInput(tTcCtrl.text)
+          if (tTcCtrl.text.isNotEmpty) 'T_tc': parseInput(tTcCtrl.text),
+          if (rDcNsxCtrl.text.isNotEmpty) 'R_nsx': parseInput(rDcNsxCtrl.text),
         },
         result: theResult,
         unit: theUnit,
@@ -579,11 +603,18 @@ class _TransformerCalculatorScreenState
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController ctrl, {bool isExpanded = true, String? hintText}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController ctrl, {
+    bool isExpanded = true,
+    String? hintText,
+    ValueChanged<String>? onChanged,
+  }) {
     final field = Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: TextField(
         controller: ctrl,
+        onChanged: onChanged,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
         decoration: InputDecoration(
@@ -765,10 +796,31 @@ class _TransformerCalculatorScreenState
                         child: _buildTextField(
                           'Rnsx cuộn dây (mΩ)',
                           rDcNsxCtrl,
+                          isExpanded: false,
                           hintText: 'VD: 1.25',
+                          onChanged: (_) {
+                            if (rResultA != null || rResultB != null || rResultC != null) {
+                              _tinhDienTroDC();
+                            }
+                          },
                         ),
                       ),
                     ElevatedButton(onPressed: _tinhDienTroDC, child: const Text('TÍNH Rđc - Rqd')),
+                    if (_selectedRdcUnbalanceFormula != null &&
+                        _selectedRdcUnbalanceFormula!.inputs.contains('R_nsx') &&
+                        parseInput(rDcNsxCtrl.text) <= 0)
+                      const Padding(
+                        padding: EdgeInsets.only(top: 6.0),
+                        child: Text(
+                          '(*) Vui lòng nhập Rnsx cuộn dây để tính độ lệch và đối chiếu tiêu chuẩn.',
+                          style: TextStyle(
+                            color: AppTheme.accentOrange,
+                            fontSize: 12.5,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     if (rResultA != null || rResultB != null || rResultC != null) ...[
                       const SizedBox(height: 12),
                       Row(
@@ -863,7 +915,8 @@ class _TransformerCalculatorScreenState
                     ),
                     Builder(
                       builder: (context) {
-                        if (deltaR == null && rResultA == null && rResultB == null && rResultC == null) {
+                        final double? effectiveDeltaR = (CalibrationService.isUncertaintyEnabled ? deltaRHc : null) ?? deltaR;
+                        if (effectiveDeltaR == null) {
                           return const SizedBox.shrink();
                         }
                         final double? rAVal = (CalibrationService.isUncertaintyEnabled ? _rdcPhaseUncertainty['Pha A']?.derivedCorrected : null) ?? rResultA;
@@ -880,8 +933,6 @@ class _TransformerCalculatorScreenState
                           formulaId: _selectedRdcUnbalanceFormula?.id ?? 'MBA_Unbalance',
                           rNsx: parseInput(rDcNsxCtrl.text),
                         );
-
-                        final double effectiveDeltaR = (CalibrationService.isUncertaintyEnabled ? deltaRHc : null) ?? deltaR ?? 0.0;
 
                         return StandardEvaluationWidget(
                           testCode: 'MBA_R_dc',
