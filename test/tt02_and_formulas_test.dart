@@ -12,7 +12,7 @@ void main() {
       expect(file.existsSync(), isTrue);
       final content = file.readAsStringSync();
       final list = jsonDecode(content) as List;
-      expect(list.length, equals(24));
+      expect(list.length, equals(23));
 
       for (var item in list) {
         expect(item['id'], isNotNull);
@@ -24,16 +24,17 @@ void main() {
 
       // Check specific new TT02 items
       final ids = list.map((e) => e['id']).toSet();
-      expect(ids.contains('TT02_015'), isTrue); // MC Rtx
-      expect(ids.contains('TT02_016'), isTrue); // Cable VLF
-      expect(ids.contains('TT02_017'), isTrue); // Cable AC
-      expect(ids.contains('TT02_018'), isTrue); // MBA Rdc >35kV
-      expect(ids.contains('TT02_019'), isTrue); // MBA Rdc <=35kV
-      expect(ids.contains('TT02_020'), isTrue); // MC Time Close
-      expect(ids.contains('TT02_021'), isTrue); // MC Time Open
-      expect(ids.contains('TT02_022'), isTrue); // MC SF6 Hum
-      expect(ids.contains('TT02_023'), isTrue); // MC SF6 SO2
-      expect(ids.contains('TT02_024'), isTrue); // MC SF6 Purity
+      expect(ids.contains('TT02_011'), isTrue); // MC Rtx
+      expect(ids.contains('TT02_012'), isTrue); // MC Time Close
+      expect(ids.contains('TT02_013'), isTrue); // MC Time Open
+      expect(ids.contains('TT02_014'), isTrue); // MC SF6 Hum
+      expect(ids.contains('TT02_015'), isTrue); // MC SF6 SO2
+      expect(ids.contains('TT02_016'), isTrue); // MC SF6 Purity
+      expect(ids.contains('TT02_017'), isTrue); // DCL Rtx
+      expect(ids.contains('TT02_018'), isTrue); // Cable Rcd
+      expect(ids.contains('TT02_021'), isTrue); // Cable VLF <=35kV
+      expect(ids.contains('TT02_022'), isTrue); // Cable AC <=35kV
+      expect(ids.contains('TT02_023'), isTrue); // Cable Rdc
     });
 
     test('FormulaService calculations for Contact Resistance methods', () {

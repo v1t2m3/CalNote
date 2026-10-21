@@ -169,60 +169,85 @@ class _TransformerCalculatorScreenState
         if (eq != null) {
           _rdcPhaseUncertainty = {};
           double ttc = parseInput(tTcCtrl.text);
+          double tdo = parseInput(tDoCtrl.text);
           String ttcLabel = ttc > 0 ? '${ttc.toStringAsFixed(0)}°C' : 'T_tc';
-          if (rResultA != null) {
+          double kMat = _material == 'Dong' ? 235.0 : 225.0;
+          double factor = (kMat + ttc) / (kMat + tdo);
+
+          if (rDoACtrl.text.isNotEmpty && rA > 0) {
             final rawA = CalibrationService.calculateUncertainty(
               equipment: eq,
-              measuredValue: rResultA!,
+              measuredValue: rA,
               unit: 'mΩ',
             );
+            double rQdA = model != null
+                ? FormulaService.calculate(model.formula, {'R_do': rawA.correctedValue, 'T_do': tdo, 'T_tc': ttc})
+                : rawA.correctedValue * factor;
             _rdcPhaseUncertainty['Pha A'] = rawA.withDerived(
               derivedName: 'R_qd ($ttcLabel)',
-              derivedCorrected: rawA.correctedValue,
-              derivedMinBound: rawA.minBound,
-              derivedMaxBound: rawA.maxBound,
+              derivedCorrected: rQdA,
+              derivedMinBound: rawA.minBound * factor,
+              derivedMaxBound: rawA.maxBound * factor,
               derivedUnit: 'mΩ',
             );
           }
-          if (rResultB != null) {
+          if (rDoBCtrl.text.isNotEmpty && rB > 0) {
             final rawB = CalibrationService.calculateUncertainty(
               equipment: eq,
-              measuredValue: rResultB!,
+              measuredValue: rB,
               unit: 'mΩ',
             );
+            double rQdB = model != null
+                ? FormulaService.calculate(model.formula, {'R_do': rawB.correctedValue, 'T_do': tdo, 'T_tc': ttc})
+                : rawB.correctedValue * factor;
             _rdcPhaseUncertainty['Pha B'] = rawB.withDerived(
               derivedName: 'R_qd ($ttcLabel)',
-              derivedCorrected: rawB.correctedValue,
-              derivedMinBound: rawB.minBound,
-              derivedMaxBound: rawB.maxBound,
+              derivedCorrected: rQdB,
+              derivedMinBound: rawB.minBound * factor,
+              derivedMaxBound: rawB.maxBound * factor,
               derivedUnit: 'mΩ',
             );
           }
-          if (rResultC != null) {
+          if (rDoCCtrl.text.isNotEmpty && rC > 0) {
             final rawC = CalibrationService.calculateUncertainty(
               equipment: eq,
-              measuredValue: rResultC!,
+              measuredValue: rC,
               unit: 'mΩ',
             );
+            double rQdC = model != null
+                ? FormulaService.calculate(model.formula, {'R_do': rawC.correctedValue, 'T_do': tdo, 'T_tc': ttc})
+                : rawC.correctedValue * factor;
             _rdcPhaseUncertainty['Pha C'] = rawC.withDerived(
               derivedName: 'R_qd ($ttcLabel)',
-              derivedCorrected: rawC.correctedValue,
-              derivedMinBound: rawC.minBound,
-              derivedMaxBound: rawC.maxBound,
+              derivedCorrected: rQdC,
+              derivedMinBound: rawC.minBound * factor,
+              derivedMaxBound: rawC.maxBound * factor,
               derivedUnit: 'mΩ',
             );
           }
 
-          // Tính độ lệch pha sau hiệu chỉnh (ΔR_hc)
+          // Tính độ lệch pha sau hiệu chỉnh (ΔR_hc) từ các giá trị quy đổi R_qd
           List<double> validHc = _rdcPhaseUncertainty.values
-              .where((res) => res != null)
-              .map((res) => res!.correctedValue)
+              .where((res) => res?.derivedCorrected != null)
+              .map((res) => res!.derivedCorrected!)
               .toList();
           if (validHc.length > 1) {
             double maxHc = validHc.reduce(max);
             double minHc = validHc.reduce(min);
             double avgHc = validHc.reduce((a, b) => a + b) / validHc.length;
-            deltaRHc = ((maxHc - minHc) / avgHc) * 100.0;
+            double rNsx = parseInput(rDcNsxCtrl.text);
+            final errModel = _selectedRdcUnbalanceFormula ?? FormulaService.getFormulaById('MBA_Unbalance');
+            if (errModel != null) {
+              final vars = <String, num>{
+                'R_max': maxHc,
+                'R_min': minHc,
+                'R_avg': avgHc,
+                'R_nsx': rNsx > 0 ? rNsx : (minHc > 0 ? minHc : 1.0),
+              };
+              deltaRHc = FormulaService.calculate(errModel.formula, vars);
+            } else {
+              deltaRHc = avgHc > 0 ? ((maxHc - minHc) / avgHc) * 100.0 : 0.0;
+            }
           } else {
             deltaRHc = null;
           }
@@ -841,9 +866,9 @@ class _TransformerCalculatorScreenState
                         if (deltaR == null && rResultA == null && rResultB == null && rResultC == null) {
                           return const SizedBox.shrink();
                         }
-                        final double? rAVal = (_rdcPhaseUncertainty['Pha A']?.correctedValue) ?? rResultA;
-                        final double? rBVal = (_rdcPhaseUncertainty['Pha B']?.correctedValue) ?? rResultB;
-                        final double? rCVal = (_rdcPhaseUncertainty['Pha C']?.correctedValue) ?? rResultC;
+                        final double? rAVal = (CalibrationService.isUncertaintyEnabled ? _rdcPhaseUncertainty['Pha A']?.derivedCorrected : null) ?? rResultA;
+                        final double? rBVal = (CalibrationService.isUncertaintyEnabled ? _rdcPhaseUncertainty['Pha B']?.derivedCorrected : null) ?? rResultB;
+                        final double? rCVal = (CalibrationService.isUncertaintyEnabled ? _rdcPhaseUncertainty['Pha C']?.derivedCorrected : null) ?? rResultC;
 
                         final phaseInputs = <String, double>{
                           if (rAVal != null) 'Pha A': rAVal,
@@ -856,10 +881,12 @@ class _TransformerCalculatorScreenState
                           rNsx: parseInput(rDcNsxCtrl.text),
                         );
 
+                        final double effectiveDeltaR = (CalibrationService.isUncertaintyEnabled ? deltaRHc : null) ?? deltaR ?? 0.0;
+
                         return StandardEvaluationWidget(
                           testCode: 'MBA_R_dc',
                           voltageLevel: _transformerVoltageLevel,
-                          primaryValue: deltaRHc ?? deltaR,
+                          primaryValue: effectiveDeltaR,
                           phaseValues: rPhaseDeviations.isNotEmpty ? rPhaseDeviations : null,
                           unit: '%',
                           symbol: 'ΔR',
@@ -964,21 +991,42 @@ class _TransformerCalculatorScreenState
                       },
                       phaseResults: _ratioPhaseUncertainty.isNotEmpty ? _ratioPhaseUncertainty : null,
                     ),
-                    if (errA != null || errB != null || errC != null)
-                      StandardEvaluationWidget(
-                        testCode: 'MBA_K_error',
-                        voltageLevel: _transformerVoltageLevel,
-                        primaryValue: [errA, errB, errC].whereType<double>().isNotEmpty
-                            ? [errA, errB, errC].whereType<double>().map((e) => e.abs()).reduce(max)
-                            : 0.0,
-                        phaseValues: {
-                          if (errA != null) 'Pha A': errA!,
-                          if (errB != null) 'Pha B': errB!,
-                          if (errC != null) 'Pha C': errC!,
-                        },
-                        unit: '%',
-                        customTitle: "ĐỐI CHIẾU TIÊU CHUẨN SAI LỆCH TỶ SỐ BIẾN",
-                      ),
+                    Builder(
+                      builder: (context) {
+                        final Map<String, double> effectivePhaseErrors;
+                        if (CalibrationService.isUncertaintyEnabled && _ratioPhaseUncertainty.isNotEmpty) {
+                          effectivePhaseErrors = {
+                            if (_ratioPhaseUncertainty['Pha A']?.derivedCorrected != null)
+                              'Pha A': _ratioPhaseUncertainty['Pha A']!.derivedCorrected!,
+                            if (_ratioPhaseUncertainty['Pha B']?.derivedCorrected != null)
+                              'Pha B': _ratioPhaseUncertainty['Pha B']!.derivedCorrected!,
+                            if (_ratioPhaseUncertainty['Pha C']?.derivedCorrected != null)
+                              'Pha C': _ratioPhaseUncertainty['Pha C']!.derivedCorrected!,
+                          };
+                        } else {
+                          effectivePhaseErrors = {
+                            if (errA != null) 'Pha A': errA!,
+                            if (errB != null) 'Pha B': errB!,
+                            if (errC != null) 'Pha C': errC!,
+                          };
+                        }
+
+                        if (effectivePhaseErrors.isEmpty) return const SizedBox.shrink();
+
+                        final double primaryVal = effectivePhaseErrors.values.isNotEmpty
+                            ? effectivePhaseErrors.values.map((e) => e.abs()).reduce(max)
+                            : 0.0;
+
+                        return StandardEvaluationWidget(
+                          testCode: 'MBA_K_error',
+                          voltageLevel: _transformerVoltageLevel,
+                          primaryValue: primaryVal,
+                          phaseValues: effectivePhaseErrors.isNotEmpty ? effectivePhaseErrors : null,
+                          unit: '%',
+                          customTitle: "ĐỐI CHIẾU TIÊU CHUẨN SAI LỆCH TỶ SỐ BIẾN",
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),

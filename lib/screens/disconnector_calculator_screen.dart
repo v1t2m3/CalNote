@@ -118,25 +118,7 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
       _rtxPhaseUncertainty = {};
     } else {
       maxRtx = vals.reduce(max);
-      double mn = vals.reduce(min);
-      double avg = vals.reduce((a, b) => a + b) / vals.length;
-
       final formula = _selectedRtxFormula ?? FormulaService.getFormulaById('DCL_Rtx_Delta_Nsx');
-      if (formula != null) {
-        try {
-          final vars = <String, num>{
-            'R_max': maxRtx!,
-            'R_min': mn,
-            'R_avg': avg,
-            'R_nsx': rNsx > 0 ? rNsx : (mn > 0 ? mn : 1.0),
-          };
-          deltaRtx = FormulaService.calculate(formula.formula, vars);
-        } catch (_) {
-          deltaRtx = null;
-        }
-      } else {
-        deltaRtx = avg > 0 ? ((maxRtx! - mn) / avg) * 100.0 : 0.0;
-      }
 
       if (CalibrationService.isUncertaintyEnabled) {
         final dclEqs = CalibrationService.getEquipmentsForTest('DCL_R_tx');
@@ -174,6 +156,46 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
         _rtxPhaseUncertainty = {};
         _rtxUncertaintyResult = null;
       }
+
+      Map<String, double> effPhases = {};
+      if (CalibrationService.isUncertaintyEnabled && _rtxPhaseUncertainty.isNotEmpty) {
+        if (rTxACtrl.text.isNotEmpty && _rtxPhaseUncertainty['Pha A'] != null) {
+          effPhases['Pha A'] = _rtxPhaseUncertainty['Pha A']!.correctedValue;
+        }
+        if (rTxBCtrl.text.isNotEmpty && _rtxPhaseUncertainty['Pha B'] != null) {
+          effPhases['Pha B'] = _rtxPhaseUncertainty['Pha B']!.correctedValue;
+        }
+        if (rTxCCtrl.text.isNotEmpty && _rtxPhaseUncertainty['Pha C'] != null) {
+          effPhases['Pha C'] = _rtxPhaseUncertainty['Pha C']!.correctedValue;
+        }
+      } else {
+        if (rTxACtrl.text.isNotEmpty) effPhases['Pha A'] = rA;
+        if (rTxBCtrl.text.isNotEmpty) effPhases['Pha B'] = rB;
+        if (rTxCCtrl.text.isNotEmpty) effPhases['Pha C'] = rC;
+      }
+
+      if (effPhases.isNotEmpty) {
+        final effList = effPhases.values.toList();
+        double effMax = effList.reduce(max);
+        double effMin = effList.reduce(min);
+        double effAvg = effList.reduce((a, b) => a + b) / effList.length;
+
+        if (formula != null) {
+          try {
+            final vars = <String, num>{
+              'R_max': effMax,
+              'R_min': effMin,
+              'R_avg': effAvg,
+              'R_nsx': rNsx > 0 ? rNsx : (effMin > 0 ? effMin : 1.0),
+            };
+            deltaRtx = FormulaService.calculate(formula.formula, vars);
+          } catch (_) {
+            deltaRtx = null;
+          }
+        } else {
+          deltaRtx = effAvg > 0 ? ((effMax - effMin) / effAvg) * 100.0 : 0.0;
+        }
+      }
     }
     setState(() {});
   }
@@ -196,25 +218,7 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
       _dtdPhaseUncertainty = {};
     } else {
       maxRtxDtd = vals.reduce(max);
-      double mn = vals.reduce(min);
-      double avg = vals.reduce((a, b) => a + b) / vals.length;
-
       final formula = _selectedDtdFormula ?? FormulaService.getFormulaById('DTD_Rtx_Delta_Nsx');
-      if (formula != null) {
-        try {
-          final vars = <String, num>{
-            'R_max': maxRtxDtd!,
-            'R_min': mn,
-            'R_avg': avg,
-            'R_nsx': rNsx > 0 ? rNsx : (mn > 0 ? mn : 1.0),
-          };
-          deltaRtxDtd = FormulaService.calculate(formula.formula, vars);
-        } catch (_) {
-          deltaRtxDtd = null;
-        }
-      } else {
-        deltaRtxDtd = avg > 0 ? ((maxRtxDtd! - mn) / avg) * 100.0 : 0.0;
-      }
 
       if (CalibrationService.isUncertaintyEnabled) {
         final dtdEqs = CalibrationService.getEquipmentsForTest('DTD_R_tx');
@@ -251,6 +255,46 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
       } else {
         _dtdPhaseUncertainty = {};
         _dtdUncertaintyResult = null;
+      }
+
+      Map<String, double> effPhasesDtd = {};
+      if (CalibrationService.isUncertaintyEnabled && _dtdPhaseUncertainty.isNotEmpty) {
+        if (rTxDtdACtrl.text.isNotEmpty && _dtdPhaseUncertainty['Pha A'] != null) {
+          effPhasesDtd['Pha A'] = _dtdPhaseUncertainty['Pha A']!.correctedValue;
+        }
+        if (rTxDtdBCtrl.text.isNotEmpty && _dtdPhaseUncertainty['Pha B'] != null) {
+          effPhasesDtd['Pha B'] = _dtdPhaseUncertainty['Pha B']!.correctedValue;
+        }
+        if (rTxDtdCCtrl.text.isNotEmpty && _dtdPhaseUncertainty['Pha C'] != null) {
+          effPhasesDtd['Pha C'] = _dtdPhaseUncertainty['Pha C']!.correctedValue;
+        }
+      } else {
+        if (rTxDtdACtrl.text.isNotEmpty) effPhasesDtd['Pha A'] = rA;
+        if (rTxDtdBCtrl.text.isNotEmpty) effPhasesDtd['Pha B'] = rB;
+        if (rTxDtdCCtrl.text.isNotEmpty) effPhasesDtd['Pha C'] = rC;
+      }
+
+      if (effPhasesDtd.isNotEmpty) {
+        final effList = effPhasesDtd.values.toList();
+        double effMax = effList.reduce(max);
+        double effMin = effList.reduce(min);
+        double effAvg = effList.reduce((a, b) => a + b) / effList.length;
+
+        if (formula != null) {
+          try {
+            final vars = <String, num>{
+              'R_max': effMax,
+              'R_min': effMin,
+              'R_avg': effAvg,
+              'R_nsx': rNsx > 0 ? rNsx : (effMin > 0 ? effMin : 1.0),
+            };
+            deltaRtxDtd = FormulaService.calculate(formula.formula, vars);
+          } catch (_) {
+            deltaRtxDtd = null;
+          }
+        } else {
+          deltaRtxDtd = effAvg > 0 ? ((effMax - effMin) / effAvg) * 100.0 : 0.0;
+        }
       }
     }
     setState(() {});
@@ -550,12 +594,25 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                       ),
                       Builder(
                         builder: (context) {
+                          Map<String, double> effPhases = {};
+                          if (CalibrationService.isUncertaintyEnabled && _rtxPhaseUncertainty.isNotEmpty) {
+                            if (rTxACtrl.text.isNotEmpty && _rtxPhaseUncertainty['Pha A'] != null) {
+                              effPhases['Pha A'] = _rtxPhaseUncertainty['Pha A']!.correctedValue;
+                            }
+                            if (rTxBCtrl.text.isNotEmpty && _rtxPhaseUncertainty['Pha B'] != null) {
+                              effPhases['Pha B'] = _rtxPhaseUncertainty['Pha B']!.correctedValue;
+                            }
+                            if (rTxCCtrl.text.isNotEmpty && _rtxPhaseUncertainty['Pha C'] != null) {
+                              effPhases['Pha C'] = _rtxPhaseUncertainty['Pha C']!.correctedValue;
+                            }
+                          } else {
+                            if (rTxACtrl.text.isNotEmpty) effPhases['Pha A'] = parseInput(rTxACtrl.text);
+                            if (rTxBCtrl.text.isNotEmpty) effPhases['Pha B'] = parseInput(rTxBCtrl.text);
+                            if (rTxCCtrl.text.isNotEmpty) effPhases['Pha C'] = parseInput(rTxCCtrl.text);
+                          }
+
                           final phaseDevs = FormulaService.calculatePhaseDeviations(
-                            phaseValues: {
-                              if (rTxACtrl.text.isNotEmpty) 'Pha A': parseInput(rTxACtrl.text),
-                              if (rTxBCtrl.text.isNotEmpty) 'Pha B': parseInput(rTxBCtrl.text),
-                              if (rTxCCtrl.text.isNotEmpty) 'Pha C': parseInput(rTxCCtrl.text),
-                            },
+                            phaseValues: effPhases,
                             formulaId: _selectedRtxFormula?.id,
                             rNsx: parseInput(rTxNsxCtrl.text),
                           );
@@ -656,12 +713,25 @@ class _DisconnectorCalculatorScreenState extends State<DisconnectorCalculatorScr
                       ),
                       Builder(
                         builder: (context) {
+                          Map<String, double> effPhasesDtd = {};
+                          if (CalibrationService.isUncertaintyEnabled && _dtdPhaseUncertainty.isNotEmpty) {
+                            if (rTxDtdACtrl.text.isNotEmpty && _dtdPhaseUncertainty['Pha A'] != null) {
+                              effPhasesDtd['Pha A'] = _dtdPhaseUncertainty['Pha A']!.correctedValue;
+                            }
+                            if (rTxDtdBCtrl.text.isNotEmpty && _dtdPhaseUncertainty['Pha B'] != null) {
+                              effPhasesDtd['Pha B'] = _dtdPhaseUncertainty['Pha B']!.correctedValue;
+                            }
+                            if (rTxDtdCCtrl.text.isNotEmpty && _dtdPhaseUncertainty['Pha C'] != null) {
+                              effPhasesDtd['Pha C'] = _dtdPhaseUncertainty['Pha C']!.correctedValue;
+                            }
+                          } else {
+                            if (rTxDtdACtrl.text.isNotEmpty) effPhasesDtd['Pha A'] = parseInput(rTxDtdACtrl.text);
+                            if (rTxDtdBCtrl.text.isNotEmpty) effPhasesDtd['Pha B'] = parseInput(rTxDtdBCtrl.text);
+                            if (rTxDtdCCtrl.text.isNotEmpty) effPhasesDtd['Pha C'] = parseInput(rTxDtdCCtrl.text);
+                          }
+
                           final dtdDevs = FormulaService.calculatePhaseDeviations(
-                            phaseValues: {
-                              if (rTxDtdACtrl.text.isNotEmpty) 'Pha A': parseInput(rTxDtdACtrl.text),
-                              if (rTxDtdBCtrl.text.isNotEmpty) 'Pha B': parseInput(rTxDtdBCtrl.text),
-                              if (rTxDtdCCtrl.text.isNotEmpty) 'Pha C': parseInput(rTxDtdCCtrl.text),
-                            },
+                            phaseValues: effPhasesDtd,
                             formulaId: _selectedDtdFormula?.id,
                             rNsx: parseInput(rTxDtdNsxCtrl.text),
                           );

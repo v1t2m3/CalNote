@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import '../core/theme/app_theme.dart';
 import '../models/breaker_curve.dart';
@@ -7,6 +8,9 @@ import 'curve_digitizer_screen.dart';
 import 'note_detail_screen.dart';
 import '../models/test_record.dart';
 import '../widgets/equipment_icon_widget.dart';
+import '../services/calibration_service.dart';
+import '../widgets/uncertainty_widget.dart';
+import '../widgets/standard_evaluation_widget.dart';
 
 class AptomatScreen extends StatefulWidget {
   const AptomatScreen({super.key});
@@ -30,10 +34,23 @@ class _AptomatScreenState extends State<AptomatScreen> {
   double? tMaxLth;
   double? kCalc;
 
+  // MODULE TIẾP XÚC APTOMAT (APT_R_tx)
+  final TextEditingController rTxACtrl = TextEditingController();
+  final TextEditingController rTxBCtrl = TextEditingController();
+  final TextEditingController rTxCCtrl = TextEditingController();
+  double? rTxResultA, rTxResultB, rTxResultC;
+
+  CalibratedEquipmentModel? _selectedAptEquipment;
+  final Map<String, UncertaintyResult?> _aptRtxPhaseUncertainty = {};
+
   @override
   void initState() {
     super.initState();
     _loadCurves();
+    final eqs = CalibrationService.getEquipmentsForTest('APT_R_tx');
+    if (eqs.isNotEmpty) {
+      _selectedAptEquipment = eqs.first;
+    }
   }
 
   void _loadCurves() {
@@ -46,6 +63,46 @@ class _AptomatScreenState extends State<AptomatScreen> {
   }
 
   double parseInput(String val) => AppFormatters.parseInput(val);
+
+  void _tinhTiepXucAptomat() {
+    double ra = parseInput(rTxACtrl.text);
+    double rb = parseInput(rTxBCtrl.text);
+    double rc = parseInput(rTxCCtrl.text);
+
+    rTxResultA = rTxACtrl.text.isNotEmpty ? ra : null;
+    rTxResultB = rTxBCtrl.text.isNotEmpty ? rb : null;
+    rTxResultC = rTxCCtrl.text.isNotEmpty ? rc : null;
+
+    _aptRtxPhaseUncertainty.clear();
+    if (CalibrationService.isUncertaintyEnabled) {
+      final eqs = CalibrationService.getEquipmentsForTest('APT_R_tx');
+      final eq = _selectedAptEquipment ?? (eqs.isNotEmpty ? eqs.first : null);
+      if (eq != null) {
+        if (rTxACtrl.text.isNotEmpty && ra > 0) {
+          _aptRtxPhaseUncertainty['Cực A'] = CalibrationService.calculateUncertainty(
+            equipment: eq,
+            measuredValue: ra,
+            unit: 'microΩ',
+          );
+        }
+        if (rTxBCtrl.text.isNotEmpty && rb > 0) {
+          _aptRtxPhaseUncertainty['Cực B'] = CalibrationService.calculateUncertainty(
+            equipment: eq,
+            measuredValue: rb,
+            unit: 'microΩ',
+          );
+        }
+        if (rTxCCtrl.text.isNotEmpty && rc > 0) {
+          _aptRtxPhaseUncertainty['Cực C'] = CalibrationService.calculateUncertainty(
+            equipment: eq,
+            measuredValue: rc,
+            unit: 'microΩ',
+          );
+        }
+      }
+    }
+    setState(() {});
+  }
 
 
   void _tinhToanBaoVe() {
@@ -97,27 +154,55 @@ class _AptomatScreenState extends State<AptomatScreen> {
   }
 
   void _saveAllNotes() {
-    if (evaluateResult == null || _selectedCurve == null) {
+    List<TestCalculation> cals = [];
+    
+    // Thu thập các thông số đã tính toán tác động
+    if (evaluateResult != null && _selectedCurve != null) {
+      cals.add(TestCalculation(
+        name: 'Kiểm tra Aptomat (${_selectedCurve!.brand} - Type ${_selectedCurve!.type})',
+        inputs: {
+          'I_đm': parseInput(idmCtrl.text),
+          'I_bơm': parseInput(ibomCtrl.text),
+          'Nhiệt độ': parseInput(tEnvCtrl.text),
+          'K_bội số': double.parse(kCalc!.toStringAsFixed(2)),
+        },
+        result: parseInput(tCutCtrl.text),
+        unit: 's ($evaluateResult | Theo t_lythuyet: ${tMinLth?.toStringAsFixed(2)}s ~ ${tMaxLth?.toStringAsFixed(2)}s)',
+      ));
+    }
+
+    // Thu thập thông số tiếp xúc cực
+    if (rTxResultA != null || rTxResultB != null || rTxResultC != null) {
+      final effA = (CalibrationService.isUncertaintyEnabled && _aptRtxPhaseUncertainty['Cực A'] != null)
+          ? _aptRtxPhaseUncertainty['Cực A']!.correctedValue
+          : rTxResultA;
+      final effB = (CalibrationService.isUncertaintyEnabled && _aptRtxPhaseUncertainty['Cực B'] != null)
+          ? _aptRtxPhaseUncertainty['Cực B']!.correctedValue
+          : rTxResultB;
+      final effC = (CalibrationService.isUncertaintyEnabled && _aptRtxPhaseUncertainty['Cực C'] != null)
+          ? _aptRtxPhaseUncertainty['Cực C']!.correctedValue
+          : rTxResultC;
+
+      final validEffs = [effA, effB, effC].whereType<double>().toList();
+      double maxR = validEffs.isNotEmpty ? validEffs.reduce(max) : 0.0;
+      cals.add(TestCalculation(
+        name: 'Điện trở tiếp xúc cực Aptomat (μΩ)',
+        inputs: {
+          if (rTxResultA != null) 'Ra': effA ?? 0.0,
+          if (rTxResultB != null) 'Rb': effB ?? 0.0,
+          if (rTxResultC != null) 'Rc': effC ?? 0.0,
+        },
+        result: maxR,
+        unit: 'μΩ',
+      ));
+    }
+
+    if (cals.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Vui lòng tính toán trước khi lưu sổ.')),
       );
       return;
     }
-
-    List<TestCalculation> cals = [];
-    
-    // Thu thập các thông số đã tính toán
-    cals.add(TestCalculation(
-      name: 'Kiểm tra Aptomat (${_selectedCurve!.brand} - Type ${_selectedCurve!.type})',
-      inputs: {
-        'I_đm': parseInput(idmCtrl.text),
-        'I_bơm': parseInput(ibomCtrl.text),
-        'Nhiệt độ': parseInput(tEnvCtrl.text),
-        'K_bội số': double.parse(kCalc!.toStringAsFixed(2)),
-      },
-      result: parseInput(tCutCtrl.text),
-      unit: 's ($evaluateResult | Theo t_lythuyet: ${tMinLth?.toStringAsFixed(2)}s ~ ${tMaxLth?.toStringAsFixed(2)}s)',
-    ));
 
     // Chuyển sang màn hình Note Detail
     Navigator.push(
@@ -133,6 +218,9 @@ class _AptomatScreenState extends State<AptomatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int pendingCount = (evaluateResult != null ? 1 : 0) +
+        (rTxResultA != null || rTxResultB != null || rTxResultC != null ? 1 : 0);
+
     return Scaffold(
       appBar: AppBar(
         title: const Row(
@@ -156,9 +244,9 @@ class _AptomatScreenState extends State<AptomatScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveAllNotes,
-        backgroundColor: evaluateResult != null ? AppTheme.accentOrange : Colors.grey,
+        backgroundColor: pendingCount > 0 ? AppTheme.accentOrange : Colors.grey,
         icon: const Icon(Icons.bookmark_add),
-        label: const Text('Lưu Sổ'),
+        label: Text('Lưu Sổ ($pendingCount)'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -290,6 +378,159 @@ class _AptomatScreenState extends State<AptomatScreen> {
                    ),
                  ),
                ),
+            const SizedBox(height: 12),
+
+            // MODULE III: ĐIỆN TRỞ TIẾP XÚC CÁC CỰC APTOMAT (μΩ)
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      'III. ĐIỆN TRỞ TIẾP XÚC TIẾP ĐIỂM (μΩ)',
+                      style: AppTheme.titleModuleStyle,
+                    ),
+                    const Divider(),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: rTxACtrl,
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            decoration: const InputDecoration(labelText: 'Cực A (μΩ)', hintText: 'VD: 150'),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextField(
+                            controller: rTxBCtrl,
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            decoration: const InputDecoration(labelText: 'Cực B (μΩ)', hintText: 'VD: 160'),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextField(
+                            controller: rTxCCtrl,
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            decoration: const InputDecoration(labelText: 'Cực C (μΩ)', hintText: 'VD: 155'),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton(
+                      onPressed: _tinhTiepXucAptomat,
+                      child: const Text('TÍNH TIẾP XÚC APTOMAT'),
+                    ),
+                    if (rTxResultA != null || rTxResultB != null || rTxResultC != null)
+                      Builder(
+                        builder: (context) {
+                          final effA = (CalibrationService.isUncertaintyEnabled &&
+                                  _aptRtxPhaseUncertainty['Cực A'] != null)
+                              ? _aptRtxPhaseUncertainty['Cực A']!.correctedValue
+                              : rTxResultA;
+                          final effB = (CalibrationService.isUncertaintyEnabled &&
+                                  _aptRtxPhaseUncertainty['Cực B'] != null)
+                              ? _aptRtxPhaseUncertainty['Cực B']!.correctedValue
+                              : rTxResultB;
+                          final effC = (CalibrationService.isUncertaintyEnabled &&
+                                  _aptRtxPhaseUncertainty['Cực C'] != null)
+                              ? _aptRtxPhaseUncertainty['Cực C']!.correctedValue
+                              : rTxResultC;
+
+                          final validEffs = [effA, effB, effC].whereType<double>().toList();
+                          final maxEff = validEffs.isNotEmpty ? validEffs.reduce(max) : 0.0;
+
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    if (effA != null)
+                                      Flexible(
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            'Cực A: ${effA.toStringAsFixed(1)} μΩ',
+                                            style: const TextStyle(
+                                              color: AppTheme.statusGreen,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: AppTheme.fontSizeBody,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    const SizedBox(width: 6),
+                                    if (effB != null)
+                                      Flexible(
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            'Cực B: ${effB.toStringAsFixed(1)} μΩ',
+                                            style: const TextStyle(
+                                              color: AppTheme.statusGreen,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: AppTheme.fontSizeBody,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    const SizedBox(width: 6),
+                                    if (effC != null)
+                                      Flexible(
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            'Cực C: ${effC.toStringAsFixed(1)} μΩ',
+                                            style: const TextStyle(
+                                              color: AppTheme.statusGreen,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: AppTheme.fontSizeBody,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                StandardEvaluationWidget(
+                                  testCode: 'APT_R_tx',
+                                  voltageLevel: '<=35kV',
+                                  primaryValue: maxEff,
+                                  phaseValues: {
+                                    if (effA != null) 'Cực A': effA,
+                                    if (effB != null) 'Cực B': effB,
+                                    if (effC != null) 'Cực C': effC,
+                                  },
+                                  unit: 'μΩ',
+                                  customTitle: 'ĐỐI CHIẾU TIÊU CHUẨN TIẾP XÚC APTOMAT',
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    UncertaintyEquipmentSection(
+                      testId: 'APT_R_tx',
+                      selectedEquipment: _selectedAptEquipment,
+                      onEquipmentChanged: (newEq) {
+                        setState(() {
+                          _selectedAptEquipment = newEq;
+                          if (rTxResultA != null || rTxResultB != null || rTxResultC != null) {
+                            _tinhTiepXucAptomat();
+                          }
+                        });
+                      },
+                      phaseResults: _aptRtxPhaseUncertainty.isNotEmpty ? _aptRtxPhaseUncertainty : null,
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 80),
           ],
         ),

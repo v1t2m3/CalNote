@@ -8,6 +8,7 @@ import '../core/theme/app_theme.dart';
 import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
 import '../widgets/equipment_icon_widget.dart';
+import '../widgets/standard_evaluation_widget.dart';
 
 
 class CtVtScreen extends StatefulWidget {
@@ -23,6 +24,8 @@ class _CtVtScreenState extends State<CtVtScreen> {
   final TextEditingController resolutionCtrl = TextEditingController();
   
   String _accuracyClass = '0.2'; // 0.2 hoặc 0.5
+  String _deviceType = 'TI'; // 'TI' hoặc 'TU'
+  String _voltageLevel = '<=35kV'; // '>35kV' hoặc '<=35kV'
   double? errorResult;
   bool isFailed = false;
 
@@ -40,6 +43,11 @@ class _CtVtScreenState extends State<CtVtScreen> {
 
   double parseInput(String val) => AppFormatters.parseInput(val);
 
+  double get effectiveError =>
+      (CalibrationService.isUncertaintyEnabled &&
+              _tituUncertaintyResult?.derivedCorrected != null)
+          ? _tituUncertaintyResult!.derivedCorrected!
+          : (errorResult ?? 0.0);
 
   void _tinhSaiSo() {
     double kdm = parseInput(kDmCtrl.text);
@@ -60,9 +68,6 @@ class _CtVtScreenState extends State<CtVtScreen> {
       } else {
         errorResult = ((ktt - kdm) / kdm) * 100;
       }
-      
-      double allowedError = double.parse(_accuracyClass);
-      isFailed = errorResult!.abs() > allowedError;
 
       if (CalibrationService.isUncertaintyEnabled) {
         final eqs = CalibrationService.getEquipmentsForTest('TITU_Ratio_Error');
@@ -97,6 +102,14 @@ class _CtVtScreenState extends State<CtVtScreen> {
       } else {
         _tituUncertaintyResult = null;
       }
+
+      double effError = (CalibrationService.isUncertaintyEnabled &&
+              _tituUncertaintyResult?.derivedCorrected != null)
+          ? _tituUncertaintyResult!.derivedCorrected!
+          : errorResult!;
+
+      double allowedError = double.parse(_accuracyClass);
+      isFailed = effError.abs() > allowedError;
       
       setState(() {});
     } catch (e) {
@@ -194,6 +207,37 @@ class _CtVtScreenState extends State<CtVtScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+            // CARD LỌC CẤP ĐIỆN ÁP
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Row(
+                  children: [
+                    const Text('Cấp điện áp:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white70)),
+                    const SizedBox(width: 16),
+                    ChoiceChip(
+                      label: const Text('> 35kV'),
+                      selected: _voltageLevel == '>35kV',
+                      selectedColor: AppTheme.myOrangeAccent,
+                      onSelected: (val) {
+                        if (val) setState(() => _voltageLevel = '>35kV');
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    ChoiceChip(
+                      label: const Text('≤ 35kV'),
+                      selected: _voltageLevel == '<=35kV',
+                      selectedColor: AppTheme.myOrangeAccent,
+                      onSelected: (val) {
+                        if (val) setState(() => _voltageLevel = '<=35kV');
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -205,6 +249,29 @@ class _CtVtScreenState extends State<CtVtScreen> {
                       style: AppTheme.titleModuleStyle,
                     ),
                     const Divider(),
+                    Row(
+                      children: [
+                        const Text('Loại thiết bị: ', style: TextStyle(color: Colors.white70, fontSize: AppTheme.fontSizeBody)),
+                        ChoiceChip(
+                          label: const Text('TI (Biến dòng)'),
+                          selected: _deviceType == 'TI',
+                          selectedColor: AppTheme.myOrangeAccent,
+                          onSelected: (val) {
+                            if (val) setState(() => _deviceType = 'TI');
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        ChoiceChip(
+                          label: const Text('TU (Biến áp)'),
+                          selected: _deviceType == 'TU',
+                          selectedColor: AppTheme.myOrangeAccent,
+                          onSelected: (val) {
+                            if (val) setState(() => _deviceType = 'TU');
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         Expanded(child: _buildTextField('K Định Mức', kDmCtrl, hint: 'VD: 100.0000')),
@@ -273,7 +340,7 @@ class _CtVtScreenState extends State<CtVtScreen> {
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 alignment: Alignment.centerRight,
-                                child: Text('${errorResult! >= 0 ? "+" : ""}${errorResult!.toStringAsFixed(4)} %',
+                                child: Text('${effectiveError >= 0 ? "+" : ""}${effectiveError.toStringAsFixed(4)} %',
                                     style: TextStyle(
                                       fontSize: AppTheme.fontSizeTitle,
                                       fontWeight: FontWeight.bold,
@@ -310,6 +377,15 @@ class _CtVtScreenState extends State<CtVtScreen> {
                             textAlign: TextAlign.center,
                           ),
                         ),
+                      const SizedBox(height: 12),
+                      StandardEvaluationWidget(
+                        testCode: 'TITU_Ratio',
+                        voltageLevel: _voltageLevel,
+                        symbol: _deviceType == 'TI' ? 'Δki' : 'Δku',
+                        primaryValue: effectiveError.abs(),
+                        unit: '%',
+                        customTitle: 'ĐỐI CHIẾU TIÊU CHUẨN SAI SỐ TỶ SỐ',
+                      ),
                     ],
                     UncertaintyEquipmentSection(
                       testId: 'TITU_Ratio_Error',

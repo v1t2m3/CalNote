@@ -6,6 +6,9 @@ import '../core/theme/app_theme.dart';
 import '../core/utils/app_formatters.dart';
 import 'note_detail_screen.dart';
 import '../widgets/equipment_icon_widget.dart';
+import '../services/calibration_service.dart';
+import '../widgets/uncertainty_widget.dart';
+import '../widgets/standard_evaluation_widget.dart';
 
 class CableScreen extends StatefulWidget {
   const CableScreen({super.key});
@@ -15,6 +18,8 @@ class CableScreen extends StatefulWidget {
 }
 
 class _CableScreenState extends State<CableScreen> {
+  String _cableVoltageLevel = '<=35kV';
+
   // MODULE 1: CÁCH ĐIỆN CÁP
   final TextEditingController r15sCtrl = TextEditingController();
   final TextEditingController r60sCtrl = TextEditingController();
@@ -38,6 +43,18 @@ class _CableScreenState extends State<CableScreen> {
   String _material = 'Cu'; // Cu hoặc Al
 
   double? rResultA, rResultB, rResultC, deltaRdc;
+
+  CalibratedEquipmentModel? _selectedCableEquipment;
+  final Map<String, UncertaintyResult?> _cableRdcPhaseUncertainty = {};
+
+  @override
+  void initState() {
+    super.initState();
+    final eqs = CalibrationService.getEquipmentsForTest('CABLE_Rdc_20_Cu');
+    if (eqs.isNotEmpty) {
+      _selectedCableEquipment = eqs.first;
+    }
+  }
 
   // MODULE 3: THỬ CHIỆU ĐIỆN ÁP CAO (HI-POT DC / VLF)
   final TextEditingController iLeakACtrl = TextEditingController();
@@ -174,10 +191,78 @@ class _CableScreenState extends State<CableScreen> {
         rResultC = null;
       }
 
+      _cableRdcPhaseUncertainty.clear();
+      if (CalibrationService.isUncertaintyEnabled) {
+        final eqs = CalibrationService.getEquipmentsForTest(formulaId);
+        final eq = _selectedCableEquipment ?? (eqs.isNotEmpty ? eqs.first : null);
+        if (eq != null) {
+          double factor = (kMat + 20) / (kMat + tDo);
+          if (rACtrl.text.isNotEmpty && rA > 0) {
+            final rawA = CalibrationService.calculateUncertainty(
+              equipment: eq,
+              measuredValue: rA,
+              unit: 'mΩ',
+            );
+            double rQdA = rawA.correctedValue * factor;
+            _cableRdcPhaseUncertainty['Pha A'] = rawA.withDerived(
+              derivedName: 'R_20 (20°C)',
+              derivedCorrected: rQdA,
+              derivedMinBound: rawA.minBound * factor,
+              derivedMaxBound: rawA.maxBound * factor,
+              derivedUnit: 'mΩ',
+            );
+          }
+          if (rBCtrl.text.isNotEmpty && rB > 0) {
+            final rawB = CalibrationService.calculateUncertainty(
+              equipment: eq,
+              measuredValue: rB,
+              unit: 'mΩ',
+            );
+            double rQdB = rawB.correctedValue * factor;
+            _cableRdcPhaseUncertainty['Pha B'] = rawB.withDerived(
+              derivedName: 'R_20 (20°C)',
+              derivedCorrected: rQdB,
+              derivedMinBound: rawB.minBound * factor,
+              derivedMaxBound: rawB.maxBound * factor,
+              derivedUnit: 'mΩ',
+            );
+          }
+          if (rCCtrl.text.isNotEmpty && rC > 0) {
+            final rawC = CalibrationService.calculateUncertainty(
+              equipment: eq,
+              measuredValue: rC,
+              unit: 'mΩ',
+            );
+            double rQdC = rawC.correctedValue * factor;
+            _cableRdcPhaseUncertainty['Pha C'] = rawC.withDerived(
+              derivedName: 'R_20 (20°C)',
+              derivedCorrected: rQdC,
+              derivedMinBound: rawC.minBound * factor,
+              derivedMaxBound: rawC.maxBound * factor,
+              derivedUnit: 'mΩ',
+            );
+          }
+        }
+      }
+
+      // Xác định các giá trị R hiệu quả (lấy R_20_hc sau hiệu chuẩn nếu ĐKĐBĐ bật)
+      double? effA = (CalibrationService.isUncertaintyEnabled &&
+              _cableRdcPhaseUncertainty['Pha A']?.derivedCorrected != null)
+          ? _cableRdcPhaseUncertainty['Pha A']!.derivedCorrected
+          : rResultA;
+      double? effB = (CalibrationService.isUncertaintyEnabled &&
+              _cableRdcPhaseUncertainty['Pha B']?.derivedCorrected != null)
+          ? _cableRdcPhaseUncertainty['Pha B']!.derivedCorrected
+          : rResultB;
+      double? effC = (CalibrationService.isUncertaintyEnabled &&
+              _cableRdcPhaseUncertainty['Pha C']?.derivedCorrected != null)
+          ? _cableRdcPhaseUncertainty['Pha C']!.derivedCorrected
+          : rResultC;
+
       List<double> validRs = [];
-      if (rResultA != null) validRs.add(rResultA!);
-      if (rResultB != null) validRs.add(rResultB!);
-      if (rResultC != null) validRs.add(rResultC!);
+      if (effA != null) validRs.add(effA);
+      if (effB != null) validRs.add(effB);
+      if (effC != null) validRs.add(effC);
 
       if (validRs.length > 1) {
         double maxR = validRs.reduce(max);
@@ -349,6 +434,37 @@ class _CableScreenState extends State<CableScreen> {
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
+            // CARD LỌC CẤP ĐIỆN ÁP
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Row(
+                  children: [
+                    const Text('Cấp điện áp:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white70)),
+                    const SizedBox(width: 16),
+                    ChoiceChip(
+                      label: const Text('> 35kV'),
+                      selected: _cableVoltageLevel == '>35kV',
+                      selectedColor: AppTheme.myOrangeAccent,
+                      onSelected: (val) {
+                        if (val) setState(() => _cableVoltageLevel = '>35kV');
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    ChoiceChip(
+                      label: const Text('≤ 35kV'),
+                      selected: _cableVoltageLevel == '<=35kV',
+                      selectedColor: AppTheme.myOrangeAccent,
+                      onSelected: (val) {
+                        if (val) setState(() => _cableVoltageLevel = '<=35kV');
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+
             // MODULE 1: ĐIỆN TRỞ CÁCH ĐIỆN CÁP
             Card(
               child: Padding(
@@ -412,7 +528,7 @@ class _CableScreenState extends State<CableScreen> {
                           ),
                         ),
                       ),
-                    if (r60sConverted != null)
+                    if (r60sConverted != null) ...[
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: FittedBox(
@@ -427,6 +543,15 @@ class _CableScreenState extends State<CableScreen> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 12),
+                      StandardEvaluationWidget(
+                        testCode: 'CABLE_R_cd',
+                        voltageLevel: _cableVoltageLevel,
+                        primaryValue: r60sConverted,
+                        unit: 'MΩ',
+                        customTitle: 'ĐỐI CHIẾU TIÊU CHUẨN CÁCH ĐIỆN CÁP',
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -481,78 +606,121 @@ class _CableScreenState extends State<CableScreen> {
                       child: const Text('QUY ĐỔI R_DC VỀ 20°C'),
                     ),
                     if (rResultA != null || rResultB != null || rResultC != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      Builder(
+                        builder: (context) {
+                          final effA = (CalibrationService.isUncertaintyEnabled &&
+                                  _cableRdcPhaseUncertainty['Pha A']?.derivedCorrected != null)
+                              ? _cableRdcPhaseUncertainty['Pha A']!.derivedCorrected
+                              : rResultA;
+                          final effB = (CalibrationService.isUncertaintyEnabled &&
+                                  _cableRdcPhaseUncertainty['Pha B']?.derivedCorrected != null)
+                              ? _cableRdcPhaseUncertainty['Pha B']!.derivedCorrected
+                              : rResultB;
+                          final effC = (CalibrationService.isUncertaintyEnabled &&
+                                  _cableRdcPhaseUncertainty['Pha C']?.derivedCorrected != null)
+                              ? _cableRdcPhaseUncertainty['Pha C']!.derivedCorrected
+                              : rResultC;
+
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Column(
                               children: [
-                                if (rResultA != null)
-                                  Flexible(
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        'Ra: ${rResultA!.toStringAsFixed(3)} mΩ',
-                                        style: const TextStyle(
-                                          color: AppTheme.statusGreen,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: AppTheme.fontSizeBody,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    if (effA != null)
+                                      Flexible(
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            'Ra: ${effA.toStringAsFixed(3)} mΩ',
+                                            style: const TextStyle(
+                                              color: AppTheme.statusGreen,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: AppTheme.fontSizeBody,
+                                            ),
+                                          ),
                                         ),
+                                      ),
+                                    const SizedBox(width: 6),
+                                    if (effB != null)
+                                      Flexible(
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            'Rb: ${effB.toStringAsFixed(3)} mΩ',
+                                            style: const TextStyle(
+                                              color: AppTheme.statusGreen,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: AppTheme.fontSizeBody,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    const SizedBox(width: 6),
+                                    if (effC != null)
+                                      Flexible(
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            'Rc: ${effC.toStringAsFixed(3)} mΩ',
+                                            style: const TextStyle(
+                                              color: AppTheme.statusGreen,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: AppTheme.fontSizeBody,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                                if (deltaRdc != null) ...[
+                                  const SizedBox(height: 6),
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      'ΔR = ${deltaRdc!.toStringAsFixed(2)}% ${deltaRdc! <= 2.0 ? "(✓ Đạt ≤2%)" : "(⚠️ Cảnh báo >2%)"}',
+                                      style: TextStyle(
+                                        color: deltaRdc! <= 2.0
+                                            ? AppTheme.statusGreen
+                                            : AppTheme.cbmLevel4,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: AppTheme.fontSizeTitle,
                                       ),
                                     ),
                                   ),
-                                const SizedBox(width: 6),
-                                if (rResultB != null)
-                                  Flexible(
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        'Rb: ${rResultB!.toStringAsFixed(3)} mΩ',
-                                        style: const TextStyle(
-                                          color: AppTheme.statusGreen,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: AppTheme.fontSizeBody,
-                                        ),
-                                      ),
-                                    ),
+                                  const SizedBox(height: 12),
+                                  StandardEvaluationWidget(
+                                    testCode: 'CABLE_R_dc',
+                                    voltageLevel: _cableVoltageLevel,
+                                    primaryValue: deltaRdc,
+                                    phaseValues: {
+                                      if (effA != null) 'Pha A': effA,
+                                      if (effB != null) 'Pha B': effB,
+                                      if (effC != null) 'Pha C': effC,
+                                    },
+                                    unit: '%',
+                                    customTitle: 'ĐỐI CHIẾU TIÊU CHUẨN ĐIỆN TRỞ RUỘT DẪN CÁP',
                                   ),
-                                const SizedBox(width: 6),
-                                if (rResultC != null)
-                                  Flexible(
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        'Rc: ${rResultC!.toStringAsFixed(3)} mΩ',
-                                        style: const TextStyle(
-                                          color: AppTheme.statusGreen,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: AppTheme.fontSizeBody,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                ],
                               ],
                             ),
-                            if (deltaRdc != null) ...[
-                              const SizedBox(height: 6),
-                              FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  'ΔR = ${deltaRdc!.toStringAsFixed(2)}% ${deltaRdc! <= 2.0 ? "(✓ Đạt ≤2%)" : "(⚠️ Cảnh báo >2%)"}',
-                                  style: TextStyle(
-                                    color: deltaRdc! <= 2.0
-                                        ? AppTheme.statusGreen
-                                        : AppTheme.cbmLevel4,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: AppTheme.fontSizeTitle,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
+                          );
+                        },
                       ),
+                    UncertaintyEquipmentSection(
+                      testId: _material == 'Cu' ? 'CABLE_Rdc_20_Cu' : 'CABLE_Rdc_20_Al',
+                      selectedEquipment: _selectedCableEquipment,
+                      onEquipmentChanged: (newEq) {
+                        setState(() {
+                          _selectedCableEquipment = newEq;
+                          if (rResultA != null || rResultB != null || rResultC != null) {
+                            _tinhRdcRuotDan();
+                          }
+                        });
+                      },
+                      phaseResults: _cableRdcPhaseUncertainty.isNotEmpty ? _cableRdcPhaseUncertainty : null,
+                    ),
                   ],
                 ),
               ),

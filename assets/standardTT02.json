@@ -268,7 +268,7 @@
     "recommendation": "Hút chân không, xử lý khử ẩm hoặc thay mới khí SF6"
   },
   {
-    "id": "TT02_17",
+    "id": "TT02_017",
     "type": "tt02",
     "category": "Dao Cách Ly & Cầu Chì",
     "categoryCode": "disconnector",
@@ -300,7 +300,7 @@
     "recommendation": "Định vị điểm sự cố và khắc phục vỏ cáp."
   },
   {
-    "id": "TT02_19",
+    "id": "TT02_019",
     "type": "tt02",
     "category": "Cáp điện",
     "categoryCode": "cable",
@@ -370,5 +370,23 @@
     "limit": "Uđt ≥ 35 kV",
     "standard": "TCVN 5935-1/2, TCVN 12226:2018, IEEE Std 400.2-2013,IEEE Std 400.4-2015",
     "recommendation": "Định vị điểm sự cố và xử lý cách điện cáp."
+  },
+  {
+    "id": "TT02_023",
+    "type": "tt02",
+    "category": "Cáp điện",
+    "categoryCode": "cable",
+    "subCategory": "Cáp điện",
+    "item": "Đo điện trở một chiều ruột dẫn cáp (ΔR)",
+    "testCode": "CABLE_R_dc",
+    "voltageLevel": "<=35kV",
+    "period": "Định kỳ, sau sửa chữa",
+    "symbol": "ΔR",
+    "compare": "≤",
+    "value": 2.0,
+    "unit": "%",
+    "limit": "ΔR ≤ 2.0 %",
+    "standard": "TCVN 5935-1/2, TCVN 6612, Thông tư 02/2025/TT-BCT",
+    "recommendation": "Kiểm tra đầu cốt ép, mối nối cáp hoặc thay thế đoạn cáp bị tăng trở."
   }
 ]

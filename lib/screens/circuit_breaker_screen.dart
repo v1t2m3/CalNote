@@ -102,34 +102,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
        if (rTxBCtrl.text.isNotEmpty) vals.add(rB);
        if (rTxCCtrl.text.isNotEmpty) vals.add(rC);
        maxRtx = vals.reduce(max);
-       double minR = vals.reduce(min);
-       double avgR = vals.reduce((a, b) => a + b) / vals.length;
-
        final formula = _selectedRtxFormula ?? FormulaService.getFormulaById('MC_Rtx_Delta_Nsx');
-       if (formula != null) {
-         try {
-           final vars = <String, num>{
-             'R_max': maxRtx!,
-             'R_min': minR,
-             'R_avg': avgR,
-             'R_nsx': rNsx > 0 ? rNsx : (minR > 0 ? minR : 1.0),
-           };
-           deltaRtx = FormulaService.calculate(formula.formula, vars);
-         } catch (_) {
-           deltaRtx = null;
-         }
-       }
-
-       // Tính độ lệch % từng pha để đối chiếu tiêu chuẩn
-       _rtxPhaseDeviations = FormulaService.calculatePhaseDeviations(
-         phaseValues: {
-           if (rTxACtrl.text.isNotEmpty) 'Pha A': rA,
-           if (rTxBCtrl.text.isNotEmpty) 'Pha B': rB,
-           if (rTxCCtrl.text.isNotEmpty) 'Pha C': rC,
-         },
-         formulaId: formula?.id,
-         rNsx: rNsx,
-       );
 
        if (CalibrationService.isUncertaintyEnabled) {
          final eqs = CalibrationService.getEquipmentsForTest('MC_R_tx');
@@ -166,6 +139,54 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
        } else {
          _rtxPhaseUncertainty = {};
          _rtxUncertaintyResult = null;
+       }
+
+       // Xác định giá trị từng pha cuối cùng (lấy giá trị sau hiệu chuẩn R_hc nếu BẬT ĐKĐBĐ)
+       Map<String, double> effectivePhaseValues = {};
+       if (CalibrationService.isUncertaintyEnabled && _rtxPhaseUncertainty.isNotEmpty) {
+         if (rTxACtrl.text.isNotEmpty && _rtxPhaseUncertainty['Pha A'] != null) {
+           effectivePhaseValues['Pha A'] = _rtxPhaseUncertainty['Pha A']!.correctedValue;
+         }
+         if (rTxBCtrl.text.isNotEmpty && _rtxPhaseUncertainty['Pha B'] != null) {
+           effectivePhaseValues['Pha B'] = _rtxPhaseUncertainty['Pha B']!.correctedValue;
+         }
+         if (rTxCCtrl.text.isNotEmpty && _rtxPhaseUncertainty['Pha C'] != null) {
+           effectivePhaseValues['Pha C'] = _rtxPhaseUncertainty['Pha C']!.correctedValue;
+         }
+       } else {
+         if (rTxACtrl.text.isNotEmpty) effectivePhaseValues['Pha A'] = rA;
+         if (rTxBCtrl.text.isNotEmpty) effectivePhaseValues['Pha B'] = rB;
+         if (rTxCCtrl.text.isNotEmpty) effectivePhaseValues['Pha C'] = rC;
+       }
+
+       // Tính độ lệch tiếp xúc và độ lệch % từng pha từ giá trị cuối cùng để đối chiếu tiêu chuẩn
+       if (effectivePhaseValues.isNotEmpty) {
+         final effVals = effectivePhaseValues.values.toList();
+         double effMax = effVals.reduce(max);
+         double effMin = effVals.reduce(min);
+         double effAvg = effVals.reduce((a, b) => a + b) / effVals.length;
+
+         if (formula != null) {
+           try {
+             final vars = <String, num>{
+               'R_max': effMax,
+               'R_min': effMin,
+               'R_avg': effAvg,
+               'R_nsx': rNsx > 0 ? rNsx : (effMin > 0 ? effMin : 1.0),
+             };
+             deltaRtx = FormulaService.calculate(formula.formula, vars);
+           } catch (_) {
+             deltaRtx = null;
+           }
+         } else {
+           deltaRtx = effAvg > 0 ? ((effMax - effMin) / effAvg) * 100.0 : 0.0;
+         }
+
+         _rtxPhaseDeviations = FormulaService.calculatePhaseDeviations(
+           phaseValues: effectivePhaseValues,
+           formulaId: formula?.id,
+           rNsx: rNsx,
+         );
        }
     }
     setState(() {});

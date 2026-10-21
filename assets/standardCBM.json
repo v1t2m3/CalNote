@@ -2448,5 +2448,103 @@
     "note": "Tốt: |% Δk| ≤ 0.5%; Xấu: |% Δk| > 0.5%",
     "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
     "recommendation": "Đo dòng từ hóa, R1c, kiểm định lại sai số / thay mới"
+  },
+  {
+    "id": "STD_097",
+    "type": "cbm",
+    "category": "Cáp điện",
+    "categoryCode": "cable",
+    "subCategory": "Cáp điện",
+    "item": "Đo điện trở một chiều ruột dẫn cáp (ΔR)",
+    "testCode": "CABLE_R_dc",
+    "voltageLevel": "<=35kV",
+    "symbol": "ΔR",
+    "unit": "%",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 2.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 2.0,
+        "max": 3.0,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 3.0,
+        "max": 5.0,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 5.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 2.0 %",
+    "fair": "2.0 ~ 3.0 %",
+    "average": "3.0 ~ 5.0 %",
+    "poor": "> 5.0 %",
+    "note": "Tốt: ΔR ≤ 2.0%; Khá: 2.0% < ΔR ≤ 3.0%; TB: 3.0% < ΔR ≤ 5.0%; Xấu: ΔR > 5.0%",
+    "standard": "EVNCPC-KT/QT.40 - Phần III (CBM Trung áp)",
+    "recommendation": "Kiểm tra đầu cốt ép cáp, siết lại hoặc ép lại cốt tiếp xúc."
+  },
+  {
+    "id": "STD_098",
+    "type": "cbm",
+    "category": "Aptomat (MCB/MCCB)",
+    "categoryCode": "aptomat",
+    "subCategory": "Aptomat (MCB/MCCB)",
+    "item": "Đo điện trở tiếp xúc các cực (Rtx)",
+    "testCode": "APT_R_tx",
+    "voltageLevel": "<=35kV",
+    "symbol": "Rtx",
+    "unit": "μΩ",
+    "levels": {
+      "level1": {
+        "compare": "≤",
+        "value": 300.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Tốt"
+      },
+      "level2": {
+        "compare": "between",
+        "value": null,
+        "min": 300.0,
+        "max": 500.0,
+        "conclusion": "Khá"
+      },
+      "level3": {
+        "compare": "between",
+        "value": null,
+        "min": 500.0,
+        "max": 800.0,
+        "conclusion": "Trung bình"
+      },
+      "level4": {
+        "compare": ">",
+        "value": 800.0,
+        "min": null,
+        "max": null,
+        "conclusion": "Xấu"
+      }
+    },
+    "good": "≤ 300 μΩ",
+    "fair": "300 ~ 500 μΩ",
+    "average": "500 ~ 800 μΩ",
+    "poor": "> 800 μΩ",
+    "note": "Tốt: Rtx ≤ 300 μΩ; Khá: 300 μΩ < Rtx ≤ 500 μΩ; TB: 500 μΩ < Rtx ≤ 800 μΩ; Xấu: Rtx > 800 μΩ",
+    "standard": "EVNCPC-KT/QT.40",
+    "recommendation": "Đóng cắt cơ khí nhiều lần để làm sạch tiếp điểm hoặc thay mới Aptomat nếu tiếp xúc bị cháy xém."
   }
 ]

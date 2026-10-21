@@ -334,8 +334,8 @@ class ReferenceStandardService {
   static const String boxStandards = 'standardsBox';
   static const String boxTT02 = 'tt02Box';
   static const String boxCBM = 'cbmBox';
-  static const int currentSchemaVersion = 5;
-  static const String keySchemaVersion = 'standards_schema_version_v5';
+  static const int currentSchemaVersion = 6;
+  static const String keySchemaVersion = 'standards_schema_version_v6';
 
   /// Khởi tạo các Box Hive và nạp dữ liệu mặc định từ asset nếu rỗng hoặc phiên bản cũ
   static Future<void> init() async {
