@@ -53,7 +53,7 @@
     "subCategory": "Máy biến áp lực",
     "item": "Kiểm tra bên ngoài",
     "testCode": "MBA_Other",
-    "voltageLevel": ">35kV",
+    "voltageLevel": "ALL",
     "period": "Lần đầu, định kỳ, bất thường",
     "limit": "Không rò rỉ dầu, mức dầu bình phụ bình thường, hạt hút ẩm còn tác dụng.",
     "standard": "TCVN 6306:2015 (IEC 60076), TT 02/2025/TT-BCT",
@@ -61,20 +61,6 @@
   },
   {
     "id": "TT02_005",
-    "type": "tt02",
-    "category": "Máy Biến Áp",
-    "categoryCode": "transformer",
-    "subCategory": "Máy biến áp lực",
-    "item": "Kiểm tra bên ngoài",
-    "testCode": "MBA_Other",
-    "voltageLevel": "<=35kV",
-    "period": "Lần đầu, định kỳ, bất thường",
-    "limit": "Không rò rỉ dầu, mức dầu bình phụ bình thường, hạt hút ẩm còn tác dụng.",
-    "standard": "TCVN 6306:2015 (IEC 60076), TT 02/2025/TT-BCT",
-    "recommendation": "Khắc phục hiện tượng rò rỉ dầu, thay hạt hút ẩm."
-  },
-  {
-    "id": "TT02_006",
     "type": "tt02",
     "category": "Máy Biến Áp",
     "categoryCode": "transformer",
@@ -92,7 +78,7 @@
     "recommendation": "Sấy cách điện máy biến áp nếu cách điện ẩm."
   },
   {
-    "id": "TT02_007",
+    "id": "TT02_006",
     "type": "tt02",
     "category": "Máy Biến Áp",
     "categoryCode": "transformer",
@@ -110,14 +96,14 @@
     "recommendation": "Sấy cách điện hoặc lọc dầu nếu không đạt."
   },
   {
-    "id": "TT02_008",
+    "id": "TT02_007",
     "type": "tt02",
     "category": "Máy Biến Áp",
     "categoryCode": "transformer",
     "subCategory": "Máy biến áp lực",
     "item": "Đo tỷ số biến đổi & tổ đấu dây",
     "testCode": "MBA_K_error",
-    "voltageLevel": ">35kV",
+    "voltageLevel": "ALL",
     "period": "Lần đầu, định kỳ, bất thường",
     "symbol": "ΔK",
     "compare": "≤",
@@ -128,25 +114,7 @@
     "recommendation": "Kiểm tra cơ cấu chuyển nấc phân áp OLTC/DETC."
   },
   {
-    "id": "TT02_009",
-    "type": "tt02",
-    "category": "Máy Biến Áp",
-    "categoryCode": "transformer",
-    "subCategory": "Máy biến áp lực",
-    "item": "Đo tỷ số biến đổi & tổ đấu dây",
-    "testCode": "MBA_K_error",
-    "voltageLevel": "<=35kV",
-    "period": "Lần đầu, định kỳ, bất thường",
-    "symbol": "ΔK",
-    "compare": "≤",
-    "value": 0.5,
-    "unit": "%",
-    "limit": "Độ lệch tỷ số biến ΔK ≤ 0.5% ở tất cả các nấc phân áp.",
-    "standard": "TCVN 6306-1:2015, TT 02/2025/TT-BCT",
-    "recommendation": "Kiểm tra chuyển nấc phân áp hoặc đo lại."
-  },
-  {
-    "id": "TT02_010",
+    "id": "TT02_008",
     "type": "tt02",
     "category": "Máy Biến Áp",
     "categoryCode": "transformer",
@@ -160,7 +128,7 @@
     "recommendation": "Lọc sấy hoặc thay thế dầu cách điện."
   },
   {
-    "id": "TT02_011",
+    "id": "TT02_009",
     "type": "tt02",
     "category": "Máy Biến Áp",
     "categoryCode": "transformer",
@@ -174,14 +142,14 @@
     "recommendation": "Lọc sấy hoặc thay thế dầu cách điện."
   },
   {
-    "id": "TT02_012",
+    "id": "TT02_010",
     "type": "tt02",
     "category": "Máy Biến Áp",
     "categoryCode": "transformer",
     "subCategory": "Máy biến áp lực",
     "item": "Đo điện trở một chiều các cuộn dây",
     "testCode": "MBA_R_dc",
-    "voltageLevel": ">35kV",
+    "voltageLevel": "ALL",
     "period": "Lần đầu, định kỳ, bất thường",
     "symbol": "ΔR",
     "compare": "≤",
@@ -192,32 +160,14 @@
     "recommendation": "Kiểm tra, xử lý theo quy định nhà sản xuất khi chỉ tiêu không đạt."
   },
   {
-    "id": "TT02_013",
-    "type": "tt02",
-    "category": "Máy Biến Áp",
-    "categoryCode": "transformer",
-    "subCategory": "Máy biến áp lực",
-    "item": "Đo điện trở một chiều các cuộn dây",
-    "testCode": "MBA_R_dc",
-    "voltageLevel": "<=35kV",
-    "period": "Lần đầu, định kỳ, bất thường",
-    "symbol": "ΔR",
-    "compare": "≤",
-    "value": 2,
-    "unit": "%",
-    "limit": "Độ lệch điện trở 1 chiều giữa các pha ΔR ≤ 2 % (so với nhãn máy/nghiệm thu)",
-    "standard": "TCVN 6306-1:2015, TCVN 6306-5:2006, TT 02/2025/TT-BCT",
-    "recommendation": "Kiểm tra, xử lý theo quy định nhà sản xuất khi chỉ tiêu không đạt."
-  },
-  {
-    "id": "TT02_014",
+    "id": "TT02_011",
     "type": "tt02",
     "category": "Máy Cắt & Tủ Đóng Cắt",
     "categoryCode": "circuit_breaker",
     "subCategory": "Máy cắt",
     "item": "Đo điện trở tiếp xúc mạch chính (Rtx)",
     "testCode": "MC_R_tx",
-    "voltageLevel": ">35kV",
+    "voltageLevel": "ALL",
     "period": "Lần đầu, định kỳ, bất thường",
     "symbol": "ΔRtx",
     "compare": "≤",
@@ -228,32 +178,14 @@
     "recommendation": "Bảo dưỡng cơ cấu truyền động và tiếp điểm chính máy cắt."
   },
   {
-    "id": "TT02_015",
-    "type": "tt02",
-    "category": "Máy Cắt & Tủ Đóng Cắt",
-    "categoryCode": "circuit_breaker",
-    "subCategory": "Máy cắt",
-    "item": "Đo điện trở tiếp xúc các tiếp điểm (Rtx)",
-    "testCode": "MC_R_tx",
-    "voltageLevel": "<=35kV",
-    "period": "Lần đầu, định kỳ, bất thường",
-    "symbol": "ΔRtx",
-    "compare": "≤",
-    "value": 50,
-    "unit": "%",
-    "limit": "ΔRtx ≤ 50 %",
-    "standard": "TCVN 8096-200:2010 (IEC 62271-200), TT 02/2025/TT-BCT",
-    "recommendation": "Bảo dưỡng cơ cấu truyền động và tiếp điểm chính máy cắt."
-  },
-  {
-    "id": "TT02_016",
+    "id": "TT02_012",
     "type": "tt02",
     "category": "Máy Cắt & Tủ Đóng Cắt",
     "categoryCode": "circuit_breaker",
     "subCategory": "Máy cắt",
     "item": "Đo chu trình thao tác máy cắt - đóng",
     "testCode": "MC_Time_Close",
-    "voltageLevel": ">35kV",
+    "voltageLevel": "ALL",
     "period": "Lần đầu, định kỳ, bất thường",
     "symbol": "t",
     "compare": "≤",
@@ -264,14 +196,14 @@
     "recommendation": "Kiểm tra truyền động, cuộn đóng và xử lý theo quy định nhà sản xuất khi chỉ tiêu không đạt."
   },
   {
-    "id": "TT02_017",
+    "id": "TT02_013",
     "type": "tt02",
     "category": "Máy Cắt & Tủ Đóng Cắt",
     "categoryCode": "circuit_breaker",
     "subCategory": "Máy cắt",
     "item": "Đo chu trình thao tác máy cắt - cắt",
     "testCode": "MC_Time_Open",
-    "voltageLevel": ">35kV",
+    "voltageLevel": "ALL",
     "period": "Lần đầu, định kỳ, bất thường",
     "symbol": "t",
     "compare": "≤",
@@ -282,7 +214,7 @@
     "recommendation": "Kiểm tra truyền động, cuộn cắt và xử lý theo quy định nhà sản xuất khi chỉ tiêu không đạt."
   },
   {
-    "id": "TT02_018",
+    "id": "TT02_014",
     "type": "tt02",
     "category": "Máy Cắt & Tủ Đóng Cắt",
     "categoryCode": "circuit_breaker",
@@ -300,7 +232,7 @@
     "recommendation": "Hút chân không, xử lý khử ẩm hoặc thay mới khí SF6"
   },
   {
-    "id": "TT02_019",
+    "id": "TT02_015",
     "type": "tt02",
     "category": "Máy Cắt & Tủ Đóng Cắt",
     "categoryCode": "circuit_breaker",
@@ -318,7 +250,7 @@
     "recommendation": "Hút chân không, xử lý khử ẩm hoặc thay mới khí SF6"
   },
   {
-    "id": "TT02_020",
+    "id": "TT02_016",
     "type": "tt02",
     "category": "Máy Cắt & Tủ Đóng Cắt",
     "categoryCode": "circuit_breaker",
@@ -336,50 +268,14 @@
     "recommendation": "Hút chân không, xử lý khử ẩm hoặc thay mới khí SF6"
   },
   {
-    "id": "TT02_021",
-    "type": "tt02",
-    "category": "Máy Cắt & Tủ Đóng Cắt",
-    "categoryCode": "circuit_breaker",
-    "subCategory": "Máy cắt",
-    "item": "Đo chu trình thao tác máy cắt - đóng",
-    "testCode": "MC_Time_Close",
-    "voltageLevel": "<=35kV",
-    "period": "Lần đầu, định kỳ, bất thường",
-    "symbol": "t",
-    "compare": "≤",
-    "value": 5.0,
-    "unit": "ms",
-    "limit": "t ≤ 5 ms",
-    "standard": "IEC 62271-100:2021",
-    "recommendation": "Kiểm tra truyền động, cuộn đóng và xử lý theo quy định nhà sản xuất khi chỉ tiêu không đạt."
-  },
-  {
-    "id": "TT02_022",
-    "type": "tt02",
-    "category": "Máy Cắt & Tủ Đóng Cắt",
-    "categoryCode": "circuit_breaker",
-    "subCategory": "Máy cắt",
-    "item": "Đo chu trình thao tác máy cắt - cắt",
-    "testCode": "MC_Time_Open",
-    "voltageLevel": "<=35kV",
-    "period": "Lần đầu, định kỳ, bất thường",
-    "symbol": "t",
-    "compare": "≤",
-    "value": 3.3,
-    "unit": "ms",
-    "limit": "t ≤ 3.3 ms",
-    "standard": "IEC 62271-100:2021",
-    "recommendation": "Kiểm tra truyền động, cuộn cắt và xử lý theo quy định nhà sản xuất khi chỉ tiêu không đạt."
-  },
-  {
-    "id": "TT02_23",
+    "id": "TT02_17",
     "type": "tt02",
     "category": "Dao Cách Ly & Cầu Chì",
     "categoryCode": "disconnector",
     "subCategory": "Dao cách ly",
     "item": "Đo điện trở tiếp xúc",
     "testCode": "DCL_R_tx",
-    "voltageLevel": "<=35kV",
+    "voltageLevel": "ALL",
     "period": "Lần đầu, định kỳ, bất thường",
     "symbol": "ΔRtx",
     "compare": "≤",
@@ -390,25 +286,7 @@
     "recommendation": "Bảo dưỡng tiếp xúc ngàm và dao tiếp địa."
   },
   {
-    "id": "TT02_024",
-    "type": "tt02",
-    "category": "Dao Cách Ly & Cầu Chì",
-    "categoryCode": "disconnector",
-    "subCategory": "Dao cách ly",
-    "item": "Đo điện trở tiếp xúc",
-    "testCode": "DCL_R_tx",
-    "voltageLevel": ">35kV",
-    "period": "Lần đầu, định kỳ, bất thường",
-    "symbol": "ΔRtx",
-    "compare": "≤",
-    "value": 50,
-    "unit": "%",
-    "limit": "Rtx đạt NSX; Thao tác đóng cắt bằng tay & từ xa linh hoạt, tiếp xúc tốt.",
-    "standard": "TCVN 8096-102 (IEC 62271-102), TT 02/2025/TT-BCT",
-    "recommendation": "Bảo dưỡng tiếp xúc ngàm và dao tiếp địa."
-  },
-  {
-    "id": "TT02_025",
+    "id": "TT02_018",
     "type": "tt02",
     "category": "Cáp điện",
     "categoryCode": "cable",
@@ -422,7 +300,7 @@
     "recommendation": "Định vị điểm sự cố và khắc phục vỏ cáp."
   },
   {
-    "id": "TT02_026",
+    "id": "TT02_19",
     "type": "tt02",
     "category": "Cáp điện",
     "categoryCode": "cable",
@@ -440,7 +318,7 @@
     "recommendation": "Định vị điểm sự cố và xử lý cách điện cáp."
   },
   {
-    "id": "TT02_027",
+    "id": "TT02_020",
     "type": "tt02",
     "category": "Cáp điện",
     "categoryCode": "cable",
@@ -458,7 +336,7 @@
     "recommendation": "Định vị điểm sự cố và xử lý cách điện cáp."
   },
   {
-    "id": "TT02_028",
+    "id": "TT02_021",
     "type": "tt02",
     "category": "Cáp điện",
     "categoryCode": "cable",
@@ -476,7 +354,7 @@
     "recommendation": "Định vị điểm sự cố và xử lý cách điện cáp."
   },
   {
-    "id": "TT02_029",
+    "id": "TT02_022",
     "type": "tt02",
     "category": "Cáp điện",
     "categoryCode": "cable",
