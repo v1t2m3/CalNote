@@ -37,20 +37,36 @@ class UncertaintyEquipmentSection extends StatelessWidget {
     this.summaryPass,
   });
 
+  /// Kiểm tra điều kiện hiển thị của thẻ Hiệu chuẩn & ĐKĐBĐ:
+  /// 1. Tính năng ĐKĐBĐ phải được BẬT
+  /// 2. Có thiết bị hiệu chuẩn tương thích trong danh mục
+  /// 3. ĐÃ CÓ KẾT QUẢ TÍNH TOÁN (chỉ xuất hiện sau khi người dùng nhập số liệu và bấm nút TÍNH)
+  static bool shouldDisplay({
+    required bool isUncertaintyEnabled,
+    required bool hasAvailableEquipments,
+    required UncertaintyResult? uncertaintyResult,
+    required Map<String, UncertaintyResult?>? phaseResults,
+  }) {
+    if (!isUncertaintyEnabled) return false;
+    if (!hasAvailableEquipments) return false;
+    final bool hasMultiPhase = phaseResults != null &&
+        phaseResults.values.any((res) => res != null);
+    final bool hasSingleResult = uncertaintyResult != null;
+    return hasSingleResult || hasMultiPhase;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // 1. Chỉ hiển thị khi tính năng ĐKĐBĐ được BẬT
-    if (!CalibrationService.isUncertaintyEnabled) {
-      return const SizedBox.shrink();
-    }
-
-    // 2. Chỉ hiển thị khi có thiết bị hiệu chuẩn trong danh mục cho phép đo này
     final availableEquipments = CalibrationService.getEquipmentsForTest(testId);
-    if (availableEquipments.isEmpty) {
+    if (!shouldDisplay(
+      isUncertaintyEnabled: CalibrationService.isUncertaintyEnabled,
+      hasAvailableEquipments: availableEquipments.isNotEmpty,
+      uncertaintyResult: uncertaintyResult,
+      phaseResults: phaseResults,
+    )) {
       return const SizedBox.shrink();
     }
 
-    // Luôn tìm chính xác thiết bị đang chọn theo ID để tránh lỗi so sánh tham chiếu
     final currentEq = availableEquipments.firstWhere(
       (e) => e.id == selectedEquipment?.id,
       orElse: () => availableEquipments.first,
@@ -59,11 +75,6 @@ class UncertaintyEquipmentSection extends StatelessWidget {
     final bool hasMultiPhase = phaseResults != null &&
         phaseResults!.values.any((res) => res != null);
     final bool hasSingleResult = uncertaintyResult != null;
-
-    // 3. Chỉ hiển thị khi ĐÃ CÓ KẾT QUẢ TÍNH TOÁN (khi người dùng đã nhập số liệu và bấm nút TÍNH)
-    if (!hasSingleResult && !hasMultiPhase) {
-      return const SizedBox.shrink();
-    }
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
