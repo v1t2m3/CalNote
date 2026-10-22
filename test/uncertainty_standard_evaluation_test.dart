@@ -1,17 +1,36 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive/hive.dart';
 import 'package:mte_calculator_pro/services/calibration_service.dart';
+import 'package:mte_calculator_pro/widgets/uncertainty_widget.dart';
 
 void main() {
   late List<CalibratedEquipmentModel> equipments;
+  late Directory tempDir;
 
-  setUpAll(() {
+  setUpAll(() async {
+    tempDir = await Directory.systemTemp.createTemp('hive_calib_test_');
+    Hive.init(tempDir.path);
+    final cBox = await Hive.openBox(CalibrationService.boxName);
+
     final calibFile = File('assets/calibrated_equipment.json');
     final list = jsonDecode(calibFile.readAsStringSync()) as List;
     equipments = list
         .map((e) => CalibratedEquipmentModel.fromJson(Map<String, dynamic>.from(e)))
         .toList();
+
+    for (var eq in equipments) {
+      await cBox.put(eq.id, eq.toJson());
+    }
+  });
+
+  tearDownAll(() async {
+    await Hive.close();
+    if (tempDir.existsSync()) {
+      tempDir.deleteSync(recursive: true);
+    }
   });
 
   CalibratedEquipmentModel getEquipmentForTest(String testCode) {
@@ -149,6 +168,51 @@ void main() {
       // Đánh giá tiêu chuẩn >= 97% (Purity)
       final verdict = resPurity.evaluate(97.0, isUpperBound: false);
       expect(verdict, equals(UncertaintyVerdict.pass));
+    });
+
+    testWidgets('UncertaintyEquipmentSection remains hidden until calculated and appears after calculation', (WidgetTester tester) async {
+      await CalibrationService.setUncertaintyEnabled(true);
+      final eq = getEquipmentForTest('MC_R_tx');
+
+      // 1. Khi chưa có kết quả tính: Thẻ phải ẨN hoàn toàn
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: UncertaintyEquipmentSection(
+              testId: 'MC_R_tx',
+              selectedEquipment: eq,
+              onEquipmentChanged: (_) {},
+              uncertaintyResult: null,
+              phaseResults: null,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('HIỆU CHUẨN & ĐKĐBĐ (ISO 17025)'), findsNothing);
+
+      // 2. Khi đã có kết quả tính: Thẻ xuất hiện để người dùng xem và chọn đổi thiết bị
+      final res = CalibrationService.calculateUncertainty(
+        equipment: eq,
+        measuredValue: 80.0,
+        unit: 'microΩ',
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: UncertaintyEquipmentSection(
+              testId: 'MC_R_tx',
+              selectedEquipment: eq,
+              onEquipmentChanged: (_) {},
+              uncertaintyResult: res,
+              phaseResults: {'Pha A': res},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('HIỆU CHUẨN & ĐKĐBĐ (ISO 17025)'), findsOneWidget);
     });
   });
 }

@@ -60,6 +60,11 @@ class UncertaintyEquipmentSection extends StatelessWidget {
         phaseResults!.values.any((res) => res != null);
     final bool hasSingleResult = uncertaintyResult != null;
 
+    // 3. Chỉ hiển thị khi ĐÃ CÓ KẾT QUẢ TÍNH TOÁN (khi người dùng đã nhập số liệu và bấm nút TÍNH)
+    if (!hasSingleResult && !hasMultiPhase) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(12),

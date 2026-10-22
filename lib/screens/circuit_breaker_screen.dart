@@ -750,24 +750,22 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                            return const SizedBox.shrink();
                          }
                        ),
-                    ],
-                    UncertaintyEquipmentSection(
-                      testId: 'MC_R_tx',
-                      selectedEquipment: _selectedRtxEquipment,
-                      onEquipmentChanged: (newEq) {
-                        setState(() {
-                          _selectedRtxEquipment = newEq;
-                          if (maxRtx != null) {
-                            _tinhTiepXuc();
-                          }
-                        });
-                      },
-                      phaseResults: _rtxPhaseUncertainty.isNotEmpty ? _rtxPhaseUncertainty : null,
-                      uncertaintyResult: _rtxUncertaintyResult,
-                      standardLimit: 100.0,
-                      isUpperBound: true,
-                    ),
-                    if (maxRtx != null)
+                      UncertaintyEquipmentSection(
+                        testId: 'MC_R_tx',
+                        selectedEquipment: _selectedRtxEquipment,
+                        onEquipmentChanged: (newEq) {
+                          setState(() {
+                            _selectedRtxEquipment = newEq;
+                            if (maxRtx != null) {
+                              _tinhTiepXuc();
+                            }
+                          });
+                        },
+                        phaseResults: _rtxPhaseUncertainty.isNotEmpty ? _rtxPhaseUncertainty : null,
+                        uncertaintyResult: _rtxUncertaintyResult,
+                        standardLimit: 100.0,
+                        isUpperBound: true,
+                      ),
                       StandardEvaluationWidget(
                         testCode: 'MC_R_tx',
                         voltageLevel: _cbVoltageLevel,
