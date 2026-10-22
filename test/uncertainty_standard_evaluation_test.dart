@@ -106,5 +106,49 @@ void main() {
       double r20Hc = raw.correctedValue * factor;
       expect(r20Hc, lessThan(raw.correctedValue));
     });
+
+    test('CT-6500/S2 (CAL_EQ_08_CT65000) calibrates MC_Time_Delta and points', () {
+      final eq = getEquipmentForTest('MC_Time_Delta');
+      expect(eq.id, equals('CAL_EQ_08_CT65000'));
+      expect(eq.type, equals('CT-6500/S2'));
+
+      // Kiểm tra điểm 100.0 ms -> correction = -0.10 ms -> correctedValue = 99.90 ms
+      final res100 = CalibrationService.calculateUncertainty(
+        equipment: eq,
+        measuredValue: 100.0,
+        unit: 'ms',
+      );
+      expect(res100.correction, closeTo(-0.10, 1e-3));
+      expect(res100.correctedValue, closeTo(99.90, 1e-3));
+
+      // Kiểm tra điểm 4000.0 ms -> correction = -3.00 ms -> correctedValue = 3997.00 ms
+      final res4000 = CalibrationService.calculateUncertainty(
+        equipment: eq,
+        measuredValue: 4000.0,
+        unit: 'ms',
+      );
+      expect(res4000.correction, closeTo(-3.00, 1e-3));
+      expect(res4000.correctedValue, closeTo(3997.00, 1e-3));
+    });
+
+    test('DILO 3-38R (CAL_EQ_09_DILOSF6) calibrates MC_SF6_Purity with uncertainty', () {
+      final eq = getEquipmentForTest('MC_SF6_Purity');
+      expect(eq.id, equals('CAL_EQ_09_DILOSF6'));
+      expect(eq.type, equals('DILO 3-38R'));
+
+      // Kiểm tra điểm 99.96 % -> correction = +0.04 % -> correctedValue = 100.00 %
+      final resPurity = CalibrationService.calculateUncertainty(
+        equipment: eq,
+        measuredValue: 99.96,
+        unit: '%',
+      );
+      expect(resPurity.correction, closeTo(0.04, 1e-3));
+      expect(resPurity.correctedValue, closeTo(100.00, 1e-3));
+      expect(resPurity.expandedUncertainty, greaterThan(0.0));
+
+      // Đánh giá tiêu chuẩn >= 97% (Purity)
+      final verdict = resPurity.evaluate(97.0, isUpperBound: false);
+      expect(verdict, equals(UncertaintyVerdict.pass));
+    });
   });
 }

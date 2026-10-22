@@ -942,5 +942,132 @@
         ]
       }
     ]
+  },
+  {
+    "id": "CAL_EQ_08_CT65000",
+    "name": "Thiết bị chụp sóng máy cắt",
+    "type": "CT-6500/S2",
+    "serial": "LKN66239",
+    "targetItem": [
+      "Đo thời gian đóng cắt"
+    ],
+    "applicableTests": [
+      "MC_Time_Close",
+      "MC_Time_Open",
+      "MC_Time_Delta"
+    ],
+    "k": 2.0,
+    "confidenceLevel": "95%",
+    "scales": [
+      {
+        "scaleId": "scale_1",
+        "scaleName": "Thời gian đóng/cắt",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "ms",
+            "min": 0.00,
+            "max": 10000.00,
+            "uPercent": 0.01,
+            "calibrationPoints": [
+              {
+                "baseValue": 99.90,
+                "deviceValue": 100.00,
+                "correction": -0.10
+              },
+              {
+                "baseValue": 199.60,
+                "deviceValue": 200.00,
+                "correction": -0.40
+              },
+              {
+                "baseValue": 499.30,
+                "deviceValue": 500.004,
+                "correction": -0.70
+              },
+              {
+                "baseValue": 999.30,
+                "deviceValue": 1000.00,
+                "correction": -0.70
+              },
+              {
+                "baseValue": 1999.00,
+                "deviceValue": 2000.00,
+                "correction": -1.00
+              },
+              {
+                "baseValue": 3997.00,
+                "deviceValue": 4000.00,
+                "correction": -3.00
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "CAL_EQ_09_DILOSF6",
+    "name": "Máy phân tích khí SF6",
+    "type": "DILO 3-38R",
+    "serial": "2000029138",
+    "targetItem": [
+      "Đo độ tinh khiết khí SF6"
+    ],
+    "applicableTests": [
+      "MC_SF6_Purity"
+    ],
+    "k": 2.0,
+    "confidenceLevel": "95%",
+    "scales": [
+      {
+        "scaleId": "scale_1",
+        "scaleName": "SF6",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "%",
+            "min": 0.00,
+            "max": 69.99,
+            "uPercent": 1.8,
+            "calibrationPoints": [
+              {
+                "baseValue": 60.203,
+                "deviceValue": 61.230,
+                "correction": -1.027
+              }
+            ]
+          },
+          {
+            "rangeId": "range_2",
+            "unit": "%",
+            "min": 70.00,
+            "max": 89.99,
+            "uPercent": 2.3,
+            "calibrationPoints": [
+              {
+                "baseValue": 77.348,
+                "deviceValue": 78.210,
+                "correction": -0.862
+              }
+            ]
+          },
+          {
+            "rangeId": "range_3",
+            "unit": "%",
+            "min": 90.00,
+            "max": 100.00,
+            "uPercent": 3.0,
+            "calibrationPoints": [
+              {
+                "baseValue": 100.00,
+                "deviceValue": 99.96,
+                "correction": 0.04
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 ]

@@ -50,16 +50,24 @@ class CalibrationRangeModel {
   });
 
   factory CalibrationRangeModel.fromJson(Map<String, dynamic> json) {
-    var rawPts = json['calibrationPoints'] as List<dynamic>? ?? [];
+    var rawPts = json['calibrationPoints'];
+    List<CalibrationPointModel> pts = [];
+    if (rawPts is List) {
+      pts = rawPts
+          .map((e) => CalibrationPointModel.fromJson(Map<String, dynamic>.from(e)))
+          .toList();
+    } else if (rawPts is Map) {
+      pts = [
+        CalibrationPointModel.fromJson(Map<String, dynamic>.from(rawPts))
+      ];
+    }
     return CalibrationRangeModel(
       rangeId: json['rangeId'] ?? '',
       unit: json['unit'] ?? '',
       min: (json['min'] as num?)?.toDouble() ?? 0.0,
       max: (json['max'] as num?)?.toDouble() ?? 999999.0,
       uPercent: (json['uPercent'] as num?)?.toDouble() ?? 0.0,
-      calibrationPoints: rawPts
-          .map((e) => CalibrationPointModel.fromJson(Map<String, dynamic>.from(e)))
-          .toList(),
+      calibrationPoints: pts,
     );
   }
 
@@ -260,9 +268,10 @@ class UncertaintyResult {
   }
 
   /// Đánh giá sự phù hợp ILAC-G8 tự động
-  UncertaintyVerdict? evaluateStandard([double? customLimit]) {
+  UncertaintyVerdict? evaluateStandard([double? customLimit, bool? customIsUpperBound]) {
     final limit = customLimit ?? standardLimit;
     if (limit == null) return null;
+    final upper = customIsUpperBound ?? isUpperBound;
 
     final valToCheck = derivedCorrected ?? correctedValue;
     final minToCheck = derivedMinBound ?? minBound;
@@ -285,7 +294,7 @@ class UncertaintyResult {
     }
 
     // Kiểm tra 1 phía (<= limit hoặc >= limit)
-    if (isUpperBound) {
+    if (upper) {
       if (maxToCheck <= limit) {
         return UncertaintyVerdict.pass;
       } else if (valToCheck <= limit) {
@@ -306,7 +315,7 @@ class UncertaintyResult {
 
   /// Đánh giá sự phù hợp với ngưỡng giới hạn tiêu chuẩn (tương thích ngược)
   UncertaintyVerdict evaluate(double limit, {bool isUpperBound = true}) {
-    return evaluateStandard(limit) ??
+    return evaluateStandard(limit, isUpperBound) ??
         (isUpperBound
             ? (maxBound <= limit
                 ? UncertaintyVerdict.pass
@@ -337,10 +346,12 @@ class CalibrationService {
   static const String boxName = 'calibrationBox';
   static const String settingsKey = 'is_uncertainty_enabled';
 
-  /// Khởi tạo Service, nạp danh sách thiết bị mặc định nếu rỗng
+  /// Khởi tạo Service, nạp danh sách thiết bị mặc định nếu rỗng hoặc thiếu thiết bị mới
   static Future<void> init() async {
     final box = await Hive.openBox(boxName);
-    if (box.isEmpty) {
+    if (box.isEmpty ||
+        !box.containsKey('CAL_EQ_08_CT65000') ||
+        !box.containsKey('CAL_EQ_09_DILOSF6')) {
       await loadDefaultEquipments();
     }
   }
@@ -451,7 +462,9 @@ class CalibrationService {
         .replaceAll('µ', 'u')
         .replaceAll('micro', 'u')
         .replaceAll('milli', 'm')
-        .replaceAll('ohm', 'ω');
+        .replaceAll('ohm', 'ω')
+        .replaceAll('ppmv', 'ppm')
+        .replaceAll('°c', 'c');
   }
 
   /// Tính toán giá trị hiệu chính X_hc và ĐKĐBĐ mở rộng U

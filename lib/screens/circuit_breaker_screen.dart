@@ -47,8 +47,23 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
   final TextEditingController tBCtrl = TextEditingController();
   final TextEditingController tCCtrl = TextEditingController();
   String _actionType = 'Close'; // Close hoặc Open
-  double? timeResult; // delta t
+  double? timeResult; // delta t đo
+  double? effectiveDeltaT; // delta t hiệu chỉnh để so sánh tiêu chuẩn
   bool hasTimeWarning = false;
+  CalibratedEquipmentModel? _selectedTimeEquipment;
+  UncertaintyResult? _timeDeltaUncertaintyResult;
+  Map<String, UncertaintyResult?> _timePhaseUncertainty = {};
+
+  // 4. Phân tích khí SF6
+  final TextEditingController sf6PurityCtrl = TextEditingController();
+  final TextEditingController sf6HumCtrl = TextEditingController();
+  final TextEditingController sf6So2Ctrl = TextEditingController();
+  bool _isHumidityDewPoint = false; // false: ppmv, true: °C (điểm sương)
+  double? sf6PurityResult; // % (sau hiệu chuẩn nếu bật ĐKĐBĐ)
+  double? sf6HumPpmResult; // ppmv quy chuẩn tại 20°C
+  double? sf6So2Result; // ppmv
+  CalibratedEquipmentModel? _selectedSf6Equipment;
+  UncertaintyResult? _sf6PurityUncertaintyResult;
 
   @override
   void initState() {
@@ -60,6 +75,41 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
     final rtxFormulas = FormulaService.getFormulasByGroup('MC_R_tx');
     if (rtxFormulas.isNotEmpty) {
       _selectedRtxFormula = rtxFormulas.first;
+    }
+
+    final timeEqs = CalibrationService.getEquipmentsForTest('MC_Time_Delta');
+    if (timeEqs.isNotEmpty) {
+      _selectedTimeEquipment = timeEqs.first;
+    }
+
+    final sf6Eqs = CalibrationService.getEquipmentsForTest('MC_SF6_Purity');
+    if (sf6Eqs.isNotEmpty) {
+      _selectedSf6Equipment = sf6Eqs.first;
+    }
+  }
+
+  /// Quy đổi Điểm sương Dew Point (°C) sang Nồng độ ppmv ở 1 atm (101325 Pa) theo IEC 60376
+  static double dewPointToPpmv(double tDew) {
+    double pw;
+    if (tDew >= 0) {
+      pw = 611.2 * exp((17.62 * tDew) / (243.12 + tDew));
+    } else {
+      pw = 611.2 * exp((22.46 * tDew) / (272.62 + tDew));
+    }
+    return (pw / 101325.0) * 1e6;
+  }
+
+  /// Quy đổi ppmv sang Điểm sương Dew Point (°C) ở 1 atm
+  static double ppmvToDewPoint(double ppmv) {
+    if (ppmv <= 0) return -80.0;
+    double pw = (ppmv / 1e6) * 101325.0;
+    if (pw <= 0) return -80.0;
+    if (pw >= 611.2) {
+      double lnRatio = log(pw / 611.2);
+      return (243.12 * lnRatio) / (17.62 - lnRatio);
+    } else {
+      double lnRatio = log(pw / 611.2);
+      return (272.62 * lnRatio) / (22.46 - lnRatio);
     }
   }
 
@@ -197,27 +247,165 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
     double tB = parseInput(tBCtrl.text);
     double tC = parseInput(tCCtrl.text);
 
-    if (tACtrl.text.isEmpty && tBCtrl.text.isEmpty && tCCtrl.text.isEmpty) return;
-
-    double tMax = max(tA, max(tB, tC));
-    double tMin = min(tA, min(tB, tC));
-
-    final model = FormulaService.getFormulaById('MC_Time_Delta');
-
-    try {
-      if (model != null) {
-        timeResult = FormulaService.calculate(
-            model.formula, {'t_max': tMax, 't_min': tMin});
-      } else {
-        timeResult = tMax - tMin;
-      }
-      
-      hasTimeWarning = _actionType == 'Close' ? (timeResult! > 4.0) : (timeResult! > 2.0);
+    if (tACtrl.text.isEmpty && tBCtrl.text.isEmpty && tCCtrl.text.isEmpty) {
+      timeResult = null;
+      effectiveDeltaT = null;
+      _timePhaseUncertainty = {};
+      _timeDeltaUncertaintyResult = null;
       setState(() {});
-    } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Lỗi tính: $e')));
+      return;
     }
+
+    List<double> rawVals = [];
+    if (tACtrl.text.isNotEmpty) rawVals.add(tA);
+    if (tBCtrl.text.isNotEmpty) rawVals.add(tB);
+    if (tCCtrl.text.isNotEmpty) rawVals.add(tC);
+
+    double tMax = rawVals.reduce(max);
+    double tMin = rawVals.reduce(min);
+    timeResult = tMax - tMin;
+
+    if (CalibrationService.isUncertaintyEnabled) {
+      final eqs = CalibrationService.getEquipmentsForTest('MC_Time_Delta');
+      final eq = _selectedTimeEquipment ?? (eqs.isNotEmpty ? eqs.first : null);
+      if (eq != null) {
+        _timePhaseUncertainty = {};
+        if (tACtrl.text.isNotEmpty) {
+          _timePhaseUncertainty['Pha A'] = CalibrationService.calculateUncertainty(
+            equipment: eq,
+            measuredValue: tA,
+            unit: 'ms',
+          );
+        }
+        if (tBCtrl.text.isNotEmpty) {
+          _timePhaseUncertainty['Pha B'] = CalibrationService.calculateUncertainty(
+            equipment: eq,
+            measuredValue: tB,
+            unit: 'ms',
+          );
+        }
+        if (tCCtrl.text.isNotEmpty) {
+          _timePhaseUncertainty['Pha C'] = CalibrationService.calculateUncertainty(
+            equipment: eq,
+            measuredValue: tC,
+            unit: 'ms',
+          );
+        }
+
+        // Tìm pha có thời gian hiệu chỉnh max và min
+        List<double> correctedPhaseTimes = [];
+        double? uTMax;
+        double? uTMin;
+        double maxTCorr = -1e9;
+        double minTCorr = 1e9;
+
+        for (var entry in _timePhaseUncertainty.entries) {
+          if (entry.value != null) {
+            double cVal = entry.value!.correctedValue;
+            correctedPhaseTimes.add(cVal);
+            if (cVal > maxTCorr) {
+              maxTCorr = cVal;
+              uTMax = entry.value!.expandedUncertainty;
+            }
+            if (cVal < minTCorr) {
+              minTCorr = cVal;
+              uTMin = entry.value!.expandedUncertainty;
+            }
+          }
+        }
+
+        if (correctedPhaseTimes.isNotEmpty) {
+          double deltaThc = maxTCorr - minTCorr;
+          double uDeltaT = sqrt(pow(uTMax ?? 0.0, 2) + pow(uTMin ?? 0.0, 2));
+
+          _timeDeltaUncertaintyResult = UncertaintyResult(
+            measuredValue: timeResult!,
+            correction: deltaThc - timeResult!,
+            correctedValue: deltaThc,
+            uPercent: eq.scales.isNotEmpty && eq.scales.first.ranges.isNotEmpty
+                ? eq.scales.first.ranges.first.uPercent
+                : 0.01,
+            expandedUncertainty: uDeltaT,
+            k: eq.k,
+            confidenceLevel: eq.confidenceLevel,
+            minBound: deltaThc - uDeltaT,
+            maxBound: deltaThc + uDeltaT,
+            unit: 'ms',
+            equipment: eq,
+            range: eq.scales.isNotEmpty && eq.scales.first.ranges.isNotEmpty
+                ? eq.scales.first.ranges.first
+                : null,
+          );
+          effectiveDeltaT = deltaThc;
+        } else {
+          _timeDeltaUncertaintyResult = null;
+          effectiveDeltaT = timeResult;
+        }
+      } else {
+        _timePhaseUncertainty = {};
+        _timeDeltaUncertaintyResult = null;
+        effectiveDeltaT = timeResult;
+      }
+    } else {
+      _timePhaseUncertainty = {};
+      _timeDeltaUncertaintyResult = null;
+      effectiveDeltaT = timeResult;
+    }
+
+    final limit = _actionType == 'Close' ? 4.0 : 2.0;
+    hasTimeWarning = (effectiveDeltaT ?? 0.0) > limit;
+    setState(() {});
+  }
+
+  void _tinhSF6() {
+    double purityRaw = parseInput(sf6PurityCtrl.text);
+    double humRaw = parseInput(sf6HumCtrl.text);
+    double so2Raw = parseInput(sf6So2Ctrl.text);
+
+    // 1. Độ tinh khiết SF6
+    if (sf6PurityCtrl.text.isNotEmpty) {
+      if (CalibrationService.isUncertaintyEnabled) {
+        final eqs = CalibrationService.getEquipmentsForTest('MC_SF6_Purity');
+        final eq = _selectedSf6Equipment ?? (eqs.isNotEmpty ? eqs.first : null);
+        if (eq != null) {
+          _sf6PurityUncertaintyResult = CalibrationService.calculateUncertainty(
+            equipment: eq,
+            measuredValue: purityRaw,
+            unit: '%',
+          );
+          sf6PurityResult = _sf6PurityUncertaintyResult!.correctedValue;
+        } else {
+          _sf6PurityUncertaintyResult = null;
+          sf6PurityResult = purityRaw;
+        }
+      } else {
+        _sf6PurityUncertaintyResult = null;
+        sf6PurityResult = purityRaw;
+      }
+    } else {
+      sf6PurityResult = null;
+      _sf6PurityUncertaintyResult = null;
+    }
+
+    // 2. Độ ẩm SF6
+    if (sf6HumCtrl.text.isNotEmpty) {
+      if (_isHumidityDewPoint) {
+        sf6HumPpmResult = dewPointToPpmv(humRaw);
+      } else {
+        sf6HumPpmResult = humRaw;
+      }
+    } else {
+      sf6HumPpmResult = null;
+    }
+
+    // 3. Hàm lượng SO2
+    if (sf6So2Ctrl.text.isNotEmpty) {
+      sf6So2Result = so2Raw;
+    } else {
+      sf6So2Result = null;
+    }
+
+    setState(() {});
   }
 
   void _saveAllNotes() {
@@ -282,16 +470,65 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
       }
     }
 
-    if (timeResult != null) {
+    if (effectiveDeltaT != null || timeResult != null) {
+      double resVal = effectiveDeltaT ?? timeResult!;
+      String uStr = '';
+      if (_timePhaseUncertainty.isNotEmpty) {
+        final eq = _selectedTimeEquipment;
+        final parts = _timePhaseUncertainty.entries
+            .where((e) => e.value != null)
+            .map((e) =>
+                '${e.key}: ${e.value!.correctedValue.toStringAsFixed(2)}±${e.value!.expandedUncertainty.toStringAsFixed(2)}')
+            .join(', ');
+        uStr = ' [ISO 17025: $parts ms (${eq?.type ?? ''} SN:${eq?.serial ?? ''})]';
+      }
       cals.add(TestCalculation(
-        name: _actionType == 'Close' ? 'Độ không đồng thời (Đóng)' : 'Độ không đồng thời (Cắt)',
+        name: (_actionType == 'Close' ? 'Độ không đồng thời (Đóng)' : 'Độ không đồng thời (Cắt)') + uStr,
         inputs: {
           't_A': parseInput(tACtrl.text),
           't_B': parseInput(tBCtrl.text),
           't_C': parseInput(tCCtrl.text)
         },
-        result: timeResult!,
+        result: resVal,
         unit: 'ms',
+      ));
+    }
+
+    if (sf6PurityResult != null) {
+      String uStr = '';
+      if (_sf6PurityUncertaintyResult != null) {
+        final res = _sf6PurityUncertaintyResult!;
+        uStr = ' [ISO 17025: X_hc=${res.correctedValue.toStringAsFixed(3)} ± ${res.expandedUncertainty.toStringAsFixed(3)}% (${res.equipment.type} SN:${res.equipment.serial})]';
+      }
+      cals.add(TestCalculation(
+        name: 'Độ tinh khiết khí SF6$uStr',
+        inputs: {'Purity_do': parseInput(sf6PurityCtrl.text)},
+        result: sf6PurityResult!,
+        unit: '%',
+      ));
+    }
+
+    if (sf6HumPpmResult != null) {
+      String dewPointStr = '';
+      if (_isHumidityDewPoint) {
+        dewPointStr = ' (Tdew: ${parseInput(sf6HumCtrl.text)} °C)';
+      }
+      cals.add(TestCalculation(
+        name: 'Độ ẩm khí SF6$dewPointStr',
+        inputs: {
+          if (_isHumidityDewPoint) 'T_dew': parseInput(sf6HumCtrl.text) else 'Hum_ppm': parseInput(sf6HumCtrl.text),
+        },
+        result: sf6HumPpmResult!,
+        unit: 'ppmv',
+      ));
+    }
+
+    if (sf6So2Result != null) {
+      cals.add(TestCalculation(
+        name: 'Hàm lượng SO2 trong khí SF6',
+        inputs: {'SO2_do': parseInput(sf6So2Ctrl.text)},
+        result: sf6So2Result!,
+        unit: 'ppm',
       ));
     }
 
@@ -299,7 +536,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text(
-                'Chưa có thông số nào được tính. Hãy bấm nút tính tính toán trước nghen!')),
+                'Chưa có thông số nào được tính. Hãy bấm nút tính toán trước nghen!')),
       );
       return;
     }
@@ -336,7 +573,8 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
     int pendingCount = 0;
     if (minRcd != null) pendingCount++;
     if (maxRtx != null) pendingCount++;
-    if (timeResult != null) pendingCount++;
+    if (effectiveDeltaT != null || timeResult != null) pendingCount++;
+    if (sf6PurityResult != null || sf6HumPpmResult != null || sf6So2Result != null) pendingCount++;
 
     return Scaffold(
       appBar: AppBar(
@@ -593,7 +831,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 12),
                         child: Text(
-                          'Độ không đồng thời Δt: ${timeResult!.toStringAsFixed(1)} ms',
+                          'Độ không đồng thời Δt${CalibrationService.isUncertaintyEnabled ? " (sau hiệu chuẩn)" : ""}: ${(effectiveDeltaT ?? timeResult!).toStringAsFixed(2)} ms',
                           style: TextStyle(
                             fontSize: AppTheme.fontSizeBody,
                             fontWeight: FontWeight.bold,
@@ -614,14 +852,166 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                                   fontWeight: FontWeight.bold),
                               textAlign: TextAlign.center),
                         ),
+                      UncertaintyEquipmentSection(
+                        testId: 'MC_Time_Delta',
+                        selectedEquipment: _selectedTimeEquipment,
+                        onEquipmentChanged: (newEq) {
+                          setState(() {
+                            _selectedTimeEquipment = newEq;
+                            if (timeResult != null) {
+                              _tinhThoiGian();
+                            }
+                          });
+                        },
+                        phaseResults: _timePhaseUncertainty.isNotEmpty ? _timePhaseUncertainty : null,
+                        uncertaintyResult: _timeDeltaUncertaintyResult,
+                        standardLimit: _actionType == 'Close' ? 4.0 : 2.0,
+                        isUpperBound: true,
+                      ),
                       StandardEvaluationWidget(
                         testCode: _actionType == 'Close' ? 'MC_Time_Close' : 'MC_Time_Open',
                         voltageLevel: _cbVoltageLevel,
-                        primaryValue: timeResult,
+                        primaryValue: effectiveDeltaT ?? timeResult,
                         unit: 'ms',
                         customTitle: "ĐỐI CHIẾU TIÊU CHUẨN THỜI GIAN",
                       ),
                     ]
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // MODULE 4: PHÂN TÍCH KHÍ SF6
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text('IV. PHÂN TÍCH KHÍ SF6',
+                        style: AppTheme.titleModuleStyle),
+                    const Divider(),
+                    // 1. Độ tinh khiết (%)
+                    _buildTextField('1. Độ tinh khiết SF6 (%)', sf6PurityCtrl,
+                        hint: 'VD: 99.5', isExpanded: false),
+                    const SizedBox(height: 8),
+
+                    // 2. Độ ẩm SF6
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: _buildTextField(
+                            _isHumidityDewPoint
+                                ? '2. Độ ẩm (Điểm sương °C)'
+                                : '2. Độ ẩm SF6 (ppmv)',
+                            sf6HumCtrl,
+                            hint: _isHumidityDewPoint ? 'VD: -42.5' : 'VD: 150',
+                            isExpanded: false,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4.0),
+                          child: ChoiceChip(
+                            label: Text(
+                              _isHumidityDewPoint ? 'Đơn vị: °C' : 'Đơn vị: ppmv',
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            selected: _isHumidityDewPoint,
+                            selectedColor: AppTheme.myOrangeAccent,
+                            onSelected: (val) {
+                              setState(() {
+                                double cur = parseInput(sf6HumCtrl.text);
+                                if (cur != 0 || sf6HumCtrl.text.isNotEmpty) {
+                                  if (val) {
+                                    double dew = ppmvToDewPoint(cur);
+                                    sf6HumCtrl.text = dew.toStringAsFixed(1);
+                                  } else {
+                                    double ppm = dewPointToPpmv(cur);
+                                    sf6HumCtrl.text = ppm.toStringAsFixed(1);
+                                  }
+                                }
+                                _isHumidityDewPoint = val;
+                                if (sf6HumPpmResult != null) _tinhSF6();
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (_isHumidityDewPoint && sf6HumCtrl.text.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0, bottom: 4.0),
+                        child: Text(
+                          '≈ Quy đổi tương đương: ${dewPointToPpmv(parseInput(sf6HumCtrl.text)).toStringAsFixed(1)} ppmv (tại 20°C, 1 atm)',
+                          style: const TextStyle(color: Colors.amberAccent, fontSize: 13, fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    const SizedBox(height: 8),
+
+                    // 3. Hàm lượng SO2
+                    _buildTextField('3. Hàm lượng SO2 (ppmv)', sf6So2Ctrl,
+                        hint: 'VD: 5.0', isExpanded: false),
+                    const SizedBox(height: 12),
+
+                    ElevatedButton(
+                      onPressed: _tinhSF6,
+                      child: const Text('TÍNH KHÍ SF6'),
+                    ),
+
+                    if (sf6PurityResult != null || sf6HumPpmResult != null || sf6So2Result != null) ...[
+                      // Khối ĐKĐBĐ cho thiết bị đo SF6
+                      UncertaintyEquipmentSection(
+                        testId: 'MC_SF6_Purity',
+                        selectedEquipment: _selectedSf6Equipment,
+                        onEquipmentChanged: (newEq) {
+                          setState(() {
+                            _selectedSf6Equipment = newEq;
+                            if (sf6PurityResult != null) {
+                              _tinhSF6();
+                            }
+                          });
+                        },
+                        uncertaintyResult: _sf6PurityUncertaintyResult,
+                        standardLimit: 97.0,
+                        isUpperBound: false,
+                      ),
+
+                      // Tiêu chuẩn Độ tinh khiết
+                      if (sf6PurityResult != null)
+                        StandardEvaluationWidget(
+                          testCode: 'MC_SF6_Purity',
+                          voltageLevel: _cbVoltageLevel,
+                          primaryValue: sf6PurityResult,
+                          unit: '%',
+                          symbol: 'Purity',
+                          customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐỘ TINH KHIẾT SF6",
+                        ),
+
+                      // Tiêu chuẩn Độ ẩm
+                      if (sf6HumPpmResult != null)
+                        StandardEvaluationWidget(
+                          testCode: 'MC_SF6_Hum',
+                          voltageLevel: _cbVoltageLevel,
+                          primaryValue: sf6HumPpmResult,
+                          unit: 'ppm',
+                          symbol: 'Humidity',
+                          customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐỘ ẨM SF6",
+                        ),
+
+                      // Tiêu chuẩn SO2
+                      if (sf6So2Result != null)
+                        StandardEvaluationWidget(
+                          testCode: 'MC_SF6_SO2',
+                          voltageLevel: _cbVoltageLevel,
+                          primaryValue: sf6So2Result,
+                          unit: 'ppm',
+                          symbol: 'SO2',
+                          customTitle: "ĐỐI CHIẾU TIÊU CHUẨN HÀM LƯỢNG SO2",
+                        ),
+                    ],
                   ],
                 ),
               ),
