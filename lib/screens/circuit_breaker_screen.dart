@@ -775,6 +775,7 @@ class _CircuitBreakerScreenState extends State<CircuitBreakerScreen> {
                         symbol: 'ΔRtx',
                         customTitle: "ĐỐI CHIẾU TIÊU CHUẨN ĐỘ LỆCH TIẾP XÚC MÁY CẮT",
                       ),
+                    ],
                   ],
                 ),
               ),
