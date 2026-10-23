@@ -1067,6 +1067,51 @@
             ]
           }
         ]
+      },
+      {
+        "scaleId": "scale_2",
+        "scaleName": "Nhiệt độ điểm sương",
+        "ranges": [
+          {
+            "rangeId": "range_1",
+            "unit": "°C",
+            "min": -50.00,
+            "max": -35.00,
+            "uPercent": 0.3,
+            "calibrationPoints":
+              {
+                "baseValue": -40.29,
+                "deviceValue": -38.90,
+                "correction": -1.40
+              }
+          },
+		  {
+            "rangeId": "range_2",
+            "unit": "°C",
+            "min": -34.90,
+            "max": -20.00,
+            "uPercent": 0.3,
+            "calibrationPoints":
+              {
+                "baseValue": -30.18,
+                "deviceValue": -29.10,
+                "correction": -1.10
+              }
+          },
+		  {
+            "rangeId": "range_3",
+            "unit": "°C",
+            "min": -19.90,
+            "max": 0.00,
+            "uPercent": 3.0,
+            "calibrationPoints":
+              {
+                "baseValue": -19.86,
+                "deviceValue": -19.20,
+                "correction": -0.7
+              }
+          }
+        ]
       }
     ]
   }
